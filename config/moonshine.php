@@ -106,6 +106,6 @@ return [
     'locale' => 'pt_BR',
     'locale_key' => ChangeLocale::KEY,
     'locales' => [
-        // en
+        'pt_BR',
     ],
 ];
