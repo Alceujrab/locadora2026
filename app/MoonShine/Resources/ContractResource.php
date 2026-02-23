@@ -25,6 +25,8 @@ use App\MoonShine\Resources\VehicleResource;
 use App\MoonShine\Resources\ReservationResource;
 use App\MoonShine\Resources\BranchResource;
 use App\MoonShine\Resources\ContractTemplateResource;
+use App\MoonShine\Resources\VehicleInspection\VehicleInspectionResource;
+use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionFormPage;
 use MoonShine\Laravel\MoonShineUI;
 use MoonShine\Laravel\Http\Requests\MoonShineRequest;
 use MoonShine\Contracts\UI\ActionButtonContract;
@@ -217,11 +219,23 @@ class ContractResource extends ModelResource
                 ->method('sign')
                 ->canSee(fn($item) => $item->status === ContractStatus::AWAITING_SIGNATURE && $item->pdf_path !== null),
 
+            ActionButton::make('Check-out (Entrega)', '#')
+                ->icon('truck')
+                ->success()
+                ->method('checkout')
+                ->canSee(fn($item) => in_array($item->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE])),
+
+            ActionButton::make('Check-in (Devolução)', '#')
+                ->icon('arrow-uturn-left')
+                ->warning()
+                ->method('checkin')
+                ->canSee(fn($item) => $item->status === ContractStatus::ACTIVE),
+
             ActionButton::make('Gerar Fatura', '#')
                 ->icon('banknotes')
                 ->warning()
                 ->method('generateInvoices')
-                ->canSee(fn($item) => $item->status === ContractStatus::ACTIVE && !$item->invoices()->exists()),
+                ->canSee(fn($item) => in_array($item->status, [ContractStatus::ACTIVE, ContractStatus::FINISHED]) && !$item->invoices()->exists()),
         ];
     }
 
@@ -281,5 +295,68 @@ class ContractResource extends ModelResource
         }
 
         return back();
+    }
+
+    public function checkout(MoonShineRequest $request): mixed
+    {
+        $contract = $request->getResource()->getItem();
+        
+        $inspection = \App\Models\VehicleInspection::firstOrCreate([
+            'contract_id' => $contract->id,
+            'type' => \App\Enums\InspectionType::CHECKOUT,
+        ], [
+            'vehicle_id' => $contract->vehicle_id,
+            'inspector_user_id' => auth()->id() ?? 1,
+            'status' => 'rascunho',
+            'inspection_date' => now(),
+            'mileage' => $contract->vehicle->mileage ?? 0,
+            'fuel_level' => 100,
+            'overall_condition' => 'Bom',
+        ]);
+
+        $contract->update(['status' => ContractStatus::ACTIVE]);
+        if ($contract->reservation) {
+            $contract->reservation->update(['status' => \App\Enums\ReservationStatus::IN_PROGRESS]);
+        }
+
+        $resource = new VehicleInspectionResource();
+        $uri = to_page(VehicleInspectionFormPage::class, $resource, ['resourceItem' => $inspection->id]);
+        
+        return redirect($uri);
+    }
+
+    public function checkin(MoonShineRequest $request): mixed
+    {
+        $contract = $request->getResource()->getItem();
+        
+        $inspection = \App\Models\VehicleInspection::firstOrCreate([
+            'contract_id' => $contract->id,
+            'type' => \App\Enums\InspectionType::RETURN,
+        ], [
+            'vehicle_id' => $contract->vehicle_id,
+            'inspector_user_id' => auth()->id() ?? 1,
+            'status' => 'rascunho',
+            'inspection_date' => now(),
+            'mileage' => clone $contract->vehicle->mileage ?? clone $contract->pickup_mileage,
+            'fuel_level' => 100,
+            'overall_condition' => 'Bom',
+        ]);
+
+        $contract->update([
+            'status' => ContractStatus::FINISHED,
+            'actual_return_date' => now(),
+        ]);
+        
+        if ($contract->reservation) {
+            $contract->reservation->update(['status' => \App\Enums\ReservationStatus::COMPLETED]);
+        }
+        
+        // Liberar Veículo
+        $contract->vehicle->update(['status' => \App\Enums\VehicleStatus::AVAILABLE]);
+
+        $resource = new VehicleInspectionResource();
+        $uri = to_page(VehicleInspectionFormPage::class, $resource, ['resourceItem' => $inspection->id]);
+        
+        return redirect($uri);
     }
 }

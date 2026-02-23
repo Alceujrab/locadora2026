@@ -29,6 +29,12 @@ Route::get('/export/cashflow', [App\Http\Controllers\CashFlowExportController::c
     ->middleware(['web']);
 
 // ==========================================
+// ASSINATURA DIGITAL (PÚBLICA)
+// ==========================================
+Route::get('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::class, 'show'])->name('contract.signature.show');
+Route::post('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::class, 'sign'])->name('contract.signature.sign');
+
+// ==========================================
 // CLIENT PORTAL ROUTES
 // ==========================================
 Route::prefix('cliente')->name('cliente.')->group(function () {

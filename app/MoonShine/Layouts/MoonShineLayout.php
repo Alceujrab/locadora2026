@@ -65,6 +65,8 @@ final class MoonShineLayout extends AppLayout
                     ->icon('building-storefront'),
                 MenuItem::make(RentalExtraResource::class, 'Extras de Locação')
                     ->icon('puzzle-piece'),
+                MenuItem::make(InspectionItemResource::class, 'Itens de Vistoria')
+                    ->icon('check-badge'),
             ])->icon('folder'),
 
             MenuGroup::make('Operacional', [
