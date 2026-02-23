@@ -15,6 +15,12 @@ use MoonShine\UI\Fields\Textarea;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\Enums\SortDirection;
+use MoonShine\UI\Components\ActionButton;
+use MoonShine\Laravel\MoonShineUI;
+use MoonShine\Laravel\Http\Requests\MoonShineRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
 
 #[Icon('document-check')]
 class NfseResource extends ModelResource
@@ -155,5 +161,71 @@ class NfseResource extends ModelResource
             Date::make('Emissão De', 'data_emissao')
                 ->nullable(),
         ];
+    }
+
+    public function indexButtons(): iterable
+    {
+        return [
+            ActionButton::make('Gerar PDF', '#')
+                ->icon('document-arrow-down')
+                ->primary()
+                ->method('generatePdf')
+                ->canSee(fn($item) => $item->status === 'emitida'),
+
+            ActionButton::make('Baixar PDF', fn($item) => Storage::disk('public')->url($item->pdf_path))
+                ->icon('arrow-down-tray')
+                ->blank()
+                ->canSee(fn($item) => $item->pdf_path !== null),
+        ];
+    }
+
+    public function detailButtons(): iterable
+    {
+        return $this->indexButtons();
+    }
+
+    protected function beforeSave(Model $item): Model
+    {
+        if (empty($item->numero)) {
+            $item->numero = Nfse::generateNumero();
+        }
+
+        if (empty($item->valor_iss)) {
+            $item->valor_iss = $item->calculateIss();
+        }
+
+        return $item;
+    }
+
+    public function generatePdf(MoonShineRequest $request): mixed
+    {
+        $item = $request->getResource()->getItem();
+
+        // Carrega o invoice e contraro vinculado para pegar a filial/empresa
+        $item->load('invoice.contract.branch');
+        
+        $branch = $item->invoice?->contract?->branch;
+        
+        $data = [
+            'nfse' => $item,
+            'branch' => $branch,
+        ];
+
+        // Gera o PDF
+        $pdf = Pdf::loadView('admin.nfse.pdf', $data);
+        $fileName = 'nfse_' . $item->numero . '.pdf';
+        
+        // Garante o diretório
+        if (!Storage::disk('public')->exists('nfse')) {
+            Storage::disk('public')->makeDirectory('nfse');
+        }
+
+        $path = 'nfse/' . $fileName;
+        Storage::disk('public')->put($path, $pdf->output());
+
+        $item->update(['pdf_path' => $path]);
+
+        MoonShineUI::toast('PDF da NFS-e gerado com sucesso!', 'success');
+        return back();
     }
 }

@@ -15,6 +15,12 @@ use MoonShine\UI\Fields\Textarea;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Support\Attributes\Icon;
 use MoonShine\Support\Enums\SortDirection;
+use MoonShine\UI\Components\ActionButton;
+use MoonShine\Laravel\MoonShineUI;
+use MoonShine\Laravel\Http\Requests\MoonShineRequest;
+use App\Models\AccountPayable;
+use App\Models\AccountReceivable;
+use App\Enums\PaymentMethod;
 
 #[Icon('exclamation-triangle')]
 class FineTrafficResource extends ModelResource
@@ -175,5 +181,71 @@ class FineTrafficResource extends ModelResource
             Date::make('Vencimento De', 'due_date')
                 ->nullable(),
         ];
+    }
+
+    public function indexButtons(): iterable
+    {
+        return [
+            ActionButton::make('Transferir para Cliente', '#')
+                ->icon('arrow-right')
+                ->warning()
+                ->method('transferToCustomer')
+                ->canSee(fn($item) => $item->status === 'pendente' && $item->responsibility === 'empresa' && $item->customer_id),
+
+            ActionButton::make('Marcar como Paga', '#')
+                ->icon('check')
+                ->success()
+                ->method('markAsPaid')
+                ->canSee(fn($item) => $item->status !== 'pago' && $item->status !== 'cancelado'),
+        ];
+    }
+
+    public function detailButtons(): iterable
+    {
+        return $this->indexButtons();
+    }
+
+    public function transferToCustomer(MoonShineRequest $request): mixed
+    {
+        $item = $request->getResource()->getItem();
+
+        $item->update([
+            'responsibility' => 'cliente',
+            'status' => 'transferido',
+        ]);
+
+        // Criar Conta a Receber (Cobrar do Cliente)
+        AccountReceivable::create([
+            'customer_id' => $item->customer_id,
+            'description' => 'Repasse de Multa de Trânsito: ' . $item->auto_infraction_number,
+            'amount' => $item->amount,
+            'due_date' => now()->addDays(10), // Vencimento em 10 dias
+            'status' => 'pendente',
+            'notes' => 'Multa de infração cometida no contrato ' . ($item->contract->contract_number ?? 'N/A'),
+        ]);
+
+        MoonShineUI::toast('Multa transferida para o cliente. Conta a receber gerada.', 'success');
+        return back();
+    }
+
+    public function markAsPaid(MoonShineRequest $request): mixed
+    {
+        $item = $request->getResource()->getItem();
+
+        $item->update(['status' => 'pago']);
+
+        // Criar Conta a Pagar (Para o Detran/Órgão de autuação)
+        // (Seria ideal associar a um 'Supplier' do Detran, aqui deixaremos supplier_id null se não houver um padrão)
+        AccountPayable::create([
+            'supplier_id' => null, // Poderia buscar um supplier com nome "DETRAN"
+            'description' => 'Pagamento de Multa de Trânsito: ' . $item->auto_infraction_number,
+            'amount' => $item->amount,
+            'due_date' => $item->due_date ?? now(),
+            'status' => 'pendente', // Deixa pendente pro financeiro apenas baixar
+            'notes' => 'Multa ' . $item->fine_code,
+        ]);
+
+        MoonShineUI::toast('Status alterado para Pago e encaminhado ao Contas a Pagar.', 'success');
+        return back();
     }
 }
