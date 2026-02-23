@@ -11,6 +11,17 @@ Route::get('/', [PublicPageController::class, 'home'])->name('public.home');
 Route::get('/frota', [PublicPageController::class, 'vehicles'])->name('public.vehicles');
 Route::get('/frota/{id}', [PublicPageController::class, 'vehicleDetails'])->name('public.vehicles.show');
 
+// ==========================================
+// RESERVA / CHECKOUT ROUTES
+// ==========================================
+Route::get('/reserva/opcionais', [App\Http\Controllers\CheckoutController::class, 'extras'])->name('checkout.extras');
+Route::post('/reserva/processar-opcionais', [App\Http\Controllers\CheckoutController::class, 'processExtras'])->name('checkout.process_extras');
+Route::get('/reserva/identificacao', [App\Http\Controllers\CheckoutController::class, 'identify'])->name('checkout.identify');
+Route::post('/reserva/login', [App\Http\Controllers\CheckoutController::class, 'login'])->name('checkout.login');
+Route::post('/reserva/cadastro', [App\Http\Controllers\CheckoutController::class, 'register'])->name('checkout.register');
+Route::get('/reserva/concluir', [App\Http\Controllers\CheckoutController::class, 'confirm'])->name('checkout.confirm');
+Route::post('/reserva/finalizar', [App\Http\Controllers\CheckoutController::class, 'finish'])->name('checkout.finish');
+
 Route::post('/webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle']);
 
 Route::get('/export/cashflow', [App\Http\Controllers\CashFlowExportController::class, 'exportCsv'])

@@ -117,7 +117,7 @@
                         </div>
                     </div>
 
-                    <form action="#" method="GET" class="space-y-5" x-data="{
+                    <form action="{{ route('checkout.extras') }}" method="GET" class="space-y-5" x-data="{
                         start: '',
                         end: '',
                         days() {
@@ -129,14 +129,16 @@
                             return this.days() * {{ $vehicle->category->daily_rate ?? 0 }};
                         }
                     }">
-                        <!-- Date Pickers (Frontend Only Simulation) -->
+                        <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+
+                        <!-- Date Pickers -->
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Retirada</label>
-                            <input type="date" x-model="start" class="block w-full border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-gray-50" required>
+                            <input type="date" name="start" x-model="start" min="{{ date('Y-m-d') }}" class="block w-full border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-gray-50" required>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Devolução</label>
-                            <input type="date" x-model="end" class="block w-full border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-gray-50" required>
+                            <input type="date" name="end" x-model="end" :min="start" class="block w-full border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-gray-50" required>
                         </div>
                         
                         <!-- Price Calculation Preview -->
@@ -155,12 +157,12 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('moonshine.login') }}" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm text-base font-bold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 mt-2">
+                        <button type="submit" class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm text-base font-bold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 mt-2">
                             Reservar Agora
-                        </a>
+                        </button>
                         
                         <p class="text-xs text-center text-gray-500 mt-4 leading-relaxed">
-                            Você não será cobrado agora.<br>A confirmação é feita no portal do cliente via WhatsApp.
+                            Você não será cobrado agora.<br>A confirmação é feita no portal do cliente.
                         </p>
                     </form>
                 </div>
