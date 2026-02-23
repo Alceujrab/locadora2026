@@ -41,6 +41,13 @@ use App\MoonShine\Pages\FleetProfitabilityPage;
 use App\MoonShine\Pages\DefaultReportPage;
 use App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource;
 use App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource;
+use App\MoonShine\Resources\Page\PageResource;
+use App\MoonShine\Resources\Faq\FaqResource;
+use App\MoonShine\Resources\Testimonial\TestimonialResource;
+use App\MoonShine\Resources\PostCategory\PostCategoryResource;
+use App\MoonShine\Resources\Post\PostResource;
+use MoonShine\MenuOptions\MenuElements;
+use MoonShine\UI\Components\Layout\{Box, Flash, Div, LayoutBlock, LayoutBuilder, Menu, Sidebar};
 
 final class MoonShineLayout extends AppLayout
 {
@@ -56,6 +63,21 @@ final class MoonShineLayout extends AppLayout
     protected function menu(): array
     {
         return [
+            MenuGroup::make('Cadastros Base', [
+                MenuItem::make('Filiais', BranchResource::class, 'building-office'),
+                MenuItem::make('Fornecedores (Oficinas)', SupplierResource::class, 'wrench'),
+                MenuItem::make('Extras de Locação', RentalExtraResource::class, 'squares-plus'),
+                MenuItem::make('Templates de Contrato', ContractTemplateResource::class, 'document-duplicate'),
+            ])->icon('users'),
+
+            MenuGroup::make('Site / CMS', [
+                MenuItem::make('Páginas', PageResource::class, 'document-text'),
+                MenuItem::make('Blog / Notícias', PostResource::class, 'newspaper'),
+                MenuItem::make('Categorias do Blog', PostCategoryResource::class, 'tag'),
+                MenuItem::make('FAQs', FaqResource::class, 'question-mark-circle'),
+                MenuItem::make('Depoimentos', TestimonialResource::class, 'chat-bubble-bottom-center-text'),
+            ])->icon('globe-alt'),
+
             MenuGroup::make('Cadastros', [
                 MenuItem::make(BranchResource::class, 'Filiais')
                     ->icon('building-office'),
@@ -124,6 +146,11 @@ final class MoonShineLayout extends AppLayout
                 ->icon('shield-check'),
             MenuItem::make(VehiclePhotoResource::class, 'VehiclePhotos'),
             MenuItem::make(CustomerDocumentResource::class, 'CustomerDocuments'),
+            MenuItem::make(PageResource::class, 'Pages'),
+            MenuItem::make(FaqResource::class, 'Faqs'),
+            MenuItem::make(TestimonialResource::class, 'Testimonials'),
+            MenuItem::make(PostCategoryResource::class, 'PostCategories'),
+            MenuItem::make(PostResource::class, 'Posts'),
         ];
     }
 

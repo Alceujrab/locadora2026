@@ -39,6 +39,11 @@ use App\MoonShine\Pages\FleetProfitabilityPage;
 use App\MoonShine\Pages\DefaultReportPage;
 use App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource;
 use App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource;
+use App\MoonShine\Resources\Page\PageResource;
+use App\MoonShine\Resources\Faq\FaqResource;
+use App\MoonShine\Resources\Testimonial\TestimonialResource;
+use App\MoonShine\Resources\PostCategory\PostCategoryResource;
+use App\MoonShine\Resources\Post\PostResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -76,6 +81,11 @@ class MoonShineServiceProvider extends ServiceProvider
                 \App\MoonShine\Resources\AuditLog\AuditLogResource::class,
                 VehiclePhotoResource::class,
                 CustomerDocumentResource::class,
+                PageResource::class,
+                FaqResource::class,
+                TestimonialResource::class,
+                PostCategoryResource::class,
+                PostResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

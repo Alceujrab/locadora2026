@@ -9,19 +9,19 @@
 
 <!-- Resumo Cards -->
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-8 mb-10">
-    <div class="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-slate-100 flex items-center gap-4">
-        <div class="p-4 bg-purple-50 rounded-xl">
-            <svg class="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <div class="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-gray-100 flex items-center gap-4">
+        <div class="p-4 bg-primary-50 rounded-xl">
+            <svg class="w-8 h-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
             </svg>
         </div>
         <div>
-            <p class="text-sm font-medium text-slate-500">Contratos Ativos</p>
-            <p class="text-2xl font-bold font-display text-slate-900">{{ $activeContractsCount }}</p>
+            <p class="text-sm font-medium text-gray-500">Contratos Ativos</p>
+            <p class="text-2xl font-bold font-display text-gray-900">{{ $activeContractsCount }}</p>
         </div>
     </div>
 
-    <div class="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-slate-100 flex items-center gap-4">
+    <div class="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-gray-100 flex items-center gap-4">
         <div class="p-4 bg-red-50 rounded-xl">
             <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -40,8 +40,8 @@
             </svg>
         </div>
         <div>
-            <p class="text-sm font-medium text-slate-500">Chamados Abertos</p>
-            <p class="text-2xl font-bold font-display text-slate-900">{{ $openTicketsCount }}</p>
+            <p class="text-sm font-medium text-gray-500">Chamados Abertos</p>
+            <p class="text-2xl font-bold font-display text-gray-900">{{ $openTicketsCount }}</p>
         </div>
     </div>
 </div>
@@ -49,10 +49,10 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     
     <!-- Faturas Section -->
-    <div class="bg-white shadow-sm rounded-2xl border border-slate-100 overflow-hidden">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="text-lg font-semibold font-display text-slate-900">Suas Faturas e Avisos</h3>
-            <a href="{{ route('cliente.invoices') }}" class="text-sm font-medium text-purple-600 hover:text-purple-500">Ver todas</a>
+    <div class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold font-display text-gray-900">Suas Faturas e Avisos</h3>
+            <a href="{{ route('cliente.invoices') }}" class="text-sm font-bold text-primary-600 hover:text-primary-500 transition-colors">Ver todas</a>
         </div>
         
         @if($pendingInvoicesCount > 0)
@@ -100,10 +100,10 @@
     </div>
 
     <!-- Próximas Reservas -->
-    <div class="bg-white shadow-sm rounded-2xl border border-slate-100 overflow-hidden">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="text-lg font-semibold font-display text-slate-900">Próximas Reservas</h3>
-            <a href="{{ route('cliente.reservations') }}" class="text-sm font-medium text-purple-600 hover:text-purple-500">Ver todas</a>
+    <div class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold font-display text-gray-900">Próximas Reservas</h3>
+            <a href="{{ route('cliente.reservations') }}" class="text-sm font-bold text-primary-600 hover:text-primary-500 transition-colors">Ver todas</a>
         </div>
         
         @if($upcomingReservations->count() > 0)
@@ -136,8 +136,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <p class="font-medium text-slate-700">Nenhuma reserva agendada</p>
-                <a href="{{ route('public.vehicles') }}" class="text-sm mt-2 text-purple-600 hover:text-purple-500 font-medium">+ Fazer nova reserva</a>
+                <p class="font-medium text-gray-700">Nenhuma reserva agendada</p>
+                <a href="{{ route('public.vehicles') }}" class="text-sm mt-2 text-primary-600 hover:text-primary-500 font-bold transition-colors">+ Fazer nova reserva</a>
             </div>
         @endif
     </div>

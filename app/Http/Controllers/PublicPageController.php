@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\VehicleCategory;
+use App\Models\Faq;
+use App\Models\Testimonial;
 
 class PublicPageController extends Controller
 {
@@ -18,8 +20,11 @@ class PublicPageController extends Controller
 
         $categories = VehicleCategory::orderBy('name')->get();
         $brands = Vehicle::where('status', 'disponivel')->distinct()->pluck('brand')->filter()->sort();
+        
+        $faqs = Faq::where('is_active', true)->orderBy('position')->get();
+        $testimonials = Testimonial::where('is_active', true)->orderBy('id', 'desc')->get();
 
-        return view('public.home', compact('featuredVehicles', 'categories', 'brands'));
+        return view('public.home', compact('featuredVehicles', 'categories', 'brands', 'faqs', 'testimonials'));
     }
 
     public function vehicles(Request $request)
@@ -89,7 +94,7 @@ class PublicPageController extends Controller
         // Similar vehicles from the same category
         $relatedVehicles = Vehicle::with(['category', 'photos'])
             ->where('status', 'disponivel')
-            ->where('vehicle_category_id', $vehicle->vehicle_category_id)
+            ->where('category_id', $vehicle->category_id)
             ->where('id', '!=', $vehicle->id)
             ->take(3)
             ->get();
