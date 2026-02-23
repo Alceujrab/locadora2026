@@ -23,6 +23,7 @@ use App\MoonShine\Resources\ContractResource;
 use App\MoonShine\Resources\ServiceOrderResource;
 use App\MoonShine\Resources\VehicleInspection\VehicleInspectionResource;
 use App\MoonShine\Pages\CalendarPage;
+use App\MoonShine\Pages\BookingCalendarPage;
 use App\MoonShine\Resources\InspectionItem\InspectionItemResource;
 use App\MoonShine\Resources\AccountPayable\AccountPayableResource;
 use App\MoonShine\Resources\AccountReceivable\AccountReceivableResource;
@@ -67,6 +68,8 @@ final class MoonShineLayout extends AppLayout
             ])->icon('folder'),
 
             MenuGroup::make('Operacional', [
+                MenuItem::make(BookingCalendarPage::class, 'Calendário de Frota (Timeline)')
+                    ->icon('map'),
                 MenuItem::make(CalendarPage::class, 'Calendário Visual')
                     ->icon('calendar'),
                 MenuItem::make(ReservationResource::class, 'Reservas')
