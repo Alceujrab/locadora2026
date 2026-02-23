@@ -39,6 +39,8 @@ use App\MoonShine\Resources\Nfse\NfseResource;
 use App\MoonShine\Resources\AuditLog\AuditLogResource;
 use App\MoonShine\Pages\FleetProfitabilityPage;
 use App\MoonShine\Pages\DefaultReportPage;
+use App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource;
+use App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -120,6 +122,8 @@ final class MoonShineLayout extends AppLayout
 
             MenuItem::make(AuditLogResource::class, 'Auditoria')
                 ->icon('shield-check'),
+            MenuItem::make(VehiclePhotoResource::class, 'VehiclePhotos'),
+            MenuItem::make(CustomerDocumentResource::class, 'CustomerDocuments'),
         ];
     }
 

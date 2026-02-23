@@ -37,6 +37,8 @@ use App\MoonShine\Resources\FineTraffic\FineTrafficResource;
 use App\MoonShine\Pages\BookingCalendarPage;
 use App\MoonShine\Pages\FleetProfitabilityPage;
 use App\MoonShine\Pages\DefaultReportPage;
+use App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource;
+use App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -72,6 +74,8 @@ class MoonShineServiceProvider extends ServiceProvider
                 FineTrafficResource::class,
                 \App\MoonShine\Resources\Nfse\NfseResource::class,
                 \App\MoonShine\Resources\AuditLog\AuditLogResource::class,
+                VehiclePhotoResource::class,
+                CustomerDocumentResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

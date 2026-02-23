@@ -162,6 +162,12 @@ class VehicleResource extends ModelResource
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ordens de Serviço', 'serviceOrders', resource: ServiceOrderResource::class)
                         ->hideOnForm()
                 ]),
+                
+                \MoonShine\UI\Components\Layout\Tab::make('Galeria de Fotos', [
+                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
+                        ->creatable()
+                        ->hideOnForm()
+                ]),
             ])
         ];
     }

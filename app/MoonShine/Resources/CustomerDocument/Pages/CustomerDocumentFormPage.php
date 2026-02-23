@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\InspectionItem\Pages;
+namespace App\MoonShine\Resources\CustomerDocument\Pages;
 
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -10,7 +10,7 @@ use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use App\MoonShine\Resources\InspectionItem\InspectionItemResource;
+use App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
@@ -18,9 +18,9 @@ use Throwable;
 
 
 /**
- * @extends FormPage<InspectionItemResource>
+ * @extends FormPage<CustomerDocumentResource>
  */
-class InspectionItemFormPage extends FormPage
+class CustomerDocumentFormPage extends FormPage
 {
 
 

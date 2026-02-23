@@ -12,6 +12,7 @@ use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Phone;
 use MoonShine\UI\Fields\Email;
 use MoonShine\UI\Fields\Switcher;
@@ -71,6 +72,9 @@ class BranchResource extends ModelResource
         return [
             Box::make('Dados da Filial', [
                 ID::make(),
+                Image::make('Logomarca', 'logo')
+                    ->dir('branches')
+                    ->removable(),
                 Text::make('Nome', 'name')
                     ->required(),
                 Text::make('CNPJ', 'cnpj'),
