@@ -35,6 +35,8 @@ use App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource;
 use App\MoonShine\Resources\MaintenanceAlert\MaintenanceAlertResource;
 use App\MoonShine\Resources\FineTraffic\FineTrafficResource;
 use App\MoonShine\Pages\BookingCalendarPage;
+use App\MoonShine\Pages\FleetProfitabilityPage;
+use App\MoonShine\Pages\DefaultReportPage;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -76,6 +78,8 @@ class MoonShineServiceProvider extends ServiceProvider
                 CalendarPage::class,
                 CashFlowPage::class,
                 BookingCalendarPage::class,
+                FleetProfitabilityPage::class,
+                DefaultReportPage::class,
             ]);
     }
 }

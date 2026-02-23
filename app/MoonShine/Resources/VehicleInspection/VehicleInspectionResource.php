@@ -11,6 +11,8 @@ use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionFormPage;
 use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionDetailPage;
 
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
+use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Enum;
@@ -103,14 +105,17 @@ class VehicleInspectionResource extends ModelResource
         ];
     }
 
-    protected function afterSave(Model $item): Model
+    protected function afterSave(DataWrapperContract $item, FieldsContract $fields): DataWrapperContract
     {
-        if ($item->type === InspectionType::RETURN && $item->status === 'concluida') {
-            $contract = $item->contract;
+        /** @var \App\Models\VehicleInspection $model */
+        $model = $item->toModel();
+
+        if ($model->type === InspectionType::RETURN && $model->status === 'concluida') {
+            $contract = $model->contract;
             
             if ($contract) {
                 // Atualizar KM do contrato
-                $contract->return_mileage = $item->mileage;
+                $contract->return_mileage = $model->mileage;
                 
                 // Buscar vistoria de saída para comparar combustível
                 $checkoutInspection = \App\Models\VehicleInspection::where('contract_id', $contract->id)
@@ -118,8 +123,8 @@ class VehicleInspectionResource extends ModelResource
                                         ->first();
                 
                 $fuelDiff = 0;
-                if ($checkoutInspection && $item->fuel_level < $checkoutInspection->fuel_level) {
-                    $fuelDiff = $checkoutInspection->fuel_level - $item->fuel_level;
+                if ($checkoutInspection && $model->fuel_level < $checkoutInspection->fuel_level) {
+                    $fuelDiff = $checkoutInspection->fuel_level - $model->fuel_level;
                 }
 
                 $extraCharges = 0;
@@ -133,10 +138,12 @@ class VehicleInspectionResource extends ModelResource
                 }
 
                 // Salvar as avarias
-                $damageTotal = $item->total_damage_value;
+                // Note: assuming 'total_damage_value' is a method/attribute in model. 
+                // Using null coalesce in case it does not exist directly.
+                $damageTotal = $model->total_damage_value ?? 0;
                 if ($damageTotal > 0) {
                     $extraCharges += $damageTotal;
-                    $description[] = "Avarias (Vistoria) - R$ " . number_format($damageTotal, 2, ',', '.');
+                    $description[] = "Avarias (Vistoria) - R$ " . number_format((float)$damageTotal, 2, ',', '.');
                 }
 
                 if ($extraCharges > 0) {

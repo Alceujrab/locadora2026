@@ -37,6 +37,8 @@ use App\MoonShine\Resources\MaintenanceAlert\MaintenanceAlertResource;
 use App\MoonShine\Resources\FineTraffic\FineTrafficResource;
 use App\MoonShine\Resources\Nfse\NfseResource;
 use App\MoonShine\Resources\AuditLog\AuditLogResource;
+use App\MoonShine\Pages\FleetProfitabilityPage;
+use App\MoonShine\Pages\DefaultReportPage;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -108,6 +110,13 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(NfseResource::class, 'NFS-e')
                     ->icon('document-check'),
             ])->icon('banknotes'),
+
+            MenuGroup::make('Relatórios', [
+                MenuItem::make(FleetProfitabilityPage::class, 'Rentabilidade da Frota')
+                    ->icon('chart-bar'),
+                MenuItem::make(DefaultReportPage::class, 'Inadimplência (Cobrança)')
+                    ->icon('chart-pie'),
+            ])->icon('document-chart-bar'),
 
             MenuItem::make(AuditLogResource::class, 'Auditoria')
                 ->icon('shield-check'),
