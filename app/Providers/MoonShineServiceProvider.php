@@ -34,6 +34,7 @@ use App\MoonShine\Resources\SupportTicket\SupportTicketResource;
 use App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource;
 use App\MoonShine\Resources\MaintenanceAlert\MaintenanceAlertResource;
 use App\MoonShine\Resources\FineTraffic\FineTrafficResource;
+use App\MoonShine\Pages\BookingCalendarPage;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -74,6 +75,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 ...$core->getConfig()->getPages(),
                 CalendarPage::class,
                 CashFlowPage::class,
+                BookingCalendarPage::class,
             ]);
     }
 }

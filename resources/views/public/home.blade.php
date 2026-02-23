@@ -16,12 +16,38 @@
                     <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                         Ampla frota de veículos revisados para você alugar sem burocracia. Encontre o carro perfeito para o seu dia a dia, sua viagem ou o seu negócio.
                     </p>
-                    <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                        <div class="rounded-md shadow">
-                            <a href="{{ route('public.vehicles') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg transition">
-                                Ver Veículos Disponíveis
-                            </a>
-                        </div>
+                    
+                    <!-- Unified Search Bar -->
+                    <div class="mt-8 bg-white p-4 sm:p-6 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 max-w-3xl lg:mx-0 mx-auto">
+                        <form action="{{ route('public.vehicles') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
+                            
+                            <div class="flex-1">
+                                <label for="home_category" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Categoria</label>
+                                <select id="home_category" name="category_id" class="block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md bg-gray-50 font-medium">
+                                    <option value="">Qualquer modelo</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="flex-1">
+                                <label for="home_brand" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Marca</label>
+                                <select id="home_brand" name="brand" class="block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md bg-gray-50 font-medium">
+                                    <option value="">Todas as marcas</option>
+                                    @foreach($brands as $brandName)
+                                        <option value="{{ $brandName }}">{{ $brandName }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <div class="sm:self-end">
+                                <button type="submit" class="w-full sm:w-auto flex items-center justify-center px-8 py-3 h-[46px] border border-transparent text-base font-bold rounded-md text-white bg-primary-600 hover:bg-primary-700 transition shadow-sm">
+                                    Buscar
+                                </button>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </main>
