@@ -28,7 +28,6 @@ use App\MoonShine\Resources\FineTraffic\FineTrafficResource;
 use App\Enums\VehicleStatus;
 use App\Enums\ContractStatus;
 use App\Enums\ServiceOrderStatus;
-use MoonShine\ChangeLog\Components\ChangeLog;
 
 class VehicleDetailPage extends DetailPage
 {
@@ -39,6 +38,7 @@ class VehicleDetailPage extends DetailPage
         $faturamento = 'R$ 0,00';
         $totalLocacoes = '0';
         $custoManutencao = 'R$ 0,00';
+        $totalMultas = '0';
 
         if ($vehicle) {
             $faturamento = 'R$ ' . number_format(
@@ -54,6 +54,7 @@ class VehicleDetailPage extends DetailPage
                     ->sum('total'),
                 2, ',', '.'
             );
+            $totalMultas = (string) $vehicle->fines()->count();
         }
 
         return [
@@ -73,6 +74,9 @@ class VehicleDetailPage extends DetailPage
                     ]),
                     Box::make('Valores e Documentação', [
                         Number::make('Diária Override (R$)', 'daily_rate_override'),
+                        Number::make('Semanal Override (R$)', 'weekly_rate_override'),
+                        Number::make('Mensal Override (R$)', 'monthly_rate_override'),
+                        Number::make('Valor Seguro (R$)', 'insurance_value'),
                         Number::make('Valor FIPE (R$)', 'fipe_value'),
                         Number::make('Valor Compra (R$)', 'purchase_value'),
                         Date::make('Data Compra', 'purchase_date'),
@@ -108,6 +112,9 @@ class VehicleDetailPage extends DetailPage
                     HasMany::make('Ordens de Serviço', 'serviceOrders', resource: ServiceOrderResource::class),
                 ]),
                 Tab::make('Multas de Trânsito', [
+                    ValueMetric::make('Total de Multas')
+                        ->value($totalMultas)
+                        ->icon('exclamation-triangle'),
                     HasMany::make('Multas', 'fines', resource: FineTrafficResource::class),
                 ]),
             ]),
