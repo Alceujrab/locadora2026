@@ -63,8 +63,8 @@ class VehicleResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\UI\Components\Layout\Tabs::make([
-                \MoonShine\UI\Components\Layout\Tab::make('Ficha Técnica', [
+            \MoonShine\UI\Components\Tabs::make([
+                \MoonShine\UI\Components\Tabs\Tab::make('Ficha Técnica', [
                     Box::make('Dados do Veículo', [
                         ID::make(),
                         BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
@@ -133,7 +133,7 @@ class VehicleResource extends ModelResource
                         Textarea::make('Observações', 'notes'),
                     ]),
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Galeria de Fotos', [
+                \MoonShine\UI\Components\Tabs\Tab::make('Galeria de Fotos', [
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
                         ->creatable()
                 ]),
