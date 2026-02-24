@@ -32,7 +32,7 @@ class PostCategoryResource extends ModelResource
             \MoonShine\UI\Components\Layout\Box::make([
                 \MoonShine\UI\Fields\Text::make('Nome', 'name')->required(),
                 \MoonShine\UI\Fields\Text::make('Slug (URL)', 'slug')->required(),
-                \MoonShine\UI\Fields\Textarea::make('DescriÃ§Ã£o', 'description')->hideOnIndex(),
+                \MoonShine\UI\Fields\Textarea::make('Descrição', 'description'),
                 \MoonShine\UI\Fields\Switcher::make('Ativo', 'is_active')->default(true),
             ])
         ];

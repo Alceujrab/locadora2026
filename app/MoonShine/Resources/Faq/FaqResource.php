@@ -31,7 +31,7 @@ class FaqResource extends ModelResource
         return [
             \MoonShine\UI\Components\Layout\Box::make([
                 \MoonShine\UI\Fields\Text::make('Pergunta', 'question')->required(),
-                \MoonShine\UI\Fields\Textarea::make('Resposta', 'answer')->required()->hideOnIndex(),
+                \MoonShine\UI\Fields\Textarea::make('Resposta', 'answer')->required(),
                 \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o/Ordem', 'position')->default(0),
                 \MoonShine\UI\Fields\Switcher::make('Ativo no Site', 'is_active')->default(true),
             ])
