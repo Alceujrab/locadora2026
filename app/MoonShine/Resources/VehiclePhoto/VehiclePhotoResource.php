@@ -29,7 +29,7 @@ class VehiclePhotoResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)->hideOnForm(),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
             \MoonShine\UI\Fields\Image::make('Foto', 'path')->dir('vehicles')->removable()->required(),
             \MoonShine\UI\Fields\Text::make('Legenda', 'filename'),
             \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o', 'position')->default(0),
@@ -52,3 +52,4 @@ class VehiclePhotoResource extends ModelResource
         ];
     }
 }
+

@@ -140,12 +140,11 @@ class CustomerResource extends ModelResource
     protected function detailFields(): iterable
     {
         return [
-            \MoonShine\UI\Components\Layout\Tabs::make([
-                \MoonShine\UI\Components\Layout\Tab::make('Ficha do Cliente', $this->formFields()),
-                \MoonShine\UI\Components\Layout\Tab::make('Documentos e Fotos', [
+            \MoonShine\UI\Components\Tabs::make([
+                \MoonShine\UI\Components\Tabs\Tab::make('Ficha do Cliente', $this->formFields()),
+                \MoonShine\UI\Components\Tabs\Tab::make('Documentos e Fotos', [
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Documentos Anexos', 'documents', resource: \App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource::class)
                         ->creatable()
-                        ->hideOnForm()
                 ]),
             ])
         ];

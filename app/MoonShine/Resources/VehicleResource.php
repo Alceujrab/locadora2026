@@ -162,18 +162,18 @@ class VehicleResource extends ModelResource
                         ])->columnSpan(6),
                     ]),
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Contratos', 'contracts', resource: ContractResource::class)
-                        ->hideOnForm()
+
                 ]),
                 \MoonShine\UI\Components\Tabs\Tab::make('Histórico Mecânico', [
                     \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Custo Total de Manutenção')
                         ->value(fn($vehicle) => 'R$ ' . number_format($vehicle->serviceOrders()->where('status', \App\Enums\ServiceOrderStatus::COMPLETED)->sum('total'), 2, ',', '.'))
                         ->icon('wrench-screwdriver'),
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ordens de Serviço', 'serviceOrders', resource: ServiceOrderResource::class)
-                        ->hideOnForm()
+
                 ]),
                 \MoonShine\UI\Components\Tabs\Tab::make('Multas de Trânsito', [
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Multas', 'fines', resource: \App\MoonShine\Resources\FineTraffic\FineTrafficResource::class)
-                        ->hideOnForm()
+
                 ]),
                 \MoonShine\UI\Components\Tabs\Tab::make('Histórico (Auditoria)', [
                     \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Edições')

@@ -28,7 +28,7 @@ class CustomerDocumentResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Cliente', 'customer', resource: \App\MoonShine\Resources\CustomerResource::class)->hideOnForm(),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Cliente', 'customer', resource: \App\MoonShine\Resources\CustomerResource::class),
             \MoonShine\UI\Fields\Select::make('Tipo', 'type')->options([
                 'cnh' => 'CNH',
                 'rg' => 'RG',
