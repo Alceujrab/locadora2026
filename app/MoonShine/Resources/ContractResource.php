@@ -27,12 +27,13 @@ use App\MoonShine\Resources\ContractTemplateResource;
 use App\MoonShine\Resources\VehicleInspection\VehicleInspectionResource;
 use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionFormPage;
 use MoonShine\Laravel\MoonShineUI;
-use MoonShine\Laravel\Http\Requests\MoonShineRequest;
+use MoonShine\Laravel\MoonShineRequest;
 use MoonShine\Contracts\UI\ActionButtonContract;
 use MoonShine\UI\Components\ActionButton;
 use App\Services\ContractService;
 use App\Services\InvoiceService;
 use Illuminate\Support\Facades\Storage;
+use MoonShine\Support\Enums\HttpMethod;
 /**
  * @extends ModelResource<Contract>
  */
@@ -75,7 +76,7 @@ class ContractResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Nº Contrato', 'contract_number')->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
-            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
             Date::make('Retirada', 'pickup_date')->sortable(),
             Date::make('Devolução', 'return_date'),
             Number::make('Total (R$)', 'total')
@@ -101,7 +102,7 @@ class ContractResource extends ModelResource
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)
                     ->required()
                     ->searchable(),
-                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
             ]),
@@ -115,7 +116,7 @@ class ContractResource extends ModelResource
                 Number::make('Km Devolução', 'return_mileage')->min(0),
             ]),
             Box::make('Valores', [
-                Number::make('Dié¡ria (R$)', 'daily_rate')
+                Number::make('Diária (R$)', 'daily_rate')
                     ->step(0.01)->min(0),
                 Number::make('Total Dias', 'total_days')
                     ->min(1),
@@ -133,7 +134,7 @@ class ContractResource extends ModelResource
                     ->attach(ContractStatus::class),
                 Date::make('Assinado em', 'signed_at'),
                 Text::make('IP Assinatura', 'signature_ip'),
-                Text::make('Mé©todo', 'signature_method'),
+                Text::make('Método', 'signature_method'),
             ]),
             Box::make('Observações', [
                 Textarea::make('Observações', 'notes'),
@@ -193,34 +194,29 @@ class ContractResource extends ModelResource
     public function indexButtons(): iterable
     {
         return [
-            ActionButton::make('Gerar PDF', '#')
+            ActionButton::make('Gerar PDF', fn(Contract $item) => route('admin.contract.generatePdf', $item->id))
                 ->icon('document-text')
                 ->primary()
-                ->method('generatePdf')
+                ->async(HttpMethod::POST)
                 ->canSee(fn($item) => $item->template_id !== null),
-            ActionButton::make('Baixar PDF', fn($item) => Storage::disk('public')->url($item->pdf_path))
+            ActionButton::make('Baixar PDF', fn(Contract $item) => Storage::disk('public')->url($item->pdf_path))
                 ->icon('arrow-down-tray')
                 ->blank()
                 ->canSee(fn($item) => $item->pdf_path !== null),
-            ActionButton::make('Assinar', '#')
-                ->icon('pencil-square')
-                ->success()
-                ->method('sign')
-                ->canSee(fn($item) => $item->status === ContractStatus::AWAITING_SIGNATURE && $item->pdf_path !== null),
-            ActionButton::make('Check-out (Entrega)', '#')
+            ActionButton::make('Check-out (Entrega)', fn(Contract $item) => route('admin.contract.checkout', $item->id))
                 ->icon('truck')
                 ->success()
-                ->method('checkout')
+                ->async(HttpMethod::POST)
                 ->canSee(fn($item) => in_array($item->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE])),
-            ActionButton::make('Check-in (Devolução)', '#')
+            ActionButton::make('Check-in (Devolução)', fn(Contract $item) => route('admin.contract.checkin', $item->id))
                 ->icon('arrow-uturn-left')
                 ->warning()
-                ->method('checkin')
+                ->async(HttpMethod::POST)
                 ->canSee(fn($item) => $item->status === ContractStatus::ACTIVE),
-            ActionButton::make('Gerar Fatura', '#')
+            ActionButton::make('Gerar Fatura', fn(Contract $item) => route('admin.contract.generateInvoices', $item->id))
                 ->icon('banknotes')
                 ->warning()
-                ->method('generateInvoices')
+                ->async(HttpMethod::POST)
                 ->canSee(fn($item) => in_array($item->status, [ContractStatus::ACTIVE, ContractStatus::FINISHED]) && !$item->invoices()->exists()),
         ];
     }
@@ -230,93 +226,5 @@ class ContractResource extends ModelResource
     public function detailButtons(): iterable
     {
         return $this->indexButtons();
-    }
-    public function generatePdf(MoonShineRequest $request, ContractService $service): mixed
-    {
-        $item = $request->getResource()->getItem();
-        if (!$item->template_id) {
-            MoonShineUI::toast('Nenhum template selecionado neste contrato.', 'error');
-            return back();
-        }
-        $result = $service->generatePdf($item);
-        if ($result) {
-            MoonShineUI::toast('PDF do contrato gerado com sucesso!', 'success');
-        } else {
-            MoonShineUI::toast('Erro ao gerar PDF: O template pode estar vazio.', 'error');
-        }
-        return back();
-    }
-    public function sign(MoonShineRequest $request, ContractService $service): mixed
-    {
-        $item = $request->getResource()->getItem();
-        $success = $service->signContract($item, $request->ip());
-        if ($success) {
-            MoonShineUI::toast('Contrato assinado digitalmente com sucesso!', 'success');
-        } else {
-            MoonShineUI::toast('Né£o foi possé­vel assinar o contrato. Verifique o status.', 'error');
-        }
-        return back();
-    }
-    public function generateInvoices(MoonShineRequest $request, InvoiceService $service): mixed
-    {
-        $item = $request->getResource()->getItem();
-        $invoices = $service->generateForContract($item, 1, 5); // 1 parcela, vencimento em 5 dias.
-        if (count($invoices) > 0) {
-            MoonShineUI::toast('Fatura gerada com sucesso!', 'success');
-        } else {
-            MoonShineUI::toast('Erro ao gerar fatura.', 'error');
-        }
-        return back();
-    }
-    public function checkout(MoonShineRequest $request): mixed
-    {
-        $contract = $request->getResource()->getItem();
-        $inspection = \App\Models\VehicleInspection::firstOrCreate([
-            'contract_id' => $contract->id,
-            'type' => \App\Enums\InspectionType::CHECKOUT,
-        ], [
-            'vehicle_id' => $contract->vehicle_id,
-            'inspector_user_id' => auth()->id() ?? 1,
-            'status' => 'rascunho',
-            'inspection_date' => now(),
-            'mileage' => $contract->vehicle->mileage ?? 0,
-            'fuel_level' => 100,
-            'overall_condition' => 'Bom',
-        ]);
-        $contract->update(['status' => ContractStatus::ACTIVE]);
-        if ($contract->reservation) {
-            $contract->reservation->update(['status' => \App\Enums\ReservationStatus::IN_PROGRESS]);
-        }
-        $resource = new VehicleInspectionResource();
-        $uri = to_page(FormPage::class, $resource, ['resourceItem' => $inspection->id]);
-        return redirect($uri);
-    }
-    public function checkin(MoonShineRequest $request): mixed
-    {
-        $contract = $request->getResource()->getItem();
-        $inspection = \App\Models\VehicleInspection::firstOrCreate([
-            'contract_id' => $contract->id,
-            'type' => \App\Enums\InspectionType::RETURN,
-        ], [
-            'vehicle_id' => $contract->vehicle_id,
-            'inspector_user_id' => auth()->id() ?? 1,
-            'status' => 'rascunho',
-            'inspection_date' => now(),
-            'mileage' => clone $contract->vehicle->mileage ?? clone $contract->pickup_mileage,
-            'fuel_level' => 100,
-            'overall_condition' => 'Bom',
-        ]);
-        $contract->update([
-            'status' => ContractStatus::FINISHED,
-            'actual_return_date' => now(),
-        ]);
-        if ($contract->reservation) {
-            $contract->reservation->update(['status' => \App\Enums\ReservationStatus::COMPLETED]);
-        }
-        // Liberar Veé­culo
-        $contract->vehicle->update(['status' => \App\Enums\VehicleStatus::AVAILABLE]);
-        $resource = new VehicleInspectionResource();
-        $uri = to_page(FormPage::class, $resource, ['resourceItem' => $inspection->id]);
-        return redirect($uri);
     }
 }

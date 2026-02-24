@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 use App\Enums\CustomerType;
 
 class Customer extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids, SoftDeletes, Notifiable;
 
     protected $fillable = [
         'branch_id', 'user_id', 'type', 'name', 'cpf_cnpj', 'rg', 'birth_date',

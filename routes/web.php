@@ -36,6 +36,18 @@ Route::post('/admin/settings/save', [App\Http\Controllers\SystemSettingsControll
     ->middleware(['web']);
 
 // ==========================================
+// ADMIN: AÇÕES DO CONTRATO
+// ==========================================
+Route::post('/admin/contract/{id}/checkout', [App\Http\Controllers\ContractActionController::class, 'checkout'])
+    ->name('admin.contract.checkout')->middleware(['web']);
+Route::post('/admin/contract/{id}/checkin', [App\Http\Controllers\ContractActionController::class, 'checkin'])
+    ->name('admin.contract.checkin')->middleware(['web']);
+Route::post('/admin/contract/{id}/generate-pdf', [App\Http\Controllers\ContractActionController::class, 'generatePdf'])
+    ->name('admin.contract.generatePdf')->middleware(['web']);
+Route::post('/admin/contract/{id}/generate-invoices', [App\Http\Controllers\ContractActionController::class, 'generateInvoices'])
+    ->name('admin.contract.generateInvoices')->middleware(['web']);
+
+// ==========================================
 // ASSINATURA DIGITAL (PÚBLICA)
 // ==========================================
 Route::get('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::class, 'show'])->name('contract.signature.show');

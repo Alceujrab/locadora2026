@@ -12,7 +12,11 @@ class InvoiceObserver
     public function created(Invoice $invoice): void
     {
         if ($invoice->status === \App\Enums\InvoiceStatus::OPEN) {
-            \App\Jobs\SendInvoiceCommunicationJob::dispatch($invoice);
+            try {
+                \App\Jobs\SendInvoiceCommunicationJob::dispatch($invoice);
+            } catch (\Throwable $e) {
+                \Log::warning("Falha ao enviar notificação de fatura {$invoice->id}: {$e->getMessage()}");
+            }
         }
     }
 
@@ -22,7 +26,11 @@ class InvoiceObserver
     public function updated(Invoice $invoice): void
     {
         if ($invoice->wasChanged('status') && $invoice->status === \App\Enums\InvoiceStatus::OPEN) {
-            \App\Jobs\SendInvoiceCommunicationJob::dispatch($invoice);
+            try {
+                \App\Jobs\SendInvoiceCommunicationJob::dispatch($invoice);
+            } catch (\Throwable $e) {
+                \Log::warning("Falha ao enviar notificação de fatura {$invoice->id}: {$e->getMessage()}");
+            }
         }
     }
 
