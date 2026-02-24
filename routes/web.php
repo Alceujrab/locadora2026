@@ -29,6 +29,13 @@ Route::get('/export/cashflow', [App\Http\Controllers\CashFlowExportController::c
     ->middleware(['web']);
 
 // ==========================================
+// ADMIN: SALVAR CONFIGURAÇÕES DO SISTEMA
+// ==========================================
+Route::post('/admin/settings/save', [App\Http\Controllers\SystemSettingsController::class, 'save'])
+    ->name('admin.settings.save')
+    ->middleware(['web']);
+
+// ==========================================
 // ASSINATURA DIGITAL (PÚBLICA)
 // ==========================================
 Route::get('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::class, 'show'])->name('contract.signature.show');

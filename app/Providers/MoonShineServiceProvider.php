@@ -98,6 +98,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 BookingCalendarPage::class,
                 FleetProfitabilityPage::class,
                 DefaultReportPage::class,
+                \App\MoonShine\Pages\SystemSettingsPage::class,
             ]);
     }
 }

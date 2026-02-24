@@ -143,7 +143,7 @@ final class MoonShineLayout extends AppLayout
                     ->icon('users'),
                 MenuItem::make(\App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource::class, 'Níveis de Acesso (Cargos)')
                     ->icon('shield-exclamation'),
-                MenuItem::make(\App\MoonShine\Resources\SettingResource::class, 'Parâmetros do Sistema')
+                MenuItem::make(\App\MoonShine\Pages\SystemSettingsPage::class, 'Parâmetros do Sistema')
                     ->icon('adjustments-horizontal'),
             ])->icon('cog-8-tooth'),
 
