@@ -63,19 +63,12 @@ final class MoonShineLayout extends AppLayout
     protected function menu(): array
     {
         return [
-            MenuGroup::make('Cadastros Base', [
-                MenuItem::make('Filiais', BranchResource::class, 'building-office'),
-                MenuItem::make('Fornecedores (Oficinas)', SupplierResource::class, 'wrench'),
-                MenuItem::make('Extras de Locação', RentalExtraResource::class, 'squares-plus'),
-                MenuItem::make('Templates de Contrato', ContractTemplateResource::class, 'document-duplicate'),
-            ])->icon('users'),
-
             MenuGroup::make('Site / CMS', [
-                MenuItem::make('Páginas', PageResource::class, 'document-text'),
-                MenuItem::make('Blog / Notícias', PostResource::class, 'newspaper'),
-                MenuItem::make('Categorias do Blog', PostCategoryResource::class, 'tag'),
-                MenuItem::make('FAQs', FaqResource::class, 'question-mark-circle'),
-                MenuItem::make('Depoimentos', TestimonialResource::class, 'chat-bubble-bottom-center-text'),
+                MenuItem::make(PageResource::class, 'Páginas')->icon('document-text'),
+                MenuItem::make(PostResource::class, 'Blog / Notícias')->icon('newspaper'),
+                MenuItem::make(PostCategoryResource::class, 'Categorias do Blog')->icon('tag'),
+                MenuItem::make(FaqResource::class, 'FAQs')->icon('question-mark-circle'),
+                MenuItem::make(TestimonialResource::class, 'Depoimentos')->icon('chat-bubble-bottom-center-text'),
             ])->icon('globe-alt'),
 
             MenuGroup::make('Cadastros', [
@@ -144,13 +137,6 @@ final class MoonShineLayout extends AppLayout
 
             MenuItem::make(AuditLogResource::class, 'Auditoria')
                 ->icon('shield-check'),
-            MenuItem::make(VehiclePhotoResource::class, 'VehiclePhotos'),
-            MenuItem::make(CustomerDocumentResource::class, 'CustomerDocuments'),
-            MenuItem::make(PageResource::class, 'Pages'),
-            MenuItem::make(FaqResource::class, 'Faqs'),
-            MenuItem::make(TestimonialResource::class, 'Testimonials'),
-            MenuItem::make(PostCategoryResource::class, 'PostCategories'),
-            MenuItem::make(PostResource::class, 'Posts'),
         ];
     }
 
