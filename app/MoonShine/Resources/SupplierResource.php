@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\Supplier;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
@@ -19,20 +18,15 @@ use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-
 /**
  * @extends ModelResource<Supplier>
  */
 class SupplierResource extends ModelResource
 {
     protected string $model = Supplier::class;
-
     protected string $title = 'Fornecedores';
-
     protected string $column = 'name';
-
     protected bool $columnSelection = true;
-
     protected function pages(): array
     {
         return [
@@ -41,12 +35,10 @@ class SupplierResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     public function search(): array
     {
         return ['name', 'cnpj', 'contact_name', 'email', 'phone'];
     }
-
     protected function indexFields(): iterable
     {
         return [
@@ -55,7 +47,7 @@ class SupplierResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'oficina' => 'Oficina',
-                    'pecas' => 'Peças',
+                    'pecas' => 'PeÃ§as',
                     'ambos' => 'Ambos',
                 ]),
             Text::make('Contato', 'contact_name'),
@@ -66,7 +58,6 @@ class SupplierResource extends ModelResource
                 ->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
@@ -78,56 +69,50 @@ class SupplierResource extends ModelResource
                 Select::make('Tipo', 'type')
                     ->options([
                         'oficina' => 'Oficina',
-                        'pecas' => 'Peças',
+                        'pecas' => 'PeÃ§as',
                         'ambos' => 'Ambos',
                     ])
                     ->required(),
             ]),
-
             Box::make('Contato', [
                 Text::make('Nome Contato', 'contact_name'),
                 Phone::make('Telefone', 'phone'),
                 Email::make('E-mail', 'email'),
             ]),
-
-            Box::make('Endereço', [
+            Box::make('EndereÃ§o', [
                 Text::make('CEP', 'zip_code'),
                 Text::make('Rua', 'street'),
-                Text::make('Número', 'number'),
+                Text::make('NÃºmero', 'number'),
                 Text::make('Complemento', 'complement'),
                 Text::make('Bairro', 'neighborhood'),
                 Text::make('Cidade', 'city'),
                 Text::make('UF', 'state'),
             ]),
-
-            Box::make('Informações', [
+            Box::make('InformaÃ§Ãµes', [
                 Textarea::make('Especialidades', 'specialties'),
-                Textarea::make('Observações', 'notes'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
     }
-
     protected function filters(): iterable
     {
         return [
             Select::make('Tipo', 'type')
                 ->options([
                     'oficina' => 'Oficina',
-                    'pecas' => 'Peças',
+                    'pecas' => 'PeÃ§as',
                     'ambos' => 'Ambos',
                 ])
                 ->nullable(),
             Switcher::make('Ativo', 'is_active'),
         ];
     }
-
     protected function rules($item): array
     {
         return [

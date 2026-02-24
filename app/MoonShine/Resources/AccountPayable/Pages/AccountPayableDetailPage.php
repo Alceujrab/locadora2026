@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\AccountPayable\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -22,8 +21,6 @@ use App\MoonShine\Resources\VehicleResource;
 use App\MoonShine\Resources\BranchResource;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends DetailPage<AccountPayableResource>
  */
@@ -39,13 +36,11 @@ class AccountPayableDetailPage extends DetailPage
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class),
-                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
-                
+                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
                 Text::make('Categoria', 'category'),
-                Text::make('Descrição', 'description'),
+                Text::make('DescriÃ§Ã£o', 'description'),
                 Number::make('Valor (R$)', 'amount'),
                 Date::make('Data de Vencimento', 'due_date')->format('d/m/Y'),
-                
                 Select::make('Status', 'status')->options([
                     'pendente' => 'Pendente',
                     'pago' => 'Pago',
@@ -56,20 +51,17 @@ class AccountPayableDetailPage extends DetailPage
                     default => 'warning'
                 }),
             ]),
-
             Box::make('Pagamento', [
                 Date::make('Data do Pagamento', 'paid_at')->format('d/m/Y H:i'),
-                Text::make('Método de Pagamento', 'payment_method'),
-                Textarea::make('Observações', 'notes'),
+                Text::make('MÃ©todo de Pagamento', 'payment_method'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -79,7 +71,6 @@ class AccountPayableDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -90,7 +81,6 @@ class AccountPayableDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -101,7 +91,6 @@ class AccountPayableDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

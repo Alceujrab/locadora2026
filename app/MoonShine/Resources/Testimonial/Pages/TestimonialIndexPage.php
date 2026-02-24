@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Testimonial\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -14,15 +13,12 @@ use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\Testimonial\TestimonialResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<TestimonialResource>
  */
 class TestimonialIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -32,7 +28,6 @@ class TestimonialIndexPage extends IndexPage
             ID::make(),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -40,7 +35,6 @@ class TestimonialIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -48,7 +42,6 @@ class TestimonialIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -56,7 +49,6 @@ class TestimonialIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -64,7 +56,6 @@ class TestimonialIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -74,7 +65,6 @@ class TestimonialIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -85,7 +75,6 @@ class TestimonialIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -96,7 +85,6 @@ class TestimonialIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

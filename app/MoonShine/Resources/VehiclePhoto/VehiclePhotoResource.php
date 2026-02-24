@@ -3,25 +3,20 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\VehiclePhoto;
-
 use Illuminate\Database\Eloquent\Model;
 use App\Models\VehiclePhoto;
-use App\MoonShine\Resources\VehiclePhoto\Pages\VehiclePhotoIndexPage;
-use App\MoonShine\Resources\VehiclePhoto\Pages\VehiclePhotoFormPage;
-use App\MoonShine\Resources\VehiclePhoto\Pages\VehiclePhotoDetailPage;
-
+use MoonShine\Laravel\Pages\Crud\IndexPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
-
 /**
  * @extends ModelResource<VehiclePhoto, VehiclePhotoIndexPage, VehiclePhotoFormPage, VehiclePhotoDetailPage>
  */
 class VehiclePhotoResource extends ModelResource
 {
     protected string $model = VehiclePhoto::class;
-
-    protected string $title = 'Fotos do Veículo';
-
+    protected string $title = 'Fotos do VeÃ­culo';
     protected function indexFields(): iterable
     {
         return [
@@ -31,18 +26,16 @@ class VehiclePhotoResource extends ModelResource
             \MoonShine\UI\Fields\Switcher::make('Capa', 'is_cover')->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veículo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)->hideOnForm(),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)->hideOnForm(),
             \MoonShine\UI\Fields\Image::make('Foto', 'path')->dir('vehicles')->removable()->required(),
             \MoonShine\UI\Fields\Text::make('Legenda', 'filename'),
-            \MoonShine\UI\Fields\Number::make('Posição', 'position')->default(0),
+            \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o', 'position')->default(0),
             \MoonShine\UI\Fields\Switcher::make('Foto de Capa', 'is_cover'),
         ];
     }
-    
     protected function detailFields(): iterable
     {
         return $this->formFields();
@@ -53,9 +46,9 @@ class VehiclePhotoResource extends ModelResource
     protected function pages(): array
     {
         return [
-            VehiclePhotoIndexPage::class,
-            VehiclePhotoFormPage::class,
-            VehiclePhotoDetailPage::class,
+            IndexPage::class,
+            FormPage::class,
+            DetailPage::class,
         ];
     }
 }

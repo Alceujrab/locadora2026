@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\VehicleInspection\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -20,15 +19,12 @@ use App\Enums\InspectionType;
 use App\MoonShine\Resources\VehicleInspection\VehicleInspectionResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<VehicleInspectionResource>
  */
 class VehicleInspectionIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -36,13 +32,12 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
             Date::make('Data Vistoria', 'inspection_date')->format('d/m/Y H:i')->sortable(),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -50,18 +45,16 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
     protected function filters(): iterable
     {
         return [
-            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)->nullable(),
+            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class)->nullable(),
         ];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -69,7 +62,6 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -77,7 +69,6 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -87,7 +78,6 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -98,7 +88,6 @@ class VehicleInspectionIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -109,7 +98,6 @@ class VehicleInspectionIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

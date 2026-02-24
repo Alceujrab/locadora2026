@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Caution\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -23,8 +22,6 @@ use Illuminate\Http\Request;
 use MoonShine\Laravel\MoonShineUI;
 use MoonShine\UI\Components\FormBuilder;
 use Throwable;
-
-
 /**
  * @extends DetailPage<CautionResource>
  */
@@ -55,17 +52,16 @@ class CautionDetailPage extends DetailPage
                             }),
                     ])->columnSpan(6),
                     Column::make([
-                        Text::make('ID Pré-Auth Mercado Pago', 'mp_preauth_id'),
-                        Date::make('Data de Liberação', 'released_at')->format('d/m/Y H:i'),
+                        Text::make('ID PrÃ©-Auth Mercado Pago', 'mp_preauth_id'),
+                        Date::make('Data de LiberaÃ§Ã£o', 'released_at')->format('d/m/Y H:i'),
                         Number::make('Valor Cobrado', 'charged_amount'),
-                        Text::make('Motivo da Cobrança', 'charge_reason'),
-                        Text::make('Observações', 'notes'),
+                        Text::make('Motivo da CobranÃ§a', 'charge_reason'),
+                        Text::make('ObservaÃ§Ãµes', 'notes'),
                     ])->columnSpan(6),
                 ])
             ])
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons()->add(
@@ -78,18 +74,17 @@ class CautionDetailPage extends DetailPage
                 ->icon('currency-dollar')
                 ->error()
                 ->inModal(
-                    title: 'Cobrar Participação da Caução',
+                    title: 'Cobrar ParticipaÃ§Ã£o da CauÃ§Ã£o',
                     content: fn($item) => FormBuilder::make($this->getResource()->route('charge', $item->getKey()))
                         ->fields([
                             Number::make('Valor a Ser Cobrado', 'charged_amount')->required()->step(0.01),
-                            Text::make('Motivo da Cobrança', 'charge_reason')->required(),
+                            Text::make('Motivo da CobranÃ§a', 'charge_reason')->required(),
                         ])
                         ->submit('Cobrar')
                 )
                 ->canSee(fn($item) => $item->status === 'retida')
         );
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -99,7 +94,6 @@ class CautionDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -110,7 +104,6 @@ class CautionDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -121,7 +114,6 @@ class CautionDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

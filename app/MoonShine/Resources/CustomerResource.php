@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\Customer;
 use App\Enums\CustomerType;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -28,20 +27,15 @@ use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-
 /**
  * @extends ModelResource<Customer>
  */
 class CustomerResource extends ModelResource
 {
     protected string $model = Customer::class;
-
     protected string $title = 'Clientes';
-
     protected string $column = 'name';
-
     protected bool $columnSelection = true;
-
     protected function pages(): array
     {
         return [
@@ -50,47 +44,37 @@ class CustomerResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     public function search(): array
     {
         return ['name', 'cpf_cnpj', 'email', 'phone', 'rg'];
     }
-
     protected function afterSave(DataWrapperContract $item, FieldsContract $fields): DataWrapperContract
     {
         $customer = $item->getOriginal(); // Extract Eloquent Model
-
         if ($customer->email) {
             // Find existing user or create a new one for portal access
             $user = User::firstOrNew(['email' => $customer->email]);
-
             if (!$user->exists) {
                 // Determine a safe password if creating
                 // Ex: First 4 digits of CPF/CNPJ + "!"
                 $docClean = preg_replace('/\D/', '', $customer->cpf_cnpj);
                 $passwordBase = strlen($docClean) >= 4 ? substr($docClean, 0, 4) : Str::random(6);
-                
                 $user->name = $customer->name;
                 $user->password = Hash::make('Muda@' . $passwordBase); // Temporary explicit password for locadora demo
             }
-
             $user->branch_id = $customer->branch_id;
             $user->save();
-
             // Assign the exact 'cliente' role natively via Spatie
             if (!$user->hasRole('cliente')) {
                 $user->assignRole('cliente');
             }
-
             // Bind the user to the customer record
             if ($customer->user_id !== $user->id) {
                 $customer->updateQuietly(['user_id' => $user->id]);
             }
         }
-
         return $item;
     }
-
     protected function indexFields(): iterable
     {
         return [
@@ -105,7 +89,6 @@ class CustomerResource extends ModelResource
                 ->sortable(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
@@ -120,53 +103,45 @@ class CustomerResource extends ModelResource
                 Text::make('RG/IE', 'rg'),
                 Date::make('Data Nascimento', 'birth_date'),
             ]),
-
             Box::make('Dados PJ', [
-                Text::make('Razão Social', 'company_name'),
-                Text::make('Inscrição Estadual', 'state_registration'),
+                Text::make('RazÃ£o Social', 'company_name'),
+                Text::make('InscriÃ§Ã£o Estadual', 'state_registration'),
             ]),
-
             Box::make('Contato', [
                 Email::make('E-mail', 'email'),
                 Phone::make('Telefone', 'phone'),
                 Phone::make('WhatsApp', 'whatsapp'),
             ]),
-
             Box::make('CNH', [
-                Text::make('Nº CNH', 'cnh_number'),
+                Text::make('NÂº CNH', 'cnh_number'),
                 Text::make('Categoria CNH', 'cnh_category'),
                 Date::make('Validade CNH', 'cnh_expiry'),
             ]),
-
-            Box::make('Endereço', [
+            Box::make('EndereÃ§o', [
                 Text::make('CEP', 'address_zip_code'),
                 Text::make('Rua', 'address_street'),
-                Text::make('Número', 'address_number'),
+                Text::make('NÃºmero', 'address_number'),
                 Text::make('Complemento', 'address_complement'),
                 Text::make('Bairro', 'address_neighborhood'),
                 Text::make('Cidade', 'address_city'),
                 Text::make('UF', 'address_state'),
             ]),
-
-            Box::make('Contato de Emergência', [
-                Text::make('Nome Emergência', 'emergency_contact_name'),
-                Phone::make('Telefone Emergência', 'emergency_contact_phone'),
+            Box::make('Contato de EmergÃªncia', [
+                Text::make('Nome EmergÃªncia', 'emergency_contact_name'),
+                Phone::make('Telefone EmergÃªncia', 'emergency_contact_phone'),
             ]),
-
             Box::make('Status', [
                 Switcher::make('Bloqueado', 'is_blocked'),
                 Textarea::make('Motivo Bloqueio', 'blocked_reason'),
-                Textarea::make('Observações', 'notes'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function detailFields(): iterable
     {
         return [
             \MoonShine\UI\Components\Layout\Tabs::make([
                 \MoonShine\UI\Components\Layout\Tab::make('Ficha do Cliente', $this->formFields()),
-                
                 \MoonShine\UI\Components\Layout\Tab::make('Documentos e Fotos', [
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Documentos Anexos', 'documents', resource: \App\MoonShine\Resources\CustomerDocument\CustomerDocumentResource::class)
                         ->creatable()
@@ -175,7 +150,6 @@ class CustomerResource extends ModelResource
             ])
         ];
     }
-
     protected function filters(): iterable
     {
         return [
@@ -185,7 +159,6 @@ class CustomerResource extends ModelResource
             Text::make('Cidade', 'address_city'),
         ];
     }
-
     protected function rules($item): array
     {
         return [

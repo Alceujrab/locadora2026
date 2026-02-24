@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\MoonShineUser\Pages;
-
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -28,7 +27,6 @@ use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Password;
 use MoonShine\UI\Fields\PasswordRepeat;
 use MoonShine\UI\Fields\Text;
-
 /**
  * @extends FormPage<MoonShineUserResource, MoonShineUser>
  */
@@ -44,7 +42,6 @@ final class MoonShineUserFormPage extends FormPage
                 Tabs::make([
                     Tab::make(__('moonshine::ui.resource.main_information'), [
                         ID::make(),
-
                         BelongsTo::make(
                             __('moonshine::ui.resource.role'),
                             'moonshineUserRole',
@@ -53,31 +50,25 @@ final class MoonShineUserFormPage extends FormPage
                         )
                             ->creatable()
                             ->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
-
                         Flex::make([
                             Text::make(__('moonshine::ui.resource.name'), 'name')
                                 ->required(),
-
                             Email::make(__('moonshine::ui.resource.email'), 'email')
                                 ->required(),
                         ]),
-
                         Image::make(__('moonshine::ui.resource.avatar'), 'avatar')
                             ->disk(moonshineConfig()->getDisk())
                             ->dir(moonshineConfig()->getUserAvatarsDir())
                             ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif']),
-
                         Date::make(__('moonshine::ui.resource.created_at'), 'created_at')
                             ->format("d.m.Y")
                             ->default(now()->toDateTimeString()),
                     ])->icon('user-circle'),
-
                     Tab::make(__('moonshine::ui.resource.password'), [
                         Collapse::make(__('moonshine::ui.resource.change_password'), [
                             Password::make(__('moonshine::ui.resource.password'), 'password')
                                 ->customAttributes(['autocomplete' => 'new-password'])
                                 ->eye(),
-
                             PasswordRepeat::make(__('moonshine::ui.resource.repeat_password'), 'password_confirmation')
                                 ->customAttributes(['autocomplete' => 'confirm-password'])
                                 ->eye(),
@@ -87,7 +78,6 @@ final class MoonShineUserFormPage extends FormPage
             ]),
         ];
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\VehicleInspection\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -25,8 +24,6 @@ use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
 use App\Enums\InspectionType;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends DetailPage<VehicleInspectionResource>
  */
@@ -38,31 +35,27 @@ class VehicleInspectionDetailPage extends DetailPage
     protected function fields(): iterable
     {
         return [
-            Box::make('Informações Gerais', [
+            Box::make('InformaÃ§Ãµes Gerais', [
                 ID::make(),
-                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
+                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
                 Enum::make('Tipo de Vistoria', 'type')->attach(InspectionType::class),
                 Date::make('Data da Vistoria', 'inspection_date')->format('d/m/Y H:i'),
                 BelongsTo::make('Vistoriador', 'inspector', resource: MoonShineUserResource::class),
             ]),
-
-            Box::make('Condições do Veículo', [
+            Box::make('CondiÃ§Ãµes do VeÃ­culo', [
                 Number::make('Quilometragem', 'mileage'),
-                Text::make('Nível de Combustível', 'fuel_level'),
-                Text::make('Condição Geral', 'overall_condition'),
-                Textarea::make('Observações', 'notes'),
+                Text::make('NÃ­vel de CombustÃ­vel', 'fuel_level'),
+                Text::make('CondiÃ§Ã£o Geral', 'overall_condition'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
-
             HasMany::make('Itens Inspecionados', 'items', resource: InspectionItemResource::class),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -72,7 +65,6 @@ class VehicleInspectionDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -83,7 +75,6 @@ class VehicleInspectionDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -94,7 +85,6 @@ class VehicleInspectionDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

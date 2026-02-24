@@ -3,25 +3,20 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Testimonial;
-
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Testimonial;
-use App\MoonShine\Resources\Testimonial\Pages\TestimonialIndexPage;
-use App\MoonShine\Resources\Testimonial\Pages\TestimonialFormPage;
-use App\MoonShine\Resources\Testimonial\Pages\TestimonialDetailPage;
-
+use MoonShine\Laravel\Pages\Crud\IndexPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
-
 /**
  * @extends ModelResource<Testimonial, TestimonialIndexPage, TestimonialFormPage, TestimonialDetailPage>
  */
 class TestimonialResource extends ModelResource
 {
     protected string $model = Testimonial::class;
-
     protected string $title = 'Depoimentos (Testimonials)';
-
     protected function indexFields(): iterable
     {
         return [
@@ -33,7 +28,6 @@ class TestimonialResource extends ModelResource
             \MoonShine\UI\Fields\Switcher::make('Destacado', 'is_active')->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
@@ -47,7 +41,6 @@ class TestimonialResource extends ModelResource
             ])
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
@@ -58,9 +51,9 @@ class TestimonialResource extends ModelResource
     protected function pages(): array
     {
         return [
-            TestimonialIndexPage::class,
-            TestimonialFormPage::class,
-            TestimonialDetailPage::class,
+            IndexPage::class,
+            FormPage::class,
+            DetailPage::class,
         ];
     }
 }

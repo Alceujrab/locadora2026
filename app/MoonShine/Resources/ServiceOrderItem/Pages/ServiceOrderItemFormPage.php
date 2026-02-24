@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\ServiceOrderItem\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -15,8 +14,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<ServiceOrderItemResource>
  */
@@ -32,14 +29,12 @@ class ServiceOrderItemFormPage extends FormPage
                 ID::make(),
                 \MoonShine\UI\Fields\Select::make('Tipo', 'type')
                     ->options([
-                        'peca' => 'Peça',
-                        'mao_de_obra' => 'Mão de Obra',
+                        'peca' => 'PeÃ§a',
+                        'mao_de_obra' => 'MÃ£o de Obra',
                     ])
                     ->required(),
-                    
-                \MoonShine\UI\Fields\Text::make('Descrição', 'description')
+                \MoonShine\UI\Fields\Text::make('DescriÃ§Ã£o', 'description')
                     ->required(),
-
                 \MoonShine\UI\Fields\Number::make('Qtd', 'quantity')
                     ->default(1)
                     ->min(1)
@@ -49,8 +44,7 @@ class ServiceOrderItemFormPage extends FormPage
                         'x-model' => 'item.quantity',
                         '@change' => 'item.total = (parseFloat(item.quantity || 0) * parseFloat(item.unit_price || 0)).toFixed(2)'
                     ]),
-
-                \MoonShine\UI\Fields\Number::make('Preço Unitário', 'unit_price')
+                \MoonShine\UI\Fields\Number::make('PreÃ§o UnitÃ¡rio', 'unit_price')
                     ->step(0.01)
                     ->min(0)
                     ->required()
@@ -58,7 +52,6 @@ class ServiceOrderItemFormPage extends FormPage
                         'x-model' => 'item.unit_price',
                         '@change' => 'item.total = (parseFloat(item.quantity || 0) * parseFloat(item.unit_price || 0)).toFixed(2)'
                     ]),
-
                 \MoonShine\UI\Fields\Number::make('Total', 'total')
                     ->step(0.01)
                     ->customAttributes([
@@ -68,22 +61,18 @@ class ServiceOrderItemFormPage extends FormPage
             ])
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -93,7 +82,6 @@ class ServiceOrderItemFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -104,7 +92,6 @@ class ServiceOrderItemFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -115,7 +102,6 @@ class ServiceOrderItemFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

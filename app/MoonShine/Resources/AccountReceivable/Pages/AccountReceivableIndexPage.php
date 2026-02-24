@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\AccountReceivable\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -21,15 +20,12 @@ use App\MoonShine\Resources\ContractResource;
 use App\MoonShine\Resources\AccountReceivable\AccountReceivableResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<AccountReceivableResource>
  */
 class AccountReceivableIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -39,7 +35,7 @@ class AccountReceivableIndexPage extends IndexPage
             ID::make()->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
-            Text::make('Descrição', 'description'),
+            Text::make('DescriÃ§Ã£o', 'description'),
             Date::make('Vencimento', 'due_date')->format('d/m/Y')->sortable(),
             Number::make('Valor R$', 'amount')
                 ->sortable()
@@ -55,7 +51,6 @@ class AccountReceivableIndexPage extends IndexPage
             }),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -63,7 +58,6 @@ class AccountReceivableIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -78,7 +72,6 @@ class AccountReceivableIndexPage extends IndexPage
             ])->nullable(),
         ];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -86,7 +79,6 @@ class AccountReceivableIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -94,7 +86,6 @@ class AccountReceivableIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -104,7 +95,6 @@ class AccountReceivableIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -115,7 +105,6 @@ class AccountReceivableIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -126,7 +115,6 @@ class AccountReceivableIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

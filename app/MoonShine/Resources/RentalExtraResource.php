@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\RentalExtra;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
@@ -17,20 +16,15 @@ use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
-
 /**
  * @extends ModelResource<RentalExtra>
  */
 class RentalExtraResource extends ModelResource
 {
     protected string $model = RentalExtra::class;
-
-    protected string $title = 'Extras de Locação';
-
+    protected string $title = 'Extras de LocaÃ§Ã£o';
     protected string $column = 'name';
-
     protected bool $columnSelection = true;
-
     protected function pages(): array
     {
         return [
@@ -39,12 +33,10 @@ class RentalExtraResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     public function search(): array
     {
         return ['name'];
     }
-
     protected function indexFields(): iterable
     {
         return [
@@ -53,58 +45,54 @@ class RentalExtraResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'Acessório',
-                    'servico' => 'Serviço',
+                    'acessorio' => 'AcessÃ³rio',
+                    'servico' => 'ServiÃ§o',
                 ]),
-            Number::make('Diária (R$)', 'daily_rate')
+            Number::make('DiÃ¡ria (R$)', 'daily_rate')
                 ->sortable(),
             Switcher::make('Ativo', 'is_active')
                 ->sortable()
                 ->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
-            Box::make('Extra de Locação', [
+            Box::make('Extra de LocaÃ§Ã£o', [
                 ID::make(),
                 Text::make('Nome', 'name')->required(),
                 Select::make('Tipo', 'type')
                     ->options([
                         'seguro' => 'Seguro',
-                        'acessorio' => 'Acessório',
-                        'servico' => 'Serviço',
+                        'acessorio' => 'AcessÃ³rio',
+                        'servico' => 'ServiÃ§o',
                     ])
                     ->required(),
-                Number::make('Diária (R$)', 'daily_rate')
+                Number::make('DiÃ¡ria (R$)', 'daily_rate')
                     ->step(0.01)->min(0)->required(),
-                Textarea::make('Descrição', 'description'),
+                Textarea::make('DescriÃ§Ã£o', 'description'),
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
     }
-
     protected function filters(): iterable
     {
         return [
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'Acessório',
-                    'servico' => 'Serviço',
+                    'acessorio' => 'AcessÃ³rio',
+                    'servico' => 'ServiÃ§o',
                 ])
                 ->nullable(),
             Switcher::make('Ativo', 'is_active'),
         ];
     }
-
     protected function rules($item): array
     {
         return [

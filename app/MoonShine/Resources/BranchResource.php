@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\Branch;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
@@ -18,20 +17,15 @@ use MoonShine\UI\Fields\Email;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
-
 /**
  * @extends ModelResource<Branch>
  */
 class BranchResource extends ModelResource
 {
     protected string $model = Branch::class;
-
     protected string $title = 'Filiais';
-
     protected string $column = 'name';
-
     protected bool $columnSelection = true;
-
     /**
      * @return list<class-string<PageContract>>
      */
@@ -43,7 +37,6 @@ class BranchResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     /**
      * @return string[]
      */
@@ -51,7 +44,6 @@ class BranchResource extends ModelResource
     {
         return ['name', 'cnpj', 'city', 'email'];
     }
-
     protected function indexFields(): iterable
     {
         return [
@@ -66,7 +58,6 @@ class BranchResource extends ModelResource
                 ->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
@@ -82,33 +73,28 @@ class BranchResource extends ModelResource
                 Phone::make('Telefone', 'phone'),
                 Phone::make('WhatsApp', 'whatsapp'),
             ]),
-
-            Box::make('Endereço', [
+            Box::make('EndereÃ§o', [
                 Text::make('CEP', 'zip_code'),
                 Text::make('Rua', 'street'),
-                Text::make('Número', 'number'),
+                Text::make('NÃºmero', 'number'),
                 Text::make('Complemento', 'complement'),
                 Text::make('Bairro', 'neighborhood'),
                 Text::make('Cidade', 'city'),
                 Text::make('UF', 'state'),
             ]),
-
             Box::make('Status', [
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
-
-            Box::make('Observações', [
-                Textarea::make('Observações', 'notes'),
+            Box::make('ObservaÃ§Ãµes', [
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
     }
-
     protected function filters(): iterable
     {
         return [
@@ -117,7 +103,6 @@ class BranchResource extends ModelResource
             Text::make('UF', 'state'),
         ];
     }
-
     protected function rules($item): array
     {
         return [

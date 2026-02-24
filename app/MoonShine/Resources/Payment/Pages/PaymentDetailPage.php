@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Payment\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -35,24 +34,21 @@ class PaymentDetailPage extends DetailPage
             Box::make('Dados do Pagamento', [
                 ID::make(),
                 BelongsTo::make('Fatura Recebida', 'invoice', resource: InvoiceResource::class),
-                Enum::make('Método de Pagamento', 'method')->attach(PaymentMethod::class),
+                Enum::make('MÃ©todo de Pagamento', 'method')->attach(PaymentMethod::class),
                 Number::make('Valor Pago (R$)', 'amount'),
                 Date::make('Data e Hora', 'paid_at')->format('d/m/Y H:i'),
             ]),
-
-            Box::make('Integrações (Mercado Pago / Outros)', [
+            Box::make('IntegraÃ§Ãµes (Mercado Pago / Outros)', [
                 Text::make('ID MP (Gateway)', 'mp_payment_id'),
                 Text::make('Status MP', 'mp_status'),
-                Text::make('ID Transação', 'transaction_id'),
+                Text::make('ID TransaÃ§Ã£o', 'transaction_id'),
             ]),
-
             Box::make('Reembolsos & Notas', [
                 Date::make('Data do Reembolso', 'refunded_at')->format('d/m/Y H:i'),
                 Number::make('Valor Reembolsado', 'refund_amount'),
-                Textarea::make('Anotações', 'notes'),
+                Textarea::make('AnotaÃ§Ãµes', 'notes'),
             ]),
-
-            Box::make('PIX Cobrança', [
+            Box::make('PIX CobranÃ§a', [
                 Preview::make('QR Code', 'pix_qr_code_base64', function($item) {
                     if (!$item->pix_qr_code_base64) return '';
                     $src = str_starts_with($item->pix_qr_code_base64, 'data:image') 
@@ -64,12 +60,10 @@ class PaymentDetailPage extends DetailPage
             ])->canSee(fn($payment) => $payment->method === PaymentMethod::PIX && !empty($payment->pix_qr_code_base64)),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -79,7 +73,6 @@ class PaymentDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -90,7 +83,6 @@ class PaymentDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -101,7 +93,6 @@ class PaymentDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

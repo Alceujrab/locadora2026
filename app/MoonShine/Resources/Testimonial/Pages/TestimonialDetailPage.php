@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Testimonial\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -12,8 +11,6 @@ use App\MoonShine\Resources\Testimonial\TestimonialResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use Throwable;
-
-
 /**
  * @extends DetailPage<TestimonialResource>
  */
@@ -28,12 +25,10 @@ class TestimonialDetailPage extends DetailPage
             ID::make(),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -43,7 +38,6 @@ class TestimonialDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -54,7 +48,6 @@ class TestimonialDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -65,7 +58,6 @@ class TestimonialDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

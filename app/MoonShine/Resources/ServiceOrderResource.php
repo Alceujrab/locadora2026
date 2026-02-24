@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\ServiceOrder;
 use App\Enums\ServiceOrderStatus;
 use MoonShine\Laravel\Resources\ModelResource;
@@ -20,20 +19,15 @@ use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
-
 /**
  * @extends ModelResource<ServiceOrder>
  */
 class ServiceOrderResource extends ModelResource
 {
     protected string $model = ServiceOrder::class;
-
-    protected string $title = 'Ordens de Serviço';
-
+    protected string $title = 'Ordens de ServiÃ§o';
     protected string $column = 'id';
-
     protected bool $columnSelection = true;
-
     protected function pages(): array
     {
         return [
@@ -42,17 +36,15 @@ class ServiceOrderResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     public function search(): array
     {
         return ['id', 'description', 'nf_number'];
     }
-
     protected function indexFields(): iterable
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class),
             Select::make('Tipo', 'type')
                 ->options([
@@ -66,14 +58,13 @@ class ServiceOrderResource extends ModelResource
             Date::make('Abertura', 'opened_at')->sortable(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
-            Box::make('Ordem de Serviço', [
+            Box::make('Ordem de ServiÃ§o', [
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
-                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class)
@@ -84,42 +75,36 @@ class ServiceOrderResource extends ModelResource
                         'corretiva' => 'Corretiva',
                     ])
                     ->required(),
-                Textarea::make('Descrição', 'description'),
+                Textarea::make('DescriÃ§Ã£o', 'description'),
             ]),
-
             Box::make('Valores', [
-                Number::make('Peças (R$)', 'items_total')
+                Number::make('PeÃ§as (R$)', 'items_total')
                     ->step(0.01)->min(0)->readonly(),
-                Number::make('Mão de Obra (R$)', 'labor_total')
+                Number::make('MÃ£o de Obra (R$)', 'labor_total')
                     ->step(0.01)->min(0)->readonly(),
                 Number::make('Total (R$)', 'total')
                     ->step(0.01)->min(0)->readonly(),
             ]),
-
             Box::make('Status e Datas', [
                 Enum::make('Status', 'status')
                     ->attach(ServiceOrderStatus::class),
                 Date::make('Abertura', 'opened_at'),
-                Date::make('Conclusão', 'completed_at'),
+                Date::make('ConclusÃ£o', 'completed_at'),
             ]),
-
             Box::make('Nota Fiscal', [
-                Text::make('Nº NF', 'nf_number'),
+                Text::make('NÂº NF', 'nf_number'),
                 Text::make('Arquivo NF', 'nf_path'),
-                Textarea::make('Observações', 'notes'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
-
-            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Itens e Mão de Obra', 'items', resource: \App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource::class)
+            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Itens e MÃ£o de Obra', 'items', resource: \App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource::class)
                 ->creatable()
                 ->modifyTable(fn($table) => $table->cast(new \App\Models\ServiceOrderItem())) // Cast para as tabelas renderizarem melhor sem bugs no admin panel
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
     }
-
     protected function filters(): iterable
     {
         return [
@@ -133,7 +118,6 @@ class ServiceOrderResource extends ModelResource
                 ->nullable(),
         ];
     }
-
     protected function rules($item): array
     {
         return [
@@ -141,7 +125,6 @@ class ServiceOrderResource extends ModelResource
             'type' => ['required', 'string'],
         ];
     }
-
     public function getActiveActions(): array
     {
         return ['create', 'view', 'update', 'delete', 'massDelete', 'export'];

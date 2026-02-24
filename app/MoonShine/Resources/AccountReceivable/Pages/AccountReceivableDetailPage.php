@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\AccountReceivable\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -22,8 +21,6 @@ use App\MoonShine\Resources\ContractResource;
 use App\MoonShine\Resources\Invoice\InvoiceResource;
 use App\MoonShine\Resources\BranchResource;
 use MoonShine\UI\Components\Layout\Box;
-
-
 /**
  * @extends DetailPage<AccountReceivableResource>
  */
@@ -41,12 +38,10 @@ class AccountReceivableDetailPage extends DetailPage
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
                 BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class),
-                
                 Text::make('Categoria', 'category'),
-                Text::make('Descrição', 'description'),
+                Text::make('DescriÃ§Ã£o', 'description'),
                 Number::make('Valor (R$)', 'amount'),
                 Date::make('Data de Vencimento', 'due_date')->format('d/m/Y'),
-                
                 Select::make('Status', 'status')->options([
                     'pendente' => 'Pendente',
                     'recebido' => 'Recebido',
@@ -57,20 +52,17 @@ class AccountReceivableDetailPage extends DetailPage
                     default => 'warning'
                 }),
             ]),
-
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->format('d/m/Y H:i'),
-                Text::make('Método de Pagamento', 'payment_method'),
-                Textarea::make('Observações', 'notes'),
+                Text::make('MÃ©todo de Pagamento', 'payment_method'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -80,7 +72,6 @@ class AccountReceivableDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -91,7 +82,6 @@ class AccountReceivableDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -102,7 +92,6 @@ class AccountReceivableDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Caution\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -18,15 +17,12 @@ use MoonShine\UI\Fields\Date;
 use App\MoonShine\Resources\Caution\CautionResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<CautionResource>
  */
 class CautionIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -54,7 +50,6 @@ class CautionIndexPage extends IndexPage
                 ->sortable(),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -62,7 +57,6 @@ class CautionIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -70,7 +64,6 @@ class CautionIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -78,7 +71,6 @@ class CautionIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -86,7 +78,6 @@ class CautionIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -96,7 +87,6 @@ class CautionIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -107,7 +97,6 @@ class CautionIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -118,7 +107,6 @@ class CautionIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\VehicleInspection\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -27,8 +26,6 @@ use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
 use App\Enums\InspectionType;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<VehicleInspectionResource>
  */
@@ -40,43 +37,37 @@ class VehicleInspectionFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('Informações Gerais', [
+            Box::make('InformaÃ§Ãµes Gerais', [
                 ID::make(),
-                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
+                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable()->searchable(),
                 Enum::make('Tipo de Vistoria', 'type')->attach(InspectionType::class)->required(),
                 Date::make('Data da Vistoria', 'inspection_date')->withTime()->required(),
                 BelongsTo::make('Vistoriador', 'inspector', resource: MoonShineUserResource::class)->required()->searchable(),
             ]),
-
-            Box::make('Condições do Veículo', [
+            Box::make('CondiÃ§Ãµes do VeÃ­culo', [
                 Number::make('Quilometragem', 'mileage')->required()->min(0),
-                Text::make('Nível de Combustível', 'fuel_level')->required()
+                Text::make('NÃ­vel de CombustÃ­vel', 'fuel_level')->required()
                     ->hint('Ex: 1/4, 1/2, 3/4, Cheio, Reserva'),
-                Text::make('Condição Geral', 'overall_condition')->required()
+                Text::make('CondiÃ§Ã£o Geral', 'overall_condition')->required()
                     ->hint('Ex: Excelente, Bom, Regular, Ruim'),
-                Textarea::make('Observações', 'notes'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
-
             HasMany::make('Itens Inspecionados', 'items', resource: InspectionItemResource::class)->creatable(),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -86,7 +77,6 @@ class VehicleInspectionFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -97,7 +87,6 @@ class VehicleInspectionFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -108,7 +97,6 @@ class VehicleInspectionFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

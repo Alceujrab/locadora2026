@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Invoice\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -22,15 +21,12 @@ use App\Enums\InvoiceStatus;
 use App\MoonShine\Resources\Invoice\InvoiceResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<InvoiceResource>
  */
 class InvoiceIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -38,7 +34,7 @@ class InvoiceIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            Text::make('Nº Fatura', 'invoice_number')->sortable(),
+            Text::make('NÂº Fatura', 'invoice_number')->sortable(),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             Date::make('Vencimento', 'due_date')->format('d/m/Y')->sortable(),
@@ -46,7 +42,6 @@ class InvoiceIndexPage extends IndexPage
             Enum::make('Status', 'status')->attach(InvoiceStatus::class)->sortable(),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -58,7 +53,6 @@ class InvoiceIndexPage extends IndexPage
                 ->xlsx()
         );
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -69,7 +63,6 @@ class InvoiceIndexPage extends IndexPage
             Enum::make('Status', 'status')->attach(InvoiceStatus::class)->nullable(),
         ];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -77,7 +70,6 @@ class InvoiceIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -85,7 +77,6 @@ class InvoiceIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -95,7 +86,6 @@ class InvoiceIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -106,7 +96,6 @@ class InvoiceIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -117,7 +106,6 @@ class InvoiceIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

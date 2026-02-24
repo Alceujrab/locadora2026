@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Invoice\Pages;
-
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -40,9 +39,9 @@ class InvoiceDetailPage extends DetailPage
     protected function fields(): iterable
     {
         return [
-            Box::make('Informações Gerais da Fatura', [
+            Box::make('InformaÃ§Ãµes Gerais da Fatura', [
                 ID::make(),
-                Text::make('Nº Fatura', 'invoice_number'),
+                Text::make('NÂº Fatura', 'invoice_number'),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
                 BelongsTo::make('Contrato Vinculado', 'contract', resource: ContractResource::class),
@@ -50,7 +49,6 @@ class InvoiceDetailPage extends DetailPage
                 Date::make('Vencimento', 'due_date')->format('d/m/Y'),
                 Text::make('Parcela', 'installment_number'),
             ]),
-
             Box::make('Valores', [
                 Number::make('Valor Base (R$)', 'amount'),
                 Number::make('Multa (R$)', 'penalty_amount'),
@@ -58,16 +56,13 @@ class InvoiceDetailPage extends DetailPage
                 Number::make('Desconto (R$)', 'discount'),
                 Number::make('Total Final (R$)', 'total'),
             ]),
-
-            Box::make('Nota Fiscal / Integração', [
-                Text::make('Nº NFS-e', 'nfse_number'),
-                Textarea::make('Observações', 'notes'),
+            Box::make('Nota Fiscal / IntegraÃ§Ã£o', [
+                Text::make('NÂº NFS-e', 'nfse_number'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
-
             HasMany::make('Pagamentos Relacionados', 'payments', resource: \App\MoonShine\Resources\Payment\PaymentResource::class),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons()->add(
@@ -78,7 +73,6 @@ class InvoiceDetailPage extends DetailPage
                 ->canSee(fn($invoice) => $invoice->status === InvoiceStatus::OPEN || $invoice->status === InvoiceStatus::OVERDUE)
         );
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -88,7 +82,6 @@ class InvoiceDetailPage extends DetailPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -99,7 +92,6 @@ class InvoiceDetailPage extends DetailPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -110,7 +102,6 @@ class InvoiceDetailPage extends DetailPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

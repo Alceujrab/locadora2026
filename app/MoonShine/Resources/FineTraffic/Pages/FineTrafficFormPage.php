@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\FineTraffic\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -15,8 +14,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<FineTrafficResource>
  */
@@ -33,22 +30,18 @@ class FineTrafficFormPage extends FormPage
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -58,7 +51,6 @@ class FineTrafficFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -69,7 +61,6 @@ class FineTrafficFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -80,7 +71,6 @@ class FineTrafficFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

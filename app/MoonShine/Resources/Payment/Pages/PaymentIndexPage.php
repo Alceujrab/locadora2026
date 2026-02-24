@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Payment\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -21,15 +20,12 @@ use App\Enums\PaymentMethod;
 use App\MoonShine\Resources\Payment\PaymentResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<PaymentResource>
  */
 class PaymentIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -38,13 +34,12 @@ class PaymentIndexPage extends IndexPage
         return [
             ID::make()->sortable(),
             BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class),
-            Enum::make('Método', 'method')->attach(PaymentMethod::class)->sortable(),
+            Enum::make('MÃ©todo', 'method')->attach(PaymentMethod::class)->sortable(),
             Number::make('Valor R$', 'amount')->sortable()->badge('green'),
             Date::make('Data Pagamento', 'paid_at')->format('d/m/Y H:i')->sortable(),
             Text::make('Gateway (MP)', 'mp_payment_id')->badge('gray'),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -52,7 +47,6 @@ class PaymentIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -60,10 +54,9 @@ class PaymentIndexPage extends IndexPage
     {
         return [
             BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class)->nullable(),
-            Enum::make('Método', 'method')->attach(PaymentMethod::class)->nullable(),
+            Enum::make('MÃ©todo', 'method')->attach(PaymentMethod::class)->nullable(),
         ];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -71,7 +64,6 @@ class PaymentIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -79,7 +71,6 @@ class PaymentIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -89,7 +80,6 @@ class PaymentIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -100,7 +90,6 @@ class PaymentIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -111,7 +100,6 @@ class PaymentIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

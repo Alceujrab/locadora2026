@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\AccountReceivable\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -25,8 +24,6 @@ use App\MoonShine\Resources\Invoice\InvoiceResource;
 use App\MoonShine\Resources\BranchResource;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<AccountReceivableResource>
  */
@@ -44,43 +41,36 @@ class AccountReceivableFormPage extends FormPage
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)->searchable()->nullable(),
                 BelongsTo::make('Contrato (Opcional)', 'contract', resource: ContractResource::class)->searchable()->nullable(),
                 BelongsTo::make('Fatura (Opcional)', 'invoice', resource: InvoiceResource::class)->searchable()->nullable(),
-                
                 Text::make('Categoria', 'category')->required()
-                    ->hint('Ex: Locação, Multa, Indenização'),
-                Text::make('Descrição', 'description')->required(),
+                    ->hint('Ex: LocaÃ§Ã£o, Multa, IndenizaÃ§Ã£o'),
+                Text::make('DescriÃ§Ã£o', 'description')->required(),
                 Number::make('Valor (R$)', 'amount')->step(0.01)->min(0)->required(),
                 Date::make('Data de Vencimento', 'due_date')->required(),
-                
                 Select::make('Status', 'status')->options([
                     'pendente' => 'Pendente',
                     'recebido' => 'Recebido',
                     'cancelado' => 'Cancelado'
                 ])->required(),
             ]),
-
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->withTime(),
-                Text::make('Método de Pagamento', 'payment_method')->hint('Pix, Cartão de Crédito, Boleto'),
-                Textarea::make('Observações', 'notes'),
+                Text::make('MÃ©todo de Pagamento', 'payment_method')->hint('Pix, CartÃ£o de CrÃ©dito, Boleto'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -90,7 +80,6 @@ class AccountReceivableFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -101,7 +90,6 @@ class AccountReceivableFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -112,7 +100,6 @@ class AccountReceivableFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

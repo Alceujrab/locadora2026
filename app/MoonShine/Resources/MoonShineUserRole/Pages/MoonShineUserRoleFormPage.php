@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\MoonShineUserRole\Pages;
-
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
@@ -13,7 +12,6 @@ use App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
-
 /**
  * @extends FormPage<MoonShineUserRoleResource, MoonshineUserRole>
  */
@@ -32,7 +30,6 @@ final class MoonShineUserRoleFormPage extends FormPage
             ]),
         ];
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Faq\Pages;
-
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Components\Table\TableBuilder;
@@ -14,15 +13,12 @@ use MoonShine\UI\Fields\ID;
 use App\MoonShine\Resources\Faq\FaqResource;
 use MoonShine\Support\ListOf;
 use Throwable;
-
-
 /**
  * @extends IndexPage<FaqResource>
  */
 class FaqIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
-
     /**
      * @return list<FieldContract>
      */
@@ -32,7 +28,6 @@ class FaqIndexPage extends IndexPage
             ID::make(),
         ];
     }
-
     /**
      * @return ListOf<ActionButtonContract>
      */
@@ -40,7 +35,6 @@ class FaqIndexPage extends IndexPage
     {
         return parent::buttons();
     }
-
     /**
      * @return list<FieldContract>
      */
@@ -48,7 +42,6 @@ class FaqIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<QueryTag>
      */
@@ -56,7 +49,6 @@ class FaqIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @return list<Metric>
      */
@@ -64,7 +56,6 @@ class FaqIndexPage extends IndexPage
     {
         return [];
     }
-
     /**
      * @param  TableBuilder  $component
      *
@@ -74,7 +65,6 @@ class FaqIndexPage extends IndexPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -85,7 +75,6 @@ class FaqIndexPage extends IndexPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -96,7 +85,6 @@ class FaqIndexPage extends IndexPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

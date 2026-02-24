@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Caution\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -22,8 +21,6 @@ use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Components\Layout\Grid;
 use MoonShine\UI\Components\Layout\Column;
 use Throwable;
-
-
 /**
  * @extends FormPage<CautionResource>
  */
@@ -49,8 +46,8 @@ class CautionFormPage extends FormPage
                     Column::make([
                         Select::make('Tipo', 'type')
                             ->options([
-                                'cartao' => 'Cartão de Crédito (Pré-Autorização)',
-                                'deposito' => 'Depósito Bancário/PIX',
+                                'cartao' => 'CartÃ£o de CrÃ©dito (PrÃ©-AutorizaÃ§Ã£o)',
+                                'deposito' => 'DepÃ³sito BancÃ¡rio/PIX',
                             ])
                             ->required(),
                         Number::make('Valor Retido', 'amount')
@@ -66,33 +63,29 @@ class CautionFormPage extends FormPage
                             ->required(),
                     ])->columnSpan(6),
                     Column::make([
-                        Text::make('ID Pré-Auth Mercado Pago', 'mp_preauth_id')
-                            ->hint('Código gerado pelo Mercado Pago'),
+                        Text::make('ID PrÃ©-Auth Mercado Pago', 'mp_preauth_id')
+                            ->hint('CÃ³digo gerado pelo Mercado Pago'),
                         Number::make('Valor Cobrado (se houver)', 'charged_amount')
                             ->step(0.01),
-                        Text::make('Motivo da Cobrança', 'charge_reason'),
-                        Textarea::make('Observações', 'notes'),
+                        Text::make('Motivo da CobranÃ§a', 'charge_reason'),
+                        Textarea::make('ObservaÃ§Ãµes', 'notes'),
                     ])->columnSpan(12)
                 ])
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -102,7 +95,6 @@ class CautionFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -113,7 +105,6 @@ class CautionFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -124,7 +115,6 @@ class CautionFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

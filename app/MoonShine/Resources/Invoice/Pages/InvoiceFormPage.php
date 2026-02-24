@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Invoice\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -25,8 +24,6 @@ use App\MoonShine\Resources\BranchResource;
 use App\Enums\InvoiceStatus;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<InvoiceResource>
  */
@@ -38,9 +35,9 @@ class InvoiceFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('Informações Gerais da Fatura', [
+            Box::make('InformaÃ§Ãµes Gerais da Fatura', [
                 ID::make(),
-                Text::make('Nº Fatura', 'invoice_number')->required(),
+                Text::make('NÂº Fatura', 'invoice_number')->required(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class)->required(),
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato Vinculado', 'contract', resource: ContractResource::class)->nullable()->searchable(),
@@ -48,7 +45,6 @@ class InvoiceFormPage extends FormPage
                 Date::make('Vencimento', 'due_date')->required(),
                 Text::make('Parcela', 'installment_number')->hint('Ex: 1/3'),
             ]),
-
             Box::make('Valores', [
                 Number::make('Valor Base (R$)', 'amount')->step(0.01)->min(0)->required(),
                 Number::make('Multa (R$)', 'penalty_amount')->step(0.01)->min(0),
@@ -56,29 +52,24 @@ class InvoiceFormPage extends FormPage
                 Number::make('Desconto (R$)', 'discount')->step(0.01)->min(0),
                 Number::make('Total Final (R$)', 'total')->step(0.01)->min(0)->required(),
             ]),
-
-            Box::make('Nota Fiscal / Integração', [
-                Text::make('Nº NFS-e', 'nfse_number'),
-                Textarea::make('Observações', 'notes'),
+            Box::make('Nota Fiscal / IntegraÃ§Ã£o', [
+                Text::make('NÂº NFS-e', 'nfse_number'),
+                Textarea::make('ObservaÃ§Ãµes', 'notes'),
             ]),
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -88,7 +79,6 @@ class InvoiceFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -99,7 +89,6 @@ class InvoiceFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -110,7 +99,6 @@ class InvoiceFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

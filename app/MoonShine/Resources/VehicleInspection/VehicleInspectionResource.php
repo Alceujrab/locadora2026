@@ -3,13 +3,11 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\VehicleInspection;
-
 use Illuminate\Database\Eloquent\Model;
 use App\Models\VehicleInspection;
-use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionIndexPage;
-use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionFormPage;
-use App\MoonShine\Resources\VehicleInspection\Pages\VehicleInspectionDetailPage;
-
+use MoonShine\Laravel\Pages\Crud\IndexPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
@@ -27,116 +25,101 @@ use App\MoonShine\Resources\UserResource;
 use App\MoonShine\Resources\InspectionItem\InspectionItemResource;
 use MoonShine\UI\Components\Layout\Box;
 use App\Enums\InspectionType;
-
 /**
  * @extends ModelResource<VehicleInspection, VehicleInspectionIndexPage, VehicleInspectionFormPage, VehicleInspectionDetailPage>
  */
 class VehicleInspectionResource extends ModelResource
 {
     protected string $model = VehicleInspection::class;
-
-    protected string $title = 'Vistorias de Veículos';
-    
+    protected string $title = 'Vistorias de VeÃ­culos';
     /**
      * @return list<class-string<PageContract>>
      */
     protected function pages(): array
     {
         return [
-            VehicleInspectionIndexPage::class,
-            VehicleInspectionFormPage::class,
-            VehicleInspectionDetailPage::class,
+            IndexPage::class,
+            FormPage::class,
+            DetailPage::class,
         ];
     }
-
     public function indexFields(): iterable
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
             Date::make('Data', 'inspection_date')->format('d/m/Y H:i'),
             Text::make('Status', 'status'),
         ];
     }
-
     public function formFields(): iterable
     {
         return [
             Box::make('Dados da Vistoria', [
                 ID::make(),
-                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
+                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable()->searchable(),
                 BelongsTo::make('Inspetor', 'inspector', resource: UserResource::class)->required()->searchable(),
                 Enum::make('Tipo', 'type')->attach(InspectionType::class)->required(),
                 Date::make('Data da Vistoria', 'inspection_date')->withTime()->required(),
             ]),
-            Box::make('Estado do Veículo', [
+            Box::make('Estado do VeÃ­culo', [
                 Number::make('Quilometragem', 'mileage')->min(0)->required(),
-                Number::make('Nível de Combustível (%)', 'fuel_level')->min(0)->max(100)->required(),
-                Text::make('Condição Geral', 'overall_condition')->required(),
-                Textarea::make('Observações Gerais', 'notes'),
-                Enum::make('Status', 'status')->attach(['rascunho' => 'Rascunho', 'concluida' => 'Concluída'])->required(),
+                Number::make('NÃ­vel de CombustÃ­vel (%)', 'fuel_level')->min(0)->max(100)->required(),
+                Text::make('CondiÃ§Ã£o Geral', 'overall_condition')->required(),
+                Textarea::make('ObservaÃ§Ãµes Gerais', 'notes'),
+                Enum::make('Status', 'status')->attach(['rascunho' => 'Rascunho', 'concluida' => 'ConcluÃ­da'])->required(),
             ]),
             HasMany::make('Itens Avaliados', 'items', resource: InspectionItemResource::class)
                 ->creatable()
         ];
     }
-
     public function detailFields(): iterable
     {
         return [
             ...$this->indexFields(),
             Number::make('Quilometragem', 'mileage'),
-            Number::make('Combustível %', 'fuel_level'),
-            Text::make('Condição Geral', 'overall_condition'),
-            Textarea::make('Observações', 'notes'),
+            Number::make('CombustÃ­vel %', 'fuel_level'),
+            Text::make('CondiÃ§Ã£o Geral', 'overall_condition'),
+            Textarea::make('ObservaÃ§Ãµes', 'notes'),
             HasMany::make('Itens Avaliados', 'items', resource: InspectionItemResource::class)
         ];
     }
-
     public function filters(): array
     {
         return [
-            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)->nullable(),
+            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
         ];
     }
-
     protected function afterSave(DataWrapperContract $item, FieldsContract $fields): DataWrapperContract
     {
         /** @var \App\Models\VehicleInspection $model */
         $model = $item->toModel();
-
         if ($model->type === InspectionType::RETURN && $model->status === 'concluida') {
             $contract = $model->contract;
-            
             if ($contract) {
                 // Atualizar KM do contrato
                 $contract->return_mileage = $model->mileage;
-                
-                // Buscar vistoria de saída para comparar combustível
+                // Buscar vistoria de saÃ­da para comparar combustÃ­vel
                 $checkoutInspection = \App\Models\VehicleInspection::where('contract_id', $contract->id)
                                         ->where('type', InspectionType::CHECKOUT)
                                         ->first();
-                
                 $fuelDiff = 0;
                 if ($checkoutInspection && $model->fuel_level < $checkoutInspection->fuel_level) {
                     $fuelDiff = $checkoutInspection->fuel_level - $model->fuel_level;
                 }
-
                 $extraCharges = 0;
                 $description = [];
-
-                // Exemplo simples de cobrança de Combustível (R$ 5,00 por %)
+                // Exemplo simples de cobranÃ§a de CombustÃ­vel (R$ 5,00 por %)
                 if ($fuelDiff > 0) {
                     $fuelCharge = $fuelDiff * 5.00;
                     $extraCharges += $fuelCharge;
                     $description[] = "Reabastecimento ({$fuelDiff}%) - R$ " . number_format($fuelCharge, 2, ',', '.');
                 }
-
                 // Salvar as avarias
                 // Note: assuming 'total_damage_value' is a method/attribute in model. 
                 // Using null coalesce in case it does not exist directly.
@@ -145,18 +128,15 @@ class VehicleInspectionResource extends ModelResource
                     $extraCharges += $damageTotal;
                     $description[] = "Avarias (Vistoria) - R$ " . number_format((float)$damageTotal, 2, ',', '.');
                 }
-
                 if ($extraCharges > 0) {
                     $contract->additional_charges = ($contract->additional_charges ?? 0) + $extraCharges;
                     $oldDesc = $contract->additional_charges_description ? $contract->additional_charges_description . ' | ' : '';
                     $contract->additional_charges_description = $oldDesc . implode(' | ', $description);
                     $contract->total += $extraCharges;
                 }
-                
                 $contract->save();
             }
         }
-
         return $item;
     }
 }

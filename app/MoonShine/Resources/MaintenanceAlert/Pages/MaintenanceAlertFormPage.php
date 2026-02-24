@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources\MaintenanceAlert\Pages;
-
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
@@ -15,8 +14,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Components\Layout\Box;
 use Throwable;
-
-
 /**
  * @extends FormPage<MaintenanceAlertResource>
  */
@@ -28,17 +25,16 @@ class MaintenanceAlertFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('Definição do Alerta', [
+            Box::make('DefiniÃ§Ã£o do Alerta', [
                 ID::make(),
-                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veículo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
+                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
                     ->required()
                     ->searchable(),
-                \MoonShine\UI\Fields\Text::make('Tipo de Manutenção', 'type')
-                    ->hint('Ex: Troca de Óleo, Alinhamento, Correia Dentada')
+                \MoonShine\UI\Fields\Text::make('Tipo de ManutenÃ§Ã£o', 'type')
+                    ->hint('Ex: Troca de Ã“leo, Alinhamento, Correia Dentada')
                     ->required(),
-                \MoonShine\UI\Fields\Textarea::make('Descrição', 'description'),
+                \MoonShine\UI\Fields\Textarea::make('DescriÃ§Ã£o', 'description'),
             ]),
-
             Box::make('Regras de Gatilho (Quando Avisar)', [
                 \MoonShine\UI\Fields\Number::make('Avisar a cada (KM)', 'trigger_km')
                     ->min(1)
@@ -49,37 +45,31 @@ class MaintenanceAlertFormPage extends FormPage
                     ->hint('Ex: 180 para avisar a cada 6 meses (Opcional)')
                     ->nullable(),
             ]),
-
-            Box::make('Última Revisão Realizada', [
-                \MoonShine\UI\Fields\Date::make('Data da Revisão', 'last_service_date')
+            Box::make('Ãšltima RevisÃ£o Realizada', [
+                \MoonShine\UI\Fields\Date::make('Data da RevisÃ£o', 'last_service_date')
                     ->nullable(),
-                \MoonShine\UI\Fields\Number::make('Hodômetro na Revisão (KM)', 'last_service_km')
+                \MoonShine\UI\Fields\Number::make('HodÃ´metro na RevisÃ£o (KM)', 'last_service_km')
                     ->min(0)
                     ->nullable(),
             ]),
-
-            Box::make('Configurações', [
+            Box::make('ConfiguraÃ§Ãµes', [
                 \MoonShine\UI\Fields\Switcher::make('Alerta Ativado', 'is_active')
                     ->default(true),
             ])
         ];
     }
-
     protected function buttons(): ListOf
     {
         return parent::buttons();
     }
-
     protected function formButtons(): ListOf
     {
         return parent::formButtons();
     }
-
     protected function rules(DataWrapperContract $item): array
     {
         return [];
     }
-
     /**
      * @param  FormBuilder  $component
      *
@@ -89,7 +79,6 @@ class MaintenanceAlertFormPage extends FormPage
     {
         return $component;
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -100,7 +89,6 @@ class MaintenanceAlertFormPage extends FormPage
             ...parent::topLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable
@@ -111,7 +99,6 @@ class MaintenanceAlertFormPage extends FormPage
             ...parent::mainLayer()
         ];
     }
-
     /**
      * @return list<ComponentContract>
      * @throws Throwable

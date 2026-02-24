@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
-
 use App\Models\VehicleCategory;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
@@ -17,20 +16,15 @@ use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Components\Layout\Box;
-
 /**
  * @extends ModelResource<VehicleCategory>
  */
 class VehicleCategoryResource extends ModelResource
 {
     protected string $model = VehicleCategory::class;
-
-    protected string $title = 'Categorias de Veículos';
-
+    protected string $title = 'Categorias de VeÃ­culos';
     protected string $column = 'name';
-
     protected bool $columnSelection = true;
-
     protected function pages(): array
     {
         return [
@@ -39,18 +33,16 @@ class VehicleCategoryResource extends ModelResource
             DetailPage::class,
         ];
     }
-
     public function search(): array
     {
         return ['name'];
     }
-
     protected function indexFields(): iterable
     {
         return [
             ID::make()->sortable(),
             Text::make('Nome', 'name')->sortable(),
-            Number::make('Diária', 'daily_rate')
+            Number::make('DiÃ¡ria', 'daily_rate')
                 ->sortable(),
             Number::make('Semanal', 'weekly_rate'),
             Number::make('Mensal', 'monthly_rate'),
@@ -60,18 +52,16 @@ class VehicleCategoryResource extends ModelResource
                 ->updateOnPreview(),
         ];
     }
-
     protected function formFields(): iterable
     {
         return [
             Box::make('Categoria', [
                 ID::make(),
                 Text::make('Nome', 'name')->required(),
-                Textarea::make('Descrição', 'description'),
+                Textarea::make('DescriÃ§Ã£o', 'description'),
             ]),
-
-            Box::make('Preços', [
-                Number::make('Diária (R$)', 'daily_rate')
+            Box::make('PreÃ§os', [
+                Number::make('DiÃ¡ria (R$)', 'daily_rate')
                     ->step(0.01)
                     ->min(0)
                     ->required(),
@@ -82,8 +72,7 @@ class VehicleCategoryResource extends ModelResource
                     ->step(0.01)
                     ->min(0),
             ]),
-
-            Box::make('Política de Km', [
+            Box::make('PolÃ­tica de Km', [
                 Select::make('Tipo Km', 'km_type')
                     ->options([
                         'livre' => 'Km Livre',
@@ -97,19 +86,16 @@ class VehicleCategoryResource extends ModelResource
                     ->step(0.01)
                     ->min(0),
             ]),
-
             Box::make('Status', [
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
         ];
     }
-
     protected function detailFields(): iterable
     {
         return $this->formFields();
     }
-
     protected function filters(): iterable
     {
         return [
@@ -122,7 +108,6 @@ class VehicleCategoryResource extends ModelResource
                 ->nullable(),
         ];
     }
-
     protected function rules($item): array
     {
         return [
