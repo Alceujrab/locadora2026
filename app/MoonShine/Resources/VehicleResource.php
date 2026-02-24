@@ -143,12 +143,12 @@ class VehicleResource extends ModelResource
     protected function detailFields(): iterable
     {
         return [
-            \MoonShine\UI\Components\Layout\Tabs::make([
-                \MoonShine\UI\Components\Layout\Tab::make('Visão Geral', [
+            \MoonShine\UI\Components\Tabs::make([
+                \MoonShine\UI\Components\Tabs\Tab::make('Visão Geral', [
                     // Reaproveitando a exata formatação do formFields para ficha técnica visual
                     $this->formFields()[0]
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Locações e Faturamento', [
+                \MoonShine\UI\Components\Tabs\Tab::make('Locações e Faturamento', [
                     \MoonShine\UI\Components\Layout\Grid::make([
                         \MoonShine\UI\Components\Layout\Column::make([
                             \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Faturamento Total (R$)')
@@ -164,18 +164,18 @@ class VehicleResource extends ModelResource
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Contratos', 'contracts', resource: ContractResource::class)
                         ->hideOnForm()
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Histórico Mecânico', [
+                \MoonShine\UI\Components\Tabs\Tab::make('Histórico Mecânico', [
                     \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Custo Total de Manutenção')
                         ->value(fn($vehicle) => 'R$ ' . number_format($vehicle->serviceOrders()->where('status', \App\Enums\ServiceOrderStatus::COMPLETED)->sum('total'), 2, ',', '.'))
                         ->icon('wrench-screwdriver'),
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ordens de Serviço', 'serviceOrders', resource: ServiceOrderResource::class)
                         ->hideOnForm()
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Multas de Trânsito', [
+                \MoonShine\UI\Components\Tabs\Tab::make('Multas de Trânsito', [
                     \MoonShine\Laravel\Fields\Relationships\HasMany::make('Multas', 'fines', resource: \App\MoonShine\Resources\FineTraffic\FineTrafficResource::class)
                         ->hideOnForm()
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Histórico (Auditoria)', [
+                \MoonShine\UI\Components\Tabs\Tab::make('Histórico (Auditoria)', [
                     \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Edições')
                 ]),
             ])
