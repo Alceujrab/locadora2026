@@ -9,7 +9,12 @@ use MoonShine\Laravel\Pages\LoginPage as BaseLoginPage;
 use MoonShine\UI\Components\Layout\Divider;
 use MoonShine\UI\Components\Layout\Flex;
 use MoonShine\UI\Components\ActionButton;
+use MoonShine\Core\Attributes\Layout;
+use MoonShine\Laravel\Layouts\LoginLayout;
+use MoonShine\MenuManager\Attributes\SkipMenu;
 
+#[SkipMenu]
+#[Layout(LoginLayout::class)]
 class LoginPage extends BaseLoginPage
 {
     /**

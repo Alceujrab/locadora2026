@@ -34,6 +34,7 @@ class SettingResource extends ModelResource
                     'socialite' => 'Social Login (Socialite)',
                     'whatsapp' => 'WhatsApp (Evolution API)',
                     'payment' => 'Gateway de Pagamento',
+                    'theme' => 'Visual e Cores do Painel',
                     'general' => 'Geral'
                 ])->required()->badge('purple'),
                 
