@@ -52,12 +52,13 @@ use App\MoonShine\Resources\SeoMetadata\SeoMetadataResource;
 
 final class MoonShineLayout extends AppLayout
 {
-    protected ?string $palette = PurplePalette::class;
+    protected ?string $palette = null;
 
     protected function assets(): array
     {
         return [
             ...parent::assets(),
+
         ];
     }
 
@@ -144,6 +145,34 @@ final class MoonShineLayout extends AppLayout
 
     protected function colors(ColorManagerContract $colorManager): void
     {
+        $colorManager->assign([
+            'primary' => '#d97706',      // amber-600 (Dourado/Laranja luxuoso)
+            'secondary' => '#1e293b',    // slate-800
+            'body' => '#0f172a',         // slate-900 (Fundo bem escuro)
+            'dark' => '#1e293b',
+            'light' => '#f8fafc',
+            'success' => '#10b981',
+            'info' => '#3b82f6',
+            'warning' => '#f59e0b',
+            'error' => '#ef4444',
+            
+            // Textos
+            'content' => '#94a3b8',      // slate-400
+            'title' => '#f8fafc',        // text-slate-50
+            
+            // Bordas e divisores
+            'borders' => '#334155',      // slate-700
+            'lines' => '#1e293b',
+            
+            // Sombras e blocos
+            'box' => '#1e293b',          // Cards escuros
+            
+            // Fundo de modais e selects
+            'modal' => '#0f172a',
+            'input' => '#334155',        // slate-700
+            'dropdown' => '#1e293b',
+        ]);
+
         parent::colors($colorManager);
     }
 }
