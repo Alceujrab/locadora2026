@@ -17,7 +17,7 @@ use MoonShine\Laravel\Layouts\AppLayout;
 use App\Models\User;
 use MoonShine\Laravel\Pages\Dashboard;
 use MoonShine\Laravel\Pages\ErrorPage;
-use MoonShine\Laravel\Pages\LoginPage;
+use App\MoonShine\Pages\LoginPage;
 use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
