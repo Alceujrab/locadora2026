@@ -22,7 +22,7 @@ use MoonShine\UI\Components\Layout\Box;
 class VehicleCategoryResource extends ModelResource
 {
     protected string $model = VehicleCategory::class;
-    protected string $title = 'Categorias de Veé­culos';
+    protected string $title = 'Categorias de Veículos';
     protected string $column = 'name';
     protected bool $columnSelection = true;
     protected function pages(): array
@@ -42,7 +42,7 @@ class VehicleCategoryResource extends ModelResource
         return [
             ID::make()->sortable(),
             Text::make('Nome', 'name')->sortable(),
-            Number::make('Dié¡ria', 'daily_rate')
+            Number::make('Diária', 'daily_rate')
                 ->sortable(),
             Number::make('Semanal', 'weekly_rate'),
             Number::make('Mensal', 'monthly_rate'),
@@ -60,8 +60,8 @@ class VehicleCategoryResource extends ModelResource
                 Text::make('Nome', 'name')->required(),
                 Textarea::make('Descrição', 'description'),
             ]),
-            Box::make('Preé§os', [
-                Number::make('Dié¡ria (R$)', 'daily_rate')
+            Box::make('Preços', [
+                Number::make('Diária (R$)', 'daily_rate')
                     ->step(0.01)
                     ->min(0)
                     ->required(),
@@ -72,7 +72,7 @@ class VehicleCategoryResource extends ModelResource
                     ->step(0.01)
                     ->min(0),
             ]),
-            Box::make('Polé­tica de Km', [
+            Box::make('Política de Km', [
                 Select::make('Tipo Km', 'km_type')
                     ->options([
                         'livre' => 'Km Livre',
@@ -82,7 +82,7 @@ class VehicleCategoryResource extends ModelResource
                 Number::make('Km Incluso/Dia', 'km_included')
                     ->step(1)
                     ->min(0),
-                Number::make('Valor Km Excedente (R$)', 'km_extra_rate')
+                Number::make('Valor Km Excedente (R$)', 'km_rate')
                     ->step(0.01)
                     ->min(0),
             ]),
