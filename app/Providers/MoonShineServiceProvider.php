@@ -45,6 +45,7 @@ use App\MoonShine\Resources\Testimonial\TestimonialResource;
 use App\MoonShine\Resources\PostCategory\PostCategoryResource;
 use App\MoonShine\Resources\Post\PostResource;
 use App\MoonShine\Resources\SeoMetadata\SeoMetadataResource;
+use App\MoonShine\Resources\SettingResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -88,6 +89,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 PostCategoryResource::class,
                 PostResource::class,
                 SeoMetadataResource::class,
+                SettingResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

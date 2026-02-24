@@ -138,6 +138,15 @@ final class MoonShineLayout extends AppLayout
                     ->icon('chart-pie'),
             ])->icon('document-chart-bar'),
 
+            MenuGroup::make('Configurações', [
+                MenuItem::make(\App\MoonShine\Resources\MoonShineUser\MoonShineUserResource::class, 'Usuários do Sistema')
+                    ->icon('users'),
+                MenuItem::make(\App\MoonShine\Resources\MoonShineUserRole\MoonShineUserRoleResource::class, 'Níveis de Acesso (Cargos)')
+                    ->icon('shield-exclamation'),
+                MenuItem::make(\App\MoonShine\Resources\SettingResource::class, 'Chaves e Integrações API')
+                    ->icon('key'),
+            ])->icon('cog-8-tooth'),
+
             MenuItem::make(AuditLogResource::class, 'Auditoria')
                 ->icon('shield-check'),
         ];
