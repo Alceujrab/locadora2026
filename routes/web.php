@@ -74,6 +74,10 @@ Route::prefix('cliente')->name('cliente.')->group(function () {
 });
 
 Route::middleware(\MoonShine\Laravel\Http\Middleware\Authenticate::class)->group(function () {
+    // Exportar ficha do cliente em PDF
+    Route::get('/admin/customer/{id}/pdf', \App\Http\Controllers\CustomerPdfController::class)
+        ->name('admin.customer.pdf');
+
     Route::get('/admin/api/calendar-events', function() {
         $reservations = \App\Models\Reservation::with(['vehicle', 'customer'])->get();
         $events = [];
