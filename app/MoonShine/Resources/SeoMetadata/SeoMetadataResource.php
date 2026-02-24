@@ -6,15 +6,14 @@ namespace App\MoonShine\Resources\SeoMetadata;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SeoMetadata;
-use App\MoonShine\Resources\SeoMetadata\Pages\SeoMetadataIndexPage;
-use App\MoonShine\Resources\SeoMetadata\Pages\SeoMetadataFormPage;
-use App\MoonShine\Resources\SeoMetadata\Pages\SeoMetadataDetailPage;
-
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
+use MoonShine\Laravel\Pages\Crud\IndexPage;
+use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 
 /**
- * @extends ModelResource<SeoMetadata, SeoMetadataIndexPage, SeoMetadataFormPage, SeoMetadataDetailPage>
+ * @extends ModelResource<SeoMetadata>
  */
 class SeoMetadataResource extends ModelResource
 {
@@ -71,9 +70,9 @@ class SeoMetadataResource extends ModelResource
     protected function pages(): array
     {
         return [
-            SeoMetadataIndexPage::class,
-            SeoMetadataFormPage::class,
-            SeoMetadataDetailPage::class,
+            IndexPage::class,
+            FormPage::class,
+            DetailPage::class,
         ];
     }
 }
