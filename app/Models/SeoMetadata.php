@@ -4,21 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use MoonShine\ChangeLog\Traits\HasChangeLog;
 
-class Page extends Model
+class SeoMetadata extends Model
 {
-    use HasFactory, HasChangeLog, SoftDeletes;
+    use HasFactory, HasChangeLog;
 
     protected $fillable = [
+        'url',
         'title',
-        'slug',
-        'content',
-        'is_published',
+        'description',
+        'keywords',
+        'og_image',
+        'is_active',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean',
+        'is_active' => 'boolean',
     ];
 }

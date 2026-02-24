@@ -46,7 +46,10 @@ class PageResource extends ModelResource
 
     protected function detailFields(): iterable
     {
-        return $this->formFields();
+        return [
+            ...$this->formFields(),
+            \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Atualizações'),
+        ];
     }
     /**
      * @return list<class-string<PageContract>>

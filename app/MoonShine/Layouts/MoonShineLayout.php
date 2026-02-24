@@ -48,6 +48,7 @@ use App\MoonShine\Resources\PostCategory\PostCategoryResource;
 use App\MoonShine\Resources\Post\PostResource;
 use MoonShine\MenuOptions\MenuElements;
 use MoonShine\UI\Components\Layout\{Box, Flash, Div, LayoutBlock, LayoutBuilder, Menu, Sidebar};
+use App\MoonShine\Resources\SeoMetadata\SeoMetadataResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -69,6 +70,7 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(PostCategoryResource::class, 'Categorias do Blog')->icon('tag'),
                 MenuItem::make(FaqResource::class, 'FAQs')->icon('question-mark-circle'),
                 MenuItem::make(TestimonialResource::class, 'Depoimentos')->icon('chat-bubble-bottom-center-text'),
+                MenuItem::make(SeoMetadataResource::class, 'Metadados (SEO)')->icon('magnifying-glass'),
             ])->icon('globe-alt'),
 
             MenuGroup::make('Cadastros', [

@@ -168,6 +168,10 @@ class VehicleResource extends ModelResource
                         ->creatable()
                         ->hideOnForm()
                 ]),
+                
+                \MoonShine\UI\Components\Layout\Tab::make('Histórico (Auditoria)', [
+                    \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Edições')
+                ]),
             ])
         ];
     }
