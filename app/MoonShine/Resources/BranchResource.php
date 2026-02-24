@@ -73,14 +73,14 @@ class BranchResource extends ModelResource
                 Phone::make('Telefone', 'phone'),
                 Phone::make('WhatsApp', 'whatsapp'),
             ]),
-            Box::make('Endereé§o', [
-                Text::make('CEP', 'zip_code'),
-                Text::make('Rua', 'street'),
-                Text::make('Néºmero', 'number'),
-                Text::make('Complemento', 'complement'),
-                Text::make('Bairro', 'neighborhood'),
-                Text::make('Cidade', 'city'),
-                Text::make('UF', 'state'),
+            Box::make('Endereço', [
+                Text::make('CEP', 'address_zip'),
+                Text::make('Rua', 'address_street'),
+                Text::make('Número', 'address_number'),
+                Text::make('Complemento', 'address_complement'),
+                Text::make('Bairro', 'address_neighborhood'),
+                Text::make('Cidade', 'address_city'),
+                Text::make('UF', 'address_state'),
             ]),
             Box::make('Status', [
                 Switcher::make('Ativo', 'is_active')
