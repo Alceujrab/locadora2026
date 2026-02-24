@@ -50,7 +50,7 @@ class SupportTicketResource extends ModelResource
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             Text::make('Assunto', 'subject'),
             Select::make('Prioridade', 'priority')
-                ->options(['baixa' => 'Baixa', 'media' => 'Mé©dia', 'alta' => 'Alta', 'urgente' => 'Urgente']),
+                ->options(['baixa' => 'Baixa', 'media' => 'Média', 'alta' => 'Alta', 'urgente' => 'Urgente']),
             Select::make('Status', 'status')
                 ->options(['aberto' => 'Aberto', 'em_andamento' => 'Em Andamento', 'resolvido' => 'Resolvido', 'fechado' => 'Fechado']),
             Text::make('Criado em', 'created_at')
@@ -66,15 +66,15 @@ class SupportTicketResource extends ModelResource
                     ->required(),
                 Select::make('Categoria', 'category')
                     ->options([
-                        'duvida' => 'Déºvida', 
+                        'duvida' => 'Dúvida', 
                         'financeiro' => 'Financeiro/Fatura', 
-                        'manutencao' => 'Manutenção/Veé­culo', 
+                        'manutencao' => 'Manutenção/Veículo', 
                         'emergencia' => 'Emergéªncia/Acidente',
                         'outros' => 'Outros'
                     ])->required(),
                 Text::make('Assunto', 'subject')->required(),
                 Select::make('Prioridade', 'priority')
-                    ->options(['baixa' => 'Baixa', 'media' => 'Mé©dia', 'alta' => 'Alta', 'urgente' => 'Urgente'])
+                    ->options(['baixa' => 'Baixa', 'media' => 'Média', 'alta' => 'Alta', 'urgente' => 'Urgente'])
                     ->required(),
                 Textarea::make('Descrição', 'description')->required(),
                 Select::make('Status', 'status')

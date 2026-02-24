@@ -106,7 +106,7 @@ class CustomerResource extends ModelResource
                 Date::make('Data Nascimento', 'birth_date'),
             ]),
             Box::make('Dados PJ', [
-                Text::make('Razé£o Social', 'company_name'),
+                Text::make('Razão Social', 'company_name'),
                 Text::make('Inscrição Estadual', 'state_registration'),
             ]),
             Box::make('Contato', [
@@ -119,18 +119,19 @@ class CustomerResource extends ModelResource
                 Text::make('Categoria CNH', 'cnh_category'),
                 Date::make('Validade CNH', 'cnh_expiry'),
             ]),
-            Box::make('Endereé§o', [
-                Text::make('CEP', 'address_zip_code'),
+            Box::make('Endereço', [
+                Text::make('CEP', 'address_zip'),
                 Text::make('Rua', 'address_street'),
-                Text::make('Néºmero', 'address_number'),
+                Text::make('Número', 'address_number'),
                 Text::make('Complemento', 'address_complement'),
                 Text::make('Bairro', 'address_neighborhood'),
                 Text::make('Cidade', 'address_city'),
                 Text::make('UF', 'address_state'),
             ]),
-            Box::make('Contato de Emergéªncia', [
-                Text::make('Nome Emergéªncia', 'emergency_contact_name'),
-                Phone::make('Telefone Emergéªncia', 'emergency_contact_phone'),
+            Box::make('Contato de Emergência', [
+                Text::make('Nome Emergência', 'emergency_contact_name'),
+                Phone::make('Telefone Emergência', 'emergency_contact_phone'),
+                Text::make('Relação', 'emergency_contact_relation'),
             ]),
             Box::make('Status', [
                 Switcher::make('Bloqueado', 'is_blocked'),

@@ -38,7 +38,7 @@ class AuditLogResource extends ModelResource
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'Exclué­do',
+                    'deleted' => 'Excluído',
                 ])
                 ->badge(fn(string $value) => match($value) {
                     'created' => 'success',
@@ -47,7 +47,7 @@ class AuditLogResource extends ModelResource
                     default => 'secondary',
                 })
                 ->sortable(),
-            Text::make('Usué¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema')
+            Text::make('Usuário', 'user_id', fn($item) => $item->user?->name ?? 'Sistema')
                 ->sortable(),
             Text::make('IP', 'ip'),
             Date::make('Data', 'created_at')
@@ -65,9 +65,9 @@ class AuditLogResource extends ModelResource
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'Exclué­do',
+                    'deleted' => 'Excluído',
                 ]),
-            Text::make('Usué¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema'),
+            Text::make('Usuário', 'user_id', fn($item) => $item->user?->name ?? 'Sistema'),
             Text::make('IP', 'ip'),
             Text::make('User Agent', 'user_agent'),
             Textarea::make('Valores Anteriores', 'old_values', fn($item) => json_encode($item->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)),
@@ -83,7 +83,7 @@ class AuditLogResource extends ModelResource
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'Exclué­do',
+                    'deleted' => 'Excluído',
                 ])
                 ->nullable(),
             Text::make('Modelo', 'model_type')

@@ -18,13 +18,13 @@ class PostResource extends ModelResource
 {
     protected string $model = Post::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Noté­cias / Blog';
+    protected string $title = 'Notícias / Blog';
     protected function indexFields(): iterable
     {
         return [
             \MoonShine\UI\Fields\ID::make()->sortable(),
             \MoonShine\UI\Fields\Image::make('Capa', 'image')->dir('posts'),
-            \MoonShine\UI\Fields\Text::make('Té­tulo', 'title'),
+            \MoonShine\UI\Fields\Text::make('Título', 'title'),
             \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Categoria', 'postCategory', resource: \App\MoonShine\Resources\PostCategory\PostCategoryResource::class)->badge('primary'),
             \MoonShine\UI\Fields\Switcher::make('Publicado', 'is_published')->updateOnPreview(),
         ];
@@ -43,7 +43,7 @@ class PostResource extends ModelResource
     {
         return [
             ...$this->formFields(),
-            \MoonShine\ChangeLog\Components\ChangeLog::make('Histé³rico de Atualizações'),
+            \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Atualizações'),
         ];
     }
     /**

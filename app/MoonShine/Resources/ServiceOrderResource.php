@@ -27,7 +27,7 @@ class ServiceOrderResource extends ModelResource
 {
     protected string $model = ServiceOrder::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Ordens de Servié§o';
+    protected string $title = 'Ordens de Serviço';
     protected string $column = 'id';
     protected bool $columnSelection = true;
     protected function pages(): array
@@ -46,7 +46,7 @@ class ServiceOrderResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class),
             Select::make('Tipo', 'type')
                 ->options([
@@ -63,10 +63,10 @@ class ServiceOrderResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            Box::make('Ordem de Servié§o', [
+            Box::make('Ordem de Serviço', [
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
-                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class)
@@ -80,9 +80,9 @@ class ServiceOrderResource extends ModelResource
                 Textarea::make('Descrição', 'description'),
             ]),
             Box::make('Valores', [
-                Number::make('Peé§as (R$)', 'items_total')
+                Number::make('Peças (R$)', 'items_total')
                     ->step(0.01)->min(0)->readonly(),
-                Number::make('Mé£o de Obra (R$)', 'labor_total')
+                Number::make('Mão de Obra (R$)', 'labor_total')
                     ->step(0.01)->min(0)->readonly(),
                 Number::make('Total (R$)', 'total')
                     ->step(0.01)->min(0)->readonly(),
@@ -91,14 +91,14 @@ class ServiceOrderResource extends ModelResource
                 Enum::make('Status', 'status')
                     ->attach(ServiceOrderStatus::class),
                 Date::make('Abertura', 'opened_at'),
-                Date::make('Conclusé£o', 'completed_at'),
+                Date::make('Conclusão', 'completed_at'),
             ]),
             Box::make('Nota Fiscal', [
                 Text::make('Nº NF', 'nf_number'),
                 Text::make('Arquivo NF', 'nf_path'),
                 Textarea::make('Observações', 'notes'),
             ]),
-            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Itens e Mé£o de Obra', 'items', resource: \App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource::class)
+            \MoonShine\Laravel\Fields\Relationships\HasMany::make('Itens e Mão de Obra', 'items', resource: \App\MoonShine\Resources\ServiceOrderItem\ServiceOrderItemResource::class)
                 ->creatable()
                 ->modifyTable(fn($table) => $table->cast(new \App\Models\ServiceOrderItem())) // Cast para as tabelas renderizarem melhor sem bugs no admin panel
         ];

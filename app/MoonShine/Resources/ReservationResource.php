@@ -59,7 +59,7 @@ class ReservationResource extends ModelResource
         return [
             ID::make()->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
-            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
             Date::make('Retirada', 'pickup_date')->sortable(),
             Date::make('Devolução', 'return_date')->sortable(),
             Number::make('Total (R$)', 'total')
@@ -77,7 +77,7 @@ class ReservationResource extends ModelResource
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)
                     ->required()
                     ->searchable(),
-                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
                 BelongsTo::make('Categoria', 'category', resource: VehicleCategoryResource::class),
@@ -89,7 +89,7 @@ class ReservationResource extends ModelResource
                 BelongsTo::make('Filial Devolução', 'returnBranch', resource: BranchResource::class),
             ]),
             Box::make('Valores', [
-                Number::make('Dié¡ria (R$)', 'daily_rate')
+                Number::make('Diária (R$)', 'daily_rate')
                     ->step(0.01)->min(0),
                 Number::make('Total Dias', 'total_days')
                     ->min(1),
@@ -139,10 +139,10 @@ class ReservationResource extends ModelResource
                                 $start = new \DateTime($pickupDate);
                                 $end = new \DateTime($returnDate);
                                 if (!$vehicle->isAvailableForPeriod($start, $end, $item?->id)) {
-                                    $fail('O veé­culo selecionado né£o esté¡ disponé­vel neste peré­odo.');
+                                    $fail('O veículo selecionado não está disponível neste período.');
                                 }
                             } catch (\Exception $e) {
-                                $fail('Datas de reserva invé¡lidas.');
+                                $fail('Datas de reserva inválidas.');
                             }
                         }
                     }
@@ -160,7 +160,7 @@ class ReservationResource extends ModelResource
             request()->input('return_date'),
             (int)request()->input('vehicle_id'),
             request()->filled('category_id') ? (int)request()->input('category_id') : null,
-            [], // Extras seré£o integrados posteriormente
+            [], // Extras serão integrados posteriormente
             (float)request()->input('discount', 0)
         );
         $item->total_days = $pricing['total_days'];
@@ -169,7 +169,7 @@ class ReservationResource extends ModelResource
         $item->extras_total = $pricing['extras_total'];
         $item->discount = $pricing['discount'];
         $item->total = $pricing['total'];
-        // Associar filial automaticamente se né£o informada
+        // Associar filial automaticamente se não informada
         if (!$item->branch_id && $item->vehicle_id) {
             $vehicle = \App\Models\Vehicle::find($item->vehicle_id);
             $item->branch_id = $vehicle?->branch_id;
@@ -212,7 +212,7 @@ class ReservationResource extends ModelResource
     public function formButtons(): iterable
     {
         return [
-            // Extra buttons na edição se necessé¡rio
+            // Extra buttons na edição se necessário
         ];
     }
     public function approve(MoonShineRequest $request): mixed
@@ -234,11 +234,11 @@ class ReservationResource extends ModelResource
         $item = $request->getResource()->getItem();
         $vehicle = $item->vehicle;
         if (!$vehicle) {
-            MoonShineUI::toast('Veé­culo né£o encontrado na reserva.', 'error');
+            MoonShineUI::toast('Veículo não encontrado na reserva.', 'error');
             return back();
         }
         if ($item->contract()->exists()) {
-            MoonShineUI::toast('Jé¡ existe um contrato gerado para esta reserva.', 'error');
+            MoonShineUI::toast('Já existe um contrato gerado para esta reserva.', 'error');
             return back();
         }
         $contract = \App\Models\Contract::create([

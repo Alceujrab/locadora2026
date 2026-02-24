@@ -79,7 +79,7 @@ class VehicleResource extends ModelResource
             Box::make('Identificação', [
                 Text::make('Marca', 'brand')->required(),
                 Text::make('Modelo', 'model')->required(),
-                Number::make('Ano Fabricação', 'year_fab')
+                Number::make('Ano Fabricação', 'year_manufacture')
                     ->min(1900)->max(2030),
                 Number::make('Ano Modelo', 'year_model')
                     ->min(1900)->max(2030),
@@ -127,9 +127,9 @@ class VehicleResource extends ModelResource
                 Date::make('Data Compra', 'purchase_date'),
             ]),
             Box::make('Documentação', [
-                Text::make('Nº CRLV', 'crlv_number'),
-                Date::make('Validade CRLV', 'crlv_expiry'),
-                Date::make('Validade IPVA', 'ipva_expiry'),
+                Date::make('Validade IPVA', 'ipva_due_date'),
+                Date::make('Licenciamento', 'licensing_due_date'),
+                Date::make('Validade Seguro', 'insurance_expiry_date'),
             ]),
             Box::make('Observações', [
                 Textarea::make('Observações', 'notes'),

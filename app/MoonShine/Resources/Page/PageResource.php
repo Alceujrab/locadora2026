@@ -18,12 +18,12 @@ class PageResource extends ModelResource
 {
     protected string $model = Page::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Pé¡ginas Institucionais';
+    protected string $title = 'Páginas Institucionais';
     protected function indexFields(): iterable
     {
         return [
             \MoonShine\UI\Fields\ID::make()->sortable(),
-            \MoonShine\UI\Fields\Text::make('Té­tulo', 'title'),
+            \MoonShine\UI\Fields\Text::make('Título', 'title'),
             \MoonShine\UI\Fields\Text::make('Slug', 'slug'),
             \MoonShine\UI\Fields\Switcher::make('Publicado', 'is_published')->updateOnPreview(),
         ];
@@ -43,7 +43,7 @@ class PageResource extends ModelResource
     {
         return [
             ...$this->formFields(),
-            \MoonShine\ChangeLog\Components\ChangeLog::make('Histé³rico de Atualizações'),
+            \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Atualizações'),
         ];
     }
     /**

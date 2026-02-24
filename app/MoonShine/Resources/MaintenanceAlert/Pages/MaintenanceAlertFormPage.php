@@ -27,7 +27,7 @@ class MaintenanceAlertFormPage extends FormPage
         return [
             Box::make('Definição do Alerta', [
                 ID::make(),
-                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veé­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
+                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veículo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
                     ->required()
                     ->searchable(),
                 \MoonShine\UI\Fields\Text::make('Tipo de Manutenção', 'type')
@@ -45,10 +45,10 @@ class MaintenanceAlertFormPage extends FormPage
                     ->hint('Ex: 180 para avisar a cada 6 meses (Opcional)')
                     ->nullable(),
             ]),
-            Box::make('éšltima Revisé£o Realizada', [
-                \MoonShine\UI\Fields\Date::make('Data da Revisé£o', 'last_service_date')
+            Box::make('éšltima Revisão Realizada', [
+                \MoonShine\UI\Fields\Date::make('Data da Revisão', 'last_service_date')
                     ->nullable(),
-                \MoonShine\UI\Fields\Number::make('Hodé´metro na Revisé£o (KM)', 'last_service_km')
+                \MoonShine\UI\Fields\Number::make('Hodômetro na Revisão (KM)', 'last_service_km')
                     ->min(0)
                     ->nullable(),
             ]),

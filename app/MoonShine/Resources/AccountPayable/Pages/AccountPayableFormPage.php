@@ -38,7 +38,7 @@ class AccountPayableFormPage extends FormPage
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class)->required()->searchable(),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class)->searchable()->nullable(),
-                BelongsTo::make('Veé­culo (Opcional)', 'vehicle', resource: VehicleResource::class)->searchable()->nullable(),
+                BelongsTo::make('Veículo (Opcional)', 'vehicle', resource: VehicleResource::class)->searchable()->nullable(),
                 Text::make('Categoria', 'category')->required()
                     ->hint('Ex: Manutenção, Imposto, Operacional'),
                 Text::make('Descrição', 'description')->required(),
@@ -52,7 +52,7 @@ class AccountPayableFormPage extends FormPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Pagamento', 'paid_at')->withTime(),
-                Text::make('Mé©todo de Pagamento', 'payment_method')->hint('Boleto, Pix, Carté£o, Dinheiro'),
+                Text::make('Método de Pagamento', 'payment_method')->hint('Boleto, Pix, Cartão, Dinheiro'),
                 Textarea::make('Observações', 'notes'),
             ]),
         ];

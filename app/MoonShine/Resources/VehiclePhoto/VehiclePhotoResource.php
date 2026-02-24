@@ -18,7 +18,7 @@ class VehiclePhotoResource extends ModelResource
 {
     protected string $model = VehiclePhoto::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Fotos do Veé­culo';
+    protected string $title = 'Fotos do Veículo';
     protected function indexFields(): iterable
     {
         return [
@@ -31,7 +31,7 @@ class VehiclePhotoResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veé­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veículo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
             \MoonShine\UI\Fields\Image::make('Foto', 'path')->dir('vehicles')->removable()->required(),
             \MoonShine\UI\Fields\Text::make('Legenda', 'filename'),
             \MoonShine\UI\Fields\Number::make('Posição', 'position')->default(0),

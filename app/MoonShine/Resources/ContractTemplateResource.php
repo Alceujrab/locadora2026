@@ -41,7 +41,7 @@ class ContractTemplateResource extends ModelResource
         return [
             ID::make()->sortable(),
             Text::make('Nome', 'name')->sortable(),
-            Switcher::make('Padré£o', 'is_default')
+            Switcher::make('Padrão', 'is_default')
                 ->sortable(),
             Switcher::make('Ativo', 'is_active')
                 ->sortable()
@@ -54,13 +54,13 @@ class ContractTemplateResource extends ModelResource
             Box::make('Template', [
                 ID::make(),
                 Text::make('Nome', 'name')->required(),
-                Textarea::make('Conteéºdo', 'content')
+                Textarea::make('Conteúdo', 'content')
                     ->required(),
-                Text::make('Varié¡veis', 'variables')
-                    ->hint('Separar por vé­rgula: {{cliente_nome}}, {{veiculo_placa}}'),
+                Text::make('Variáveis', 'variables')
+                    ->hint('Separar por vírgula: {{cliente_nome}}, {{veiculo_placa}}'),
             ]),
             Box::make('Status', [
-                Switcher::make('Padré£o', 'is_default'),
+                Switcher::make('Padrão', 'is_default'),
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),

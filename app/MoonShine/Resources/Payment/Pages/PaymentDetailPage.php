@@ -34,7 +34,7 @@ class PaymentDetailPage extends DetailPage
             Box::make('Dados do Pagamento', [
                 ID::make(),
                 BelongsTo::make('Fatura Recebida', 'invoice', resource: InvoiceResource::class),
-                Enum::make('Mé©todo de Pagamento', 'method')->attach(PaymentMethod::class),
+                Enum::make('Método de Pagamento', 'method')->attach(PaymentMethod::class),
                 Number::make('Valor Pago (R$)', 'amount'),
                 Date::make('Data e Hora', 'paid_at')->format('d/m/Y H:i'),
             ]),
@@ -48,7 +48,7 @@ class PaymentDetailPage extends DetailPage
                 Number::make('Valor Reembolsado', 'refund_amount'),
                 Textarea::make('Anotações', 'notes'),
             ]),
-            Box::make('PIX Cobrané§a', [
+            Box::make('PIX Cobrança', [
                 Preview::make('QR Code', 'pix_qr_code_base64', function($item) {
                     if (!$item->pix_qr_code_base64) return '';
                     $src = str_starts_with($item->pix_qr_code_base64, 'data:image') 

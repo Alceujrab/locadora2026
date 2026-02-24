@@ -37,15 +37,15 @@ class VehicleInspectionDetailPage extends DetailPage
         return [
             Box::make('Informações Gerais', [
                 ID::make(),
-                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
+                BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
                 Enum::make('Tipo de Vistoria', 'type')->attach(InspectionType::class),
                 Date::make('Data da Vistoria', 'inspection_date')->format('d/m/Y H:i'),
                 BelongsTo::make('Vistoriador', 'inspector', resource: MoonShineUserResource::class),
             ]),
-            Box::make('Condições do Veé­culo', [
+            Box::make('Condições do Veículo', [
                 Number::make('Quilometragem', 'mileage'),
-                Text::make('Né­vel de Combusté­vel', 'fuel_level'),
+                Text::make('Nível de Combustível', 'fuel_level'),
                 Text::make('Condição Geral', 'overall_condition'),
                 Textarea::make('Observações', 'notes'),
             ]),

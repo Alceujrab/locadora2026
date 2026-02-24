@@ -26,7 +26,7 @@ class FineTrafficResource extends ModelResource
 {
     protected string $model = FineTraffic::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Multas de Tré¢nsito';
+    protected string $title = 'Multas de Trânsito';
     protected string $column = 'auto_infraction_number';
     protected SortDirection $sortDirection = SortDirection::DESC;
     public function getActiveActions(): array
@@ -43,12 +43,12 @@ class FineTrafficResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
+            BelongsTo::make('Veículo', 'vehicle', fn($item) => $item->plate ?? $item->id)
                 ->sortable(),
             BelongsTo::make('Cliente', 'customer', fn($item) => $item->name ?? $item->id)
                 ->sortable(),
             Text::make('Nº Auto Infração', 'auto_infraction_number'),
-            Text::make('Cé³digo', 'fine_code'),
+            Text::make('Código', 'fine_code'),
             Number::make('Valor (R$)', 'amount')
                 ->sortable(),
             Date::make('Data Infração', 'fine_date')
@@ -84,7 +84,7 @@ class FineTrafficResource extends ModelResource
     {
         return [
             ID::make(),
-            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate . ' - ' . ($item->brand ?? '') . ' ' . ($item->model ?? ''))
+            BelongsTo::make('Veículo', 'vehicle', fn($item) => $item->plate . ' - ' . ($item->brand ?? '') . ' ' . ($item->model ?? ''))
                 ->required()
                 ->searchable(),
             BelongsTo::make('Contrato', 'contract', fn($item) => $item->contract_number ?? 'Contrato #' . $item->id)
@@ -95,7 +95,7 @@ class FineTrafficResource extends ModelResource
                 ->searchable(),
             Text::make('Nº Auto Infração', 'auto_infraction_number')
                 ->required(),
-            Text::make('Cé³digo da Multa', 'fine_code'),
+            Text::make('Código da Multa', 'fine_code'),
             Text::make('Descrição', 'description')
                 ->required(),
             Number::make('Valor (R$)', 'amount')
@@ -134,7 +134,7 @@ class FineTrafficResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
+            BelongsTo::make('Veículo', 'vehicle', fn($item) => $item->plate ?? $item->id)
                 ->nullable(),
             Select::make('Status', 'status')
                 ->options([
@@ -184,7 +184,7 @@ class FineTrafficResource extends ModelResource
         // Criar Conta a Receber (Cobrar do Cliente)
         AccountReceivable::create([
             'customer_id' => $item->customer_id,
-            'description' => 'Repasse de Multa de Tré¢nsito: ' . $item->auto_infraction_number,
+            'description' => 'Repasse de Multa de Trânsito: ' . $item->auto_infraction_number,
             'amount' => $item->amount,
             'due_date' => now()->addDays(10), // Vencimento em 10 dias
             'status' => 'pendente',
@@ -197,11 +197,11 @@ class FineTrafficResource extends ModelResource
     {
         $item = $request->getResource()->getItem();
         $item->update(['status' => 'pago']);
-        // Criar Conta a Pagar (Para o Detran/é“rgé£o de autuação)
-        // (Seria ideal associar a um 'Supplier' do Detran, aqui deixaremos supplier_id null se né£o houver um padré£o)
+        // Criar Conta a Pagar (Para o Detran/é“rgão de autuação)
+        // (Seria ideal associar a um 'Supplier' do Detran, aqui deixaremos supplier_id null se não houver um padrão)
         AccountPayable::create([
             'supplier_id' => null, // Poderia buscar um supplier com nome "DETRAN"
-            'description' => 'Pagamento de Multa de Tré¢nsito: ' . $item->auto_infraction_number,
+            'description' => 'Pagamento de Multa de Trânsito: ' . $item->auto_infraction_number,
             'amount' => $item->amount,
             'due_date' => $item->due_date ?? now(),
             'status' => 'pendente', // Deixa pendente pro financeiro apenas baixar

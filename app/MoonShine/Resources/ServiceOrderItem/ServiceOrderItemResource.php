@@ -18,8 +18,8 @@ class ServiceOrderItemResource extends ModelResource
 {
     protected string $model = ServiceOrderItem::class;
     protected ?PageType $redirectAfterSave = PageType::INDEX;
-    protected string $title = 'Itens de Servié§o';
-    // Oculta do menu esquerdo (sé³ acessé­vel por dentro da OS Pai)
+    protected string $title = 'Itens de Serviço';
+    // Oculta do menu esquerdo (só acessível por dentro da OS Pai)
     protected bool $isDisplayInMenu = false;
     /**
      * @return list<class-string<PageContract>>

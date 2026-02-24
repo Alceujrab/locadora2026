@@ -54,7 +54,7 @@ class AccountReceivableFormPage extends FormPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->withTime(),
-                Text::make('Mé©todo de Pagamento', 'payment_method')->hint('Pix, Carté£o de Cré©dito, Boleto'),
+                Text::make('Método de Pagamento', 'payment_method')->hint('Pix, Cartão de Crédito, Boleto'),
                 Textarea::make('Observações', 'notes'),
             ]),
         ];

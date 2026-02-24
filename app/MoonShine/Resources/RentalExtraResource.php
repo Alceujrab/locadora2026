@@ -47,10 +47,10 @@ class RentalExtraResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'Acessé³rio',
-                    'servico' => 'Servié§o',
+                    'acessorio' => 'Acessório',
+                    'servico' => 'Serviço',
                 ]),
-            Number::make('Dié¡ria (R$)', 'daily_rate')
+            Number::make('Diária (R$)', 'daily_rate')
                 ->sortable(),
             Switcher::make('Ativo', 'is_active')
                 ->sortable()
@@ -66,11 +66,11 @@ class RentalExtraResource extends ModelResource
                 Select::make('Tipo', 'type')
                     ->options([
                         'seguro' => 'Seguro',
-                        'acessorio' => 'Acessé³rio',
-                        'servico' => 'Servié§o',
+                        'acessorio' => 'Acessório',
+                        'servico' => 'Serviço',
                     ])
                     ->required(),
-                Number::make('Dié¡ria (R$)', 'daily_rate')
+                Number::make('Diária (R$)', 'daily_rate')
                     ->step(0.01)->min(0)->required(),
                 Textarea::make('Descrição', 'description'),
                 Switcher::make('Ativo', 'is_active')
@@ -88,8 +88,8 @@ class RentalExtraResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'Acessé³rio',
-                    'servico' => 'Servié§o',
+                    'acessorio' => 'Acessório',
+                    'servico' => 'Serviço',
                 ])
                 ->nullable(),
             Switcher::make('Ativo', 'is_active'),

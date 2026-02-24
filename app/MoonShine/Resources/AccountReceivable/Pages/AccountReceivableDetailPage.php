@@ -54,7 +54,7 @@ class AccountReceivableDetailPage extends DetailPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->format('d/m/Y H:i'),
-                Text::make('Mé©todo de Pagamento', 'payment_method'),
+                Text::make('Método de Pagamento', 'payment_method'),
                 Textarea::make('Observações', 'notes'),
             ]),
         ];

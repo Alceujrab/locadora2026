@@ -56,7 +56,7 @@ class CautionResource extends ModelResource
                 return back();
             }
             if ($amount > $resourceItem->amount) {
-                MoonShineUI::toast('O valor né£o pode ser superior é  caução retida.', 'error');
+                MoonShineUI::toast('O valor não pode ser superior é  caução retida.', 'error');
                 return back();
             }
             $resourceItem->update([
@@ -67,14 +67,14 @@ class CautionResource extends ModelResource
             // Create an automatic Account Receivable for the charged caution
             AccountReceivable::create([
                 'customer_id' => $resourceItem->customer_id,
-                'description' => "Cobrané§a de Caução - Contrato {$resourceItem->contract_id}: {$reason}",
+                'description' => "Cobrança de Caução - Contrato {$resourceItem->contract_id}: {$reason}",
                 'amount' => $amount,
                 'due_date' => now(),
                 'received_at' => now(), // already "received" since it was a deposit or preauth capture
                 'status' => 'pago',
-                'notes' => 'Gerado automaticamente via registro de cobrané§a da Caução #' . $resourceItem->id,
+                'notes' => 'Gerado automaticamente via registro de cobrança da Caução #' . $resourceItem->id,
             ]);
-            MoonShineUI::toast('Cobrané§a registrada e lané§ada no Contas a Receber.', 'success');
+            MoonShineUI::toast('Cobrança registrada e lançada no Contas a Receber.', 'success');
             return back();
         });
     }

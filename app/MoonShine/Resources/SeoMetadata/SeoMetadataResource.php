@@ -24,7 +24,7 @@ class SeoMetadataResource extends ModelResource
         return [
             \MoonShine\UI\Fields\ID::make()->sortable(),
             \MoonShine\UI\Fields\Text::make('URL', 'url')->sortable(),
-            \MoonShine\UI\Fields\Text::make('Té­tulo Principal', 'title'),
+            \MoonShine\UI\Fields\Text::make('Título Principal', 'title'),
             \MoonShine\UI\Fields\Switcher::make('Ativo', 'is_active')->updateOnPreview(),
         ];
     }
@@ -35,14 +35,14 @@ class SeoMetadataResource extends ModelResource
                 \MoonShine\UI\Fields\Text::make('URL Relativa', 'url')
                     ->hint('Ex: /, /frota, /contato, /sobre')
                     ->required(),
-                \MoonShine\UI\Fields\Text::make('Té­tulo SEO (Meta Title)', 'title')
-                    ->hint('Tamanho ideal: até© 60 caracteres')
+                \MoonShine\UI\Fields\Text::make('Título SEO (Meta Title)', 'title')
+                    ->hint('Tamanho ideal: até 60 caracteres')
                     ->required(),
                 \MoonShine\UI\Fields\Textarea::make('Descrição (Meta Description)', 'description')
-                    ->hint('Tamanho ideal: entre 150 e 160 caracteres. Este é© o resumo exibido no Google.')
+                    ->hint('Tamanho ideal: entre 150 e 160 caracteres. Este é o resumo exibido no Google.')
                     ->required(),
                 \MoonShine\UI\Fields\Text::make('Palavras-chave (Keywords)', 'keywords')
-                    ->hint('Separe por vé­rgulas (Carros, Locadora, Aluguel)')
+                    ->hint('Separe por vírgulas (Carros, Locadora, Aluguel)')
                     ->nullable(),
                 \MoonShine\UI\Fields\Image::make('Imagem Facebook/App (Open Graph)', 'og_image')
                     ->dir('seo')
@@ -56,7 +56,7 @@ class SeoMetadataResource extends ModelResource
     {
         return [
             ...$this->formFields(),
-            \MoonShine\ChangeLog\Components\ChangeLog::make('Histé³rico de Modificações SEO'),
+            \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Modificações SEO'),
         ];
     }
     /**

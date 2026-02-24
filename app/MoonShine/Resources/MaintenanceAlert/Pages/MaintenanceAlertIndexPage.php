@@ -26,10 +26,10 @@ class MaintenanceAlertIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veé­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veículo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
             \MoonShine\UI\Fields\Text::make('Tipo', 'type'),
             \MoonShine\UI\Fields\Number::make('Gatilho (KM)', 'trigger_km')->badge('purple'),
-            \MoonShine\UI\Fields\Date::make('éšltima Revisé£o', 'last_service_date')->format('d/m/Y'),
+            \MoonShine\UI\Fields\Date::make('éšltima Revisão', 'last_service_date')->format('d/m/Y'),
             \MoonShine\UI\Fields\Switcher::make('Ativo', 'is_active'),
         ];
     }
