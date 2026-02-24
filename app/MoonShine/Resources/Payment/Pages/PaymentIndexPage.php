@@ -34,7 +34,7 @@ class PaymentIndexPage extends IndexPage
         return [
             ID::make()->sortable(),
             BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class),
-            Enum::make('MÃ©todo', 'method')->attach(PaymentMethod::class)->sortable(),
+            Enum::make('Mé©todo', 'method')->attach(PaymentMethod::class)->sortable(),
             Number::make('Valor R$', 'amount')->sortable()->badge('green'),
             Date::make('Data Pagamento', 'paid_at')->format('d/m/Y H:i')->sortable(),
             Text::make('Gateway (MP)', 'mp_payment_id')->badge('gray'),
@@ -54,7 +54,7 @@ class PaymentIndexPage extends IndexPage
     {
         return [
             BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class)->nullable(),
-            Enum::make('MÃ©todo', 'method')->attach(PaymentMethod::class)->nullable(),
+            Enum::make('Mé©todo', 'method')->attach(PaymentMethod::class)->nullable(),
         ];
     }
     /**

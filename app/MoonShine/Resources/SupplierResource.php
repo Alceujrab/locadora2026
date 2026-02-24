@@ -47,7 +47,7 @@ class SupplierResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'oficina' => 'Oficina',
-                    'pecas' => 'PeÃ§as',
+                    'pecas' => 'Peé§as',
                     'ambos' => 'Ambos',
                 ]),
             Text::make('Contato', 'contact_name'),
@@ -69,7 +69,7 @@ class SupplierResource extends ModelResource
                 Select::make('Tipo', 'type')
                     ->options([
                         'oficina' => 'Oficina',
-                        'pecas' => 'PeÃ§as',
+                        'pecas' => 'Peé§as',
                         'ambos' => 'Ambos',
                     ])
                     ->required(),
@@ -79,18 +79,18 @@ class SupplierResource extends ModelResource
                 Phone::make('Telefone', 'phone'),
                 Email::make('E-mail', 'email'),
             ]),
-            Box::make('EndereÃ§o', [
+            Box::make('Endereé§o', [
                 Text::make('CEP', 'zip_code'),
                 Text::make('Rua', 'street'),
-                Text::make('NÃºmero', 'number'),
+                Text::make('Néºmero', 'number'),
                 Text::make('Complemento', 'complement'),
                 Text::make('Bairro', 'neighborhood'),
                 Text::make('Cidade', 'city'),
                 Text::make('UF', 'state'),
             ]),
-            Box::make('InformaÃ§Ãµes', [
+            Box::make('Informações', [
                 Textarea::make('Especialidades', 'specialties'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Textarea::make('Observações', 'notes'),
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
@@ -106,7 +106,7 @@ class SupplierResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'oficina' => 'Oficina',
-                    'pecas' => 'PeÃ§as',
+                    'pecas' => 'Peé§as',
                     'ambos' => 'Ambos',
                 ])
                 ->nullable(),

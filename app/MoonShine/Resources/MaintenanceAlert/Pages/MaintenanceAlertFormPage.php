@@ -25,15 +25,15 @@ class MaintenanceAlertFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('DefiniÃ§Ã£o do Alerta', [
+            Box::make('Definição do Alerta', [
                 ID::make(),
-                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
+                \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veé­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class)
                     ->required()
                     ->searchable(),
-                \MoonShine\UI\Fields\Text::make('Tipo de ManutenÃ§Ã£o', 'type')
-                    ->hint('Ex: Troca de Ã“leo, Alinhamento, Correia Dentada')
+                \MoonShine\UI\Fields\Text::make('Tipo de Manutenção', 'type')
+                    ->hint('Ex: Troca de é“leo, Alinhamento, Correia Dentada')
                     ->required(),
-                \MoonShine\UI\Fields\Textarea::make('DescriÃ§Ã£o', 'description'),
+                \MoonShine\UI\Fields\Textarea::make('Descrição', 'description'),
             ]),
             Box::make('Regras de Gatilho (Quando Avisar)', [
                 \MoonShine\UI\Fields\Number::make('Avisar a cada (KM)', 'trigger_km')
@@ -45,14 +45,14 @@ class MaintenanceAlertFormPage extends FormPage
                     ->hint('Ex: 180 para avisar a cada 6 meses (Opcional)')
                     ->nullable(),
             ]),
-            Box::make('Ãšltima RevisÃ£o Realizada', [
-                \MoonShine\UI\Fields\Date::make('Data da RevisÃ£o', 'last_service_date')
+            Box::make('éšltima Revisé£o Realizada', [
+                \MoonShine\UI\Fields\Date::make('Data da Revisé£o', 'last_service_date')
                     ->nullable(),
-                \MoonShine\UI\Fields\Number::make('HodÃ´metro na RevisÃ£o (KM)', 'last_service_km')
+                \MoonShine\UI\Fields\Number::make('Hodé´metro na Revisé£o (KM)', 'last_service_km')
                     ->min(0)
                     ->nullable(),
             ]),
-            Box::make('ConfiguraÃ§Ãµes', [
+            Box::make('Configurações', [
                 \MoonShine\UI\Fields\Switcher::make('Alerta Ativado', 'is_active')
                     ->default(true),
             ])

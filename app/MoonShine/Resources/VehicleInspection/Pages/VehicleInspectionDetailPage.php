@@ -35,19 +35,19 @@ class VehicleInspectionDetailPage extends DetailPage
     protected function fields(): iterable
     {
         return [
-            Box::make('InformaÃ§Ãµes Gerais', [
+            Box::make('Informações Gerais', [
                 ID::make(),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
                 Enum::make('Tipo de Vistoria', 'type')->attach(InspectionType::class),
                 Date::make('Data da Vistoria', 'inspection_date')->format('d/m/Y H:i'),
                 BelongsTo::make('Vistoriador', 'inspector', resource: MoonShineUserResource::class),
             ]),
-            Box::make('CondiÃ§Ãµes do VeÃ­culo', [
+            Box::make('Condições do Veé­culo', [
                 Number::make('Quilometragem', 'mileage'),
-                Text::make('NÃ­vel de CombustÃ­vel', 'fuel_level'),
-                Text::make('CondiÃ§Ã£o Geral', 'overall_condition'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Text::make('Né­vel de Combusté­vel', 'fuel_level'),
+                Text::make('Condição Geral', 'overall_condition'),
+                Textarea::make('Observações', 'notes'),
             ]),
             HasMany::make('Itens Inspecionados', 'items', resource: InspectionItemResource::class),
         ];

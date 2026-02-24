@@ -16,13 +16,13 @@ use MoonShine\Contracts\Core\PageContract;
 class PostResource extends ModelResource
 {
     protected string $model = Post::class;
-    protected string $title = 'NotÃ­cias / Blog';
+    protected string $title = 'Noté­cias / Blog';
     protected function indexFields(): iterable
     {
         return [
             \MoonShine\UI\Fields\ID::make()->sortable(),
             \MoonShine\UI\Fields\Image::make('Capa', 'image')->dir('posts'),
-            \MoonShine\UI\Fields\Text::make('TÃ­tulo', 'title'),
+            \MoonShine\UI\Fields\Text::make('Té­tulo', 'title'),
             \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Categoria', 'postCategory', resource: \App\MoonShine\Resources\PostCategory\PostCategoryResource::class)->badge('primary'),
             \MoonShine\UI\Fields\Switcher::make('Publicado', 'is_published')->updateOnPreview(),
         ];
@@ -41,7 +41,7 @@ class PostResource extends ModelResource
     {
         return [
             ...$this->formFields(),
-            \MoonShine\ChangeLog\Components\ChangeLog::make('HistÃ³rico de AtualizaÃ§Ãµes'),
+            \MoonShine\ChangeLog\Components\ChangeLog::make('Histé³rico de Atualizações'),
         ];
     }
     /**

@@ -32,7 +32,7 @@ class VehicleInspectionIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
             Date::make('Data Vistoria', 'inspection_date')->format('d/m/Y H:i')->sortable(),
@@ -51,7 +51,7 @@ class VehicleInspectionIndexPage extends IndexPage
     protected function filters(): iterable
     {
         return [
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class)->nullable(),
         ];
     }

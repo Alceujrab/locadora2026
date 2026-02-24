@@ -37,21 +37,21 @@ class VehicleInspectionFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('InformaÃ§Ãµes Gerais', [
+            Box::make('Informações Gerais', [
                 ID::make(),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable()->searchable(),
                 Enum::make('Tipo de Vistoria', 'type')->attach(InspectionType::class)->required(),
                 Date::make('Data da Vistoria', 'inspection_date')->withTime()->required(),
                 BelongsTo::make('Vistoriador', 'inspector', resource: MoonShineUserResource::class)->required()->searchable(),
             ]),
-            Box::make('CondiÃ§Ãµes do VeÃ­culo', [
+            Box::make('Condições do Veé­culo', [
                 Number::make('Quilometragem', 'mileage')->required()->min(0),
-                Text::make('NÃ­vel de CombustÃ­vel', 'fuel_level')->required()
+                Text::make('Né­vel de Combusté­vel', 'fuel_level')->required()
                     ->hint('Ex: 1/4, 1/2, 3/4, Cheio, Reserva'),
-                Text::make('CondiÃ§Ã£o Geral', 'overall_condition')->required()
+                Text::make('Condição Geral', 'overall_condition')->required()
                     ->hint('Ex: Excelente, Bom, Regular, Ruim'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Textarea::make('Observações', 'notes'),
             ]),
             HasMany::make('Itens Inspecionados', 'items', resource: InspectionItemResource::class)->creatable(),
         ];

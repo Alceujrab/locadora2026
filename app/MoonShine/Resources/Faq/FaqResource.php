@@ -23,7 +23,7 @@ class FaqResource extends ModelResource
             \MoonShine\UI\Fields\ID::make()->sortable(),
             \MoonShine\UI\Fields\Text::make('Pergunta', 'question'),
             \MoonShine\UI\Fields\Switcher::make('Ativo', 'is_active')->updateOnPreview(),
-            \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o', 'position')->sortable(),
+            \MoonShine\UI\Fields\Number::make('Posição', 'position')->sortable(),
         ];
     }
     protected function formFields(): iterable
@@ -32,7 +32,7 @@ class FaqResource extends ModelResource
             \MoonShine\UI\Components\Layout\Box::make([
                 \MoonShine\UI\Fields\Text::make('Pergunta', 'question')->required(),
                 \MoonShine\UI\Fields\Textarea::make('Resposta', 'answer')->required(),
-                \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o/Ordem', 'position')->default(0),
+                \MoonShine\UI\Fields\Number::make('Posição/Ordem', 'position')->default(0),
                 \MoonShine\UI\Fields\Switcher::make('Ativo no Site', 'is_active')->default(true),
             ])
         ];

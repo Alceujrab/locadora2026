@@ -48,7 +48,7 @@ class SupportTicketResource extends ModelResource
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             Text::make('Assunto', 'subject'),
             Select::make('Prioridade', 'priority')
-                ->options(['baixa' => 'Baixa', 'media' => 'MÃ©dia', 'alta' => 'Alta', 'urgente' => 'Urgente']),
+                ->options(['baixa' => 'Baixa', 'media' => 'Mé©dia', 'alta' => 'Alta', 'urgente' => 'Urgente']),
             Select::make('Status', 'status')
                 ->options(['aberto' => 'Aberto', 'em_andamento' => 'Em Andamento', 'resolvido' => 'Resolvido', 'fechado' => 'Fechado']),
             Text::make('Criado em', 'created_at')
@@ -64,17 +64,17 @@ class SupportTicketResource extends ModelResource
                     ->required(),
                 Select::make('Categoria', 'category')
                     ->options([
-                        'duvida' => 'DÃºvida', 
+                        'duvida' => 'Déºvida', 
                         'financeiro' => 'Financeiro/Fatura', 
-                        'manutencao' => 'ManutenÃ§Ã£o/VeÃ­culo', 
-                        'emergencia' => 'EmergÃªncia/Acidente',
+                        'manutencao' => 'Manutenção/Veé­culo', 
+                        'emergencia' => 'Emergéªncia/Acidente',
                         'outros' => 'Outros'
                     ])->required(),
                 Text::make('Assunto', 'subject')->required(),
                 Select::make('Prioridade', 'priority')
-                    ->options(['baixa' => 'Baixa', 'media' => 'MÃ©dia', 'alta' => 'Alta', 'urgente' => 'Urgente'])
+                    ->options(['baixa' => 'Baixa', 'media' => 'Mé©dia', 'alta' => 'Alta', 'urgente' => 'Urgente'])
                     ->required(),
-                Textarea::make('DescriÃ§Ã£o', 'description')->required(),
+                Textarea::make('Descrição', 'description')->required(),
                 Select::make('Status', 'status')
                     ->options(['aberto' => 'Aberto', 'em_andamento' => 'Em Andamento', 'resolvido' => 'Resolvido', 'fechado' => 'Fechado'])
                     ->default('aberto')

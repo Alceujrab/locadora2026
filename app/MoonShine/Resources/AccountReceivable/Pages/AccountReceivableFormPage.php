@@ -42,8 +42,8 @@ class AccountReceivableFormPage extends FormPage
                 BelongsTo::make('Contrato (Opcional)', 'contract', resource: ContractResource::class)->searchable()->nullable(),
                 BelongsTo::make('Fatura (Opcional)', 'invoice', resource: InvoiceResource::class)->searchable()->nullable(),
                 Text::make('Categoria', 'category')->required()
-                    ->hint('Ex: LocaÃ§Ã£o, Multa, IndenizaÃ§Ã£o'),
-                Text::make('DescriÃ§Ã£o', 'description')->required(),
+                    ->hint('Ex: Locação, Multa, Indenização'),
+                Text::make('Descrição', 'description')->required(),
                 Number::make('Valor (R$)', 'amount')->step(0.01)->min(0)->required(),
                 Date::make('Data de Vencimento', 'due_date')->required(),
                 Select::make('Status', 'status')->options([
@@ -54,8 +54,8 @@ class AccountReceivableFormPage extends FormPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->withTime(),
-                Text::make('MÃ©todo de Pagamento', 'payment_method')->hint('Pix, CartÃ£o de CrÃ©dito, Boleto'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Text::make('Mé©todo de Pagamento', 'payment_method')->hint('Pix, Carté£o de Cré©dito, Boleto'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

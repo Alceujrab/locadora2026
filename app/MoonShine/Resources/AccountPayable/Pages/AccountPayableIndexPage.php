@@ -34,7 +34,7 @@ class AccountPayableIndexPage extends IndexPage
         return [
             ID::make()->sortable(),
             BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class),
-            Text::make('DescriÃ§Ã£o', 'description'),
+            Text::make('Descrição', 'description'),
             Date::make('Vencimento', 'due_date')->format('d/m/Y')->sortable(),
             Number::make('Valor R$', 'amount')
                 ->sortable()

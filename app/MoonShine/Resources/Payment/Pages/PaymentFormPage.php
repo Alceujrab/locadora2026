@@ -37,21 +37,21 @@ class PaymentFormPage extends FormPage
             Box::make('Dados do Pagamento', [
                 ID::make(),
                 BelongsTo::make('Fatura Referente', 'invoice', resource: InvoiceResource::class)->required()->searchable(),
-                Enum::make('MÃ©todo de Pagamento', 'method')->attach(PaymentMethod::class)->required(),
+                Enum::make('Mé©todo de Pagamento', 'method')->attach(PaymentMethod::class)->required(),
                 Number::make('Valor Pago (R$)', 'amount')->step(0.01)->min(0)->required(),
                 Date::make('Data e Hora do Pagamento', 'paid_at')->withTime()->required(),
             ]),
-            Box::make('IntegraÃ§Ãµes (Mercado Pago / Outros)', [
+            Box::make('Integrações (Mercado Pago / Outros)', [
                 Text::make('ID MP (Gateway)', 'mp_payment_id'),
                 Text::make('Status MP', 'mp_status'),
-                Text::make('ID TransaÃ§Ã£o PrÃ³pria', 'transaction_id'),
+                Text::make('ID Transação Pré³pria', 'transaction_id'),
             ]),
             Box::make('Reembolsos & Notas', [
                 Date::make('Data do Reembolso', 'refunded_at')->withTime(),
                 Number::make('Valor Reembolsado', 'refund_amount')->step(0.01)->min(0),
-                Textarea::make('AnotaÃ§Ãµes Internas', 'notes'),
+                Textarea::make('Anotações Internas', 'notes'),
             ]),
-            Box::make('PIX CobranÃ§a', [
+            Box::make('PIX Cobrané§a', [
                 Preview::make('QR Code', 'pix_qr_code_base64', function($item) {
                     if (!$item->pix_qr_code_base64) return '';
                     $src = str_starts_with($item->pix_qr_code_base64, 'data:image') 

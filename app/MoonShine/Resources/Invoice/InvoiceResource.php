@@ -44,7 +44,7 @@ class InvoiceResource extends ModelResource
     public function generatePix(Invoice $invoice, MercadoPagoService $mpService)
     {
         if ($invoice->status === \App\Enums\InvoiceStatus::PAID) {
-            return MoonShineJsonResponse::make()->toast('Fatura jÃ¡ estÃ¡ paga.', 'error');
+            return MoonShineJsonResponse::make()->toast('Fatura jé¡ esté¡ paga.', 'error');
         }
         // Criar um pagamento local pendente
         $payment = Payment::create([

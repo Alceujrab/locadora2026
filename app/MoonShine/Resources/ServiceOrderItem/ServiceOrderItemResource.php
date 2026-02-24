@@ -16,8 +16,8 @@ use MoonShine\Contracts\Core\PageContract;
 class ServiceOrderItemResource extends ModelResource
 {
     protected string $model = ServiceOrderItem::class;
-    protected string $title = 'Itens de ServiÃ§o';
-    // Oculta do menu esquerdo (sÃ³ acessÃ­vel por dentro da OS Pai)
+    protected string $title = 'Itens de Servié§o';
+    // Oculta do menu esquerdo (sé³ acessé­vel por dentro da OS Pai)
     protected bool $isDisplayInMenu = false;
     /**
      * @return list<class-string<PageContract>>

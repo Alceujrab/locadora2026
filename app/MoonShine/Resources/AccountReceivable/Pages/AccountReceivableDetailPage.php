@@ -39,7 +39,7 @@ class AccountReceivableDetailPage extends DetailPage
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
                 BelongsTo::make('Fatura', 'invoice', resource: InvoiceResource::class),
                 Text::make('Categoria', 'category'),
-                Text::make('DescriÃ§Ã£o', 'description'),
+                Text::make('Descrição', 'description'),
                 Number::make('Valor (R$)', 'amount'),
                 Date::make('Data de Vencimento', 'due_date')->format('d/m/Y'),
                 Select::make('Status', 'status')->options([
@@ -54,8 +54,8 @@ class AccountReceivableDetailPage extends DetailPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Recebimento', 'received_at')->format('d/m/Y H:i'),
-                Text::make('MÃ©todo de Pagamento', 'payment_method'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Text::make('Mé©todo de Pagamento', 'payment_method'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

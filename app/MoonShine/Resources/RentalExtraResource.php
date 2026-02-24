@@ -22,7 +22,7 @@ use MoonShine\UI\Components\Layout\Box;
 class RentalExtraResource extends ModelResource
 {
     protected string $model = RentalExtra::class;
-    protected string $title = 'Extras de LocaÃ§Ã£o';
+    protected string $title = 'Extras de Locação';
     protected string $column = 'name';
     protected bool $columnSelection = true;
     protected function pages(): array
@@ -45,10 +45,10 @@ class RentalExtraResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'AcessÃ³rio',
-                    'servico' => 'ServiÃ§o',
+                    'acessorio' => 'Acessé³rio',
+                    'servico' => 'Servié§o',
                 ]),
-            Number::make('DiÃ¡ria (R$)', 'daily_rate')
+            Number::make('Dié¡ria (R$)', 'daily_rate')
                 ->sortable(),
             Switcher::make('Ativo', 'is_active')
                 ->sortable()
@@ -58,19 +58,19 @@ class RentalExtraResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            Box::make('Extra de LocaÃ§Ã£o', [
+            Box::make('Extra de Locação', [
                 ID::make(),
                 Text::make('Nome', 'name')->required(),
                 Select::make('Tipo', 'type')
                     ->options([
                         'seguro' => 'Seguro',
-                        'acessorio' => 'AcessÃ³rio',
-                        'servico' => 'ServiÃ§o',
+                        'acessorio' => 'Acessé³rio',
+                        'servico' => 'Servié§o',
                     ])
                     ->required(),
-                Number::make('DiÃ¡ria (R$)', 'daily_rate')
+                Number::make('Dié¡ria (R$)', 'daily_rate')
                     ->step(0.01)->min(0)->required(),
-                Textarea::make('DescriÃ§Ã£o', 'description'),
+                Textarea::make('Descrição', 'description'),
                 Switcher::make('Ativo', 'is_active')
                     ->default(true),
             ]),
@@ -86,8 +86,8 @@ class RentalExtraResource extends ModelResource
             Select::make('Tipo', 'type')
                 ->options([
                     'seguro' => 'Seguro',
-                    'acessorio' => 'AcessÃ³rio',
-                    'servico' => 'ServiÃ§o',
+                    'acessorio' => 'Acessé³rio',
+                    'servico' => 'Servié§o',
                 ])
                 ->nullable(),
             Switcher::make('Ativo', 'is_active'),

@@ -35,7 +35,7 @@ class AccountReceivableIndexPage extends IndexPage
             ID::make()->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
-            Text::make('DescriÃ§Ã£o', 'description'),
+            Text::make('Descrição', 'description'),
             Date::make('Vencimento', 'due_date')->format('d/m/Y')->sortable(),
             Number::make('Valor R$', 'amount')
                 ->sortable()

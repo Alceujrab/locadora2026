@@ -41,17 +41,17 @@ class NfseResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('NÃºmero', 'numero')
+            Text::make('Néºmero', 'numero')
                 ->sortable(),
             BelongsTo::make('Fatura', 'invoice', fn($item) => $item->invoice_number ?? 'N/A')
                 ->sortable(),
             Text::make('Tomador', 'tomador_nome')
                 ->sortable(),
             Text::make('CPF/CNPJ', 'tomador_cnpj_cpf'),
-            Number::make('Valor ServiÃ§o (R$)', 'valor_servico')
+            Number::make('Valor Servié§o (R$)', 'valor_servico')
                 ->sortable(),
             Number::make('ISS (R$)', 'valor_iss'),
-            Date::make('EmissÃ£o', 'data_emissao')
+            Date::make('Emissé£o', 'data_emissao')
                 ->format('d/m/Y')
                 ->sortable(),
             Select::make('Status', 'status')
@@ -75,21 +75,21 @@ class NfseResource extends ModelResource
             BelongsTo::make('Fatura Vinculada', 'invoice', fn($item) => $item->invoice_number ?? '#' . $item->id)
                 ->nullable()
                 ->searchable(),
-            Text::make('NÃºmero NFS-e', 'numero')
+            Text::make('Néºmero NFS-e', 'numero')
                 ->hint('Deixe vazio para auto-gerar'),
-            Text::make('SÃ©rie', 'serie')
+            Text::make('Sé©rie', 'serie')
                 ->default('A1'),
-            Date::make('Data de EmissÃ£o', 'data_emissao')
+            Date::make('Data de Emissé£o', 'data_emissao')
                 ->required(),
-            Text::make('CÃ³digo do ServiÃ§o (CNAE)', 'codigo_servico')
+            Text::make('Cé³digo do Servié§o (CNAE)', 'codigo_servico')
                 ->hint('Ex: 7020'),
-            Textarea::make('DiscriminaÃ§Ã£o do ServiÃ§o', 'discriminacao')
+            Textarea::make('Discriminação do Servié§o', 'discriminacao')
                 ->required(),
-            Number::make('Valor do ServiÃ§o (R$)', 'valor_servico')
+            Number::make('Valor do Servié§o (R$)', 'valor_servico')
                 ->min(0)
                 ->step(0.01)
                 ->required(),
-            Number::make('AlÃ­quota ISS (%)', 'aliquota_iss')
+            Number::make('Alé­quota ISS (%)', 'aliquota_iss')
                 ->min(0)
                 ->step(0.01)
                 ->default(5.00),
@@ -101,7 +101,7 @@ class NfseResource extends ModelResource
                 ->required(),
             Text::make('Nome do Tomador', 'tomador_nome')
                 ->required(),
-            Text::make('EndereÃ§o do Tomador', 'tomador_endereco'),
+            Text::make('Endereé§o do Tomador', 'tomador_endereco'),
             Text::make('E-mail do Tomador', 'tomador_email'),
             Select::make('Status', 'status')
                 ->options([
@@ -111,7 +111,7 @@ class NfseResource extends ModelResource
                 ])
                 ->default('rascunho')
                 ->required(),
-            Textarea::make('ObservaÃ§Ãµes', 'observacoes'),
+            Textarea::make('Observações', 'observacoes'),
         ];
     }
     protected function detailFields(): iterable
@@ -121,7 +121,7 @@ class NfseResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-            Text::make('NÃºmero', 'numero'),
+            Text::make('Néºmero', 'numero'),
             Select::make('Status', 'status')
                 ->options([
                     'rascunho' => 'Rascunho',
@@ -129,7 +129,7 @@ class NfseResource extends ModelResource
                     'cancelada' => 'Cancelada',
                 ])
                 ->nullable(),
-            Date::make('EmissÃ£o De', 'data_emissao')
+            Date::make('Emissé£o De', 'data_emissao')
                 ->nullable(),
         ];
     }
@@ -174,7 +174,7 @@ class NfseResource extends ModelResource
         // Gera o PDF
         $pdf = Pdf::loadView('admin.nfse.pdf', $data);
         $fileName = 'nfse_' . $item->numero . '.pdf';
-        // Garante o diretÃ³rio
+        // Garante o direté³rio
         if (!Storage::disk('public')->exists('nfse')) {
             Storage::disk('public')->makeDirectory('nfse');
         }

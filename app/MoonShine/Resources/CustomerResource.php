@@ -104,8 +104,8 @@ class CustomerResource extends ModelResource
                 Date::make('Data Nascimento', 'birth_date'),
             ]),
             Box::make('Dados PJ', [
-                Text::make('RazÃ£o Social', 'company_name'),
-                Text::make('InscriÃ§Ã£o Estadual', 'state_registration'),
+                Text::make('Razé£o Social', 'company_name'),
+                Text::make('Inscrição Estadual', 'state_registration'),
             ]),
             Box::make('Contato', [
                 Email::make('E-mail', 'email'),
@@ -113,27 +113,27 @@ class CustomerResource extends ModelResource
                 Phone::make('WhatsApp', 'whatsapp'),
             ]),
             Box::make('CNH', [
-                Text::make('NÂº CNH', 'cnh_number'),
+                Text::make('Nº CNH', 'cnh_number'),
                 Text::make('Categoria CNH', 'cnh_category'),
                 Date::make('Validade CNH', 'cnh_expiry'),
             ]),
-            Box::make('EndereÃ§o', [
+            Box::make('Endereé§o', [
                 Text::make('CEP', 'address_zip_code'),
                 Text::make('Rua', 'address_street'),
-                Text::make('NÃºmero', 'address_number'),
+                Text::make('Néºmero', 'address_number'),
                 Text::make('Complemento', 'address_complement'),
                 Text::make('Bairro', 'address_neighborhood'),
                 Text::make('Cidade', 'address_city'),
                 Text::make('UF', 'address_state'),
             ]),
-            Box::make('Contato de EmergÃªncia', [
-                Text::make('Nome EmergÃªncia', 'emergency_contact_name'),
-                Phone::make('Telefone EmergÃªncia', 'emergency_contact_phone'),
+            Box::make('Contato de Emergéªncia', [
+                Text::make('Nome Emergéªncia', 'emergency_contact_name'),
+                Phone::make('Telefone Emergéªncia', 'emergency_contact_phone'),
             ]),
             Box::make('Status', [
                 Switcher::make('Bloqueado', 'is_blocked'),
                 Textarea::make('Motivo Bloqueio', 'blocked_reason'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

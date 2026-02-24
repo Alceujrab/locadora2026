@@ -31,7 +31,7 @@ use App\Enums\InspectionType;
 class VehicleInspectionResource extends ModelResource
 {
     protected string $model = VehicleInspection::class;
-    protected string $title = 'Vistorias de VeÃ­culos';
+    protected string $title = 'Vistorias de Veé­culos';
     /**
      * @return list<class-string<PageContract>>
      */
@@ -47,7 +47,7 @@ class VehicleInspectionResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
             Date::make('Data', 'inspection_date')->format('d/m/Y H:i'),
@@ -59,18 +59,18 @@ class VehicleInspectionResource extends ModelResource
         return [
             Box::make('Dados da Vistoria', [
                 ID::make(),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable()->searchable(),
                 BelongsTo::make('Inspetor', 'inspector', resource: UserResource::class)->required()->searchable(),
                 Enum::make('Tipo', 'type')->attach(InspectionType::class)->required(),
                 Date::make('Data da Vistoria', 'inspection_date')->withTime()->required(),
             ]),
-            Box::make('Estado do VeÃ­culo', [
+            Box::make('Estado do Veé­culo', [
                 Number::make('Quilometragem', 'mileage')->min(0)->required(),
-                Number::make('NÃ­vel de CombustÃ­vel (%)', 'fuel_level')->min(0)->max(100)->required(),
-                Text::make('CondiÃ§Ã£o Geral', 'overall_condition')->required(),
-                Textarea::make('ObservaÃ§Ãµes Gerais', 'notes'),
-                Enum::make('Status', 'status')->attach(['rascunho' => 'Rascunho', 'concluida' => 'ConcluÃ­da'])->required(),
+                Number::make('Né­vel de Combusté­vel (%)', 'fuel_level')->min(0)->max(100)->required(),
+                Text::make('Condição Geral', 'overall_condition')->required(),
+                Textarea::make('Observações Gerais', 'notes'),
+                Enum::make('Status', 'status')->attach(['rascunho' => 'Rascunho', 'concluida' => 'Conclué­da'])->required(),
             ]),
             HasMany::make('Itens Avaliados', 'items', resource: InspectionItemResource::class)
                 ->creatable()
@@ -81,16 +81,16 @@ class VehicleInspectionResource extends ModelResource
         return [
             ...$this->indexFields(),
             Number::make('Quilometragem', 'mileage'),
-            Number::make('CombustÃ­vel %', 'fuel_level'),
-            Text::make('CondiÃ§Ã£o Geral', 'overall_condition'),
-            Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            Number::make('Combusté­vel %', 'fuel_level'),
+            Text::make('Condição Geral', 'overall_condition'),
+            Textarea::make('Observações', 'notes'),
             HasMany::make('Itens Avaliados', 'items', resource: InspectionItemResource::class)
         ];
     }
     public function filters(): array
     {
         return [
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)->nullable(),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             Enum::make('Tipo', 'type')->attach(InspectionType::class),
         ];
@@ -104,7 +104,7 @@ class VehicleInspectionResource extends ModelResource
             if ($contract) {
                 // Atualizar KM do contrato
                 $contract->return_mileage = $model->mileage;
-                // Buscar vistoria de saÃ­da para comparar combustÃ­vel
+                // Buscar vistoria de saé­da para comparar combusté­vel
                 $checkoutInspection = \App\Models\VehicleInspection::where('contract_id', $contract->id)
                                         ->where('type', InspectionType::CHECKOUT)
                                         ->first();
@@ -114,7 +114,7 @@ class VehicleInspectionResource extends ModelResource
                 }
                 $extraCharges = 0;
                 $description = [];
-                // Exemplo simples de cobranÃ§a de CombustÃ­vel (R$ 5,00 por %)
+                // Exemplo simples de cobrané§a de Combusté­vel (R$ 5,00 por %)
                 if ($fuelDiff > 0) {
                     $fuelCharge = $fuelDiff * 5.00;
                     $extraCharges += $fuelCharge;

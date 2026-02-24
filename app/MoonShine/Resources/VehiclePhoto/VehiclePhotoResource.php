@@ -16,7 +16,7 @@ use MoonShine\Contracts\Core\PageContract;
 class VehiclePhotoResource extends ModelResource
 {
     protected string $model = VehiclePhoto::class;
-    protected string $title = 'Fotos do VeÃ­culo';
+    protected string $title = 'Fotos do Veé­culo';
     protected function indexFields(): iterable
     {
         return [
@@ -29,10 +29,10 @@ class VehiclePhotoResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('VeÃ­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
+            \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Veé­culo', 'vehicle', resource: \App\MoonShine\Resources\VehicleResource::class),
             \MoonShine\UI\Fields\Image::make('Foto', 'path')->dir('vehicles')->removable()->required(),
             \MoonShine\UI\Fields\Text::make('Legenda', 'filename'),
-            \MoonShine\UI\Fields\Number::make('PosiÃ§Ã£o', 'position')->default(0),
+            \MoonShine\UI\Fields\Number::make('Posição', 'position')->default(0),
             \MoonShine\UI\Fields\Switcher::make('Foto de Capa', 'is_cover'),
         ];
     }

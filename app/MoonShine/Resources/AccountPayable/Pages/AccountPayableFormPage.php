@@ -38,10 +38,10 @@ class AccountPayableFormPage extends FormPage
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class)->required()->searchable(),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class)->searchable()->nullable(),
-                BelongsTo::make('VeÃ­culo (Opcional)', 'vehicle', resource: VehicleResource::class)->searchable()->nullable(),
+                BelongsTo::make('Veé­culo (Opcional)', 'vehicle', resource: VehicleResource::class)->searchable()->nullable(),
                 Text::make('Categoria', 'category')->required()
-                    ->hint('Ex: ManutenÃ§Ã£o, Imposto, Operacional'),
-                Text::make('DescriÃ§Ã£o', 'description')->required(),
+                    ->hint('Ex: Manutenção, Imposto, Operacional'),
+                Text::make('Descrição', 'description')->required(),
                 Number::make('Valor (R$)', 'amount')->step(0.01)->min(0)->required(),
                 Date::make('Data de Vencimento', 'due_date')->required(),
                 Select::make('Status', 'status')->options([
@@ -52,8 +52,8 @@ class AccountPayableFormPage extends FormPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Pagamento', 'paid_at')->withTime(),
-                Text::make('MÃ©todo de Pagamento', 'payment_method')->hint('Boleto, Pix, CartÃ£o, Dinheiro'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Text::make('Mé©todo de Pagamento', 'payment_method')->hint('Boleto, Pix, Carté£o, Dinheiro'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

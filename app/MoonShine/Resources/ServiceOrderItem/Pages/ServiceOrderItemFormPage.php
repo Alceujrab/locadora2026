@@ -29,11 +29,11 @@ class ServiceOrderItemFormPage extends FormPage
                 ID::make(),
                 \MoonShine\UI\Fields\Select::make('Tipo', 'type')
                     ->options([
-                        'peca' => 'PeÃ§a',
-                        'mao_de_obra' => 'MÃ£o de Obra',
+                        'peca' => 'Peé§a',
+                        'mao_de_obra' => 'Mé£o de Obra',
                     ])
                     ->required(),
-                \MoonShine\UI\Fields\Text::make('DescriÃ§Ã£o', 'description')
+                \MoonShine\UI\Fields\Text::make('Descrição', 'description')
                     ->required(),
                 \MoonShine\UI\Fields\Number::make('Qtd', 'quantity')
                     ->default(1)
@@ -44,7 +44,7 @@ class ServiceOrderItemFormPage extends FormPage
                         'x-model' => 'item.quantity',
                         '@change' => 'item.total = (parseFloat(item.quantity || 0) * parseFloat(item.unit_price || 0)).toFixed(2)'
                     ]),
-                \MoonShine\UI\Fields\Number::make('PreÃ§o UnitÃ¡rio', 'unit_price')
+                \MoonShine\UI\Fields\Number::make('Preé§o Unité¡rio', 'unit_price')
                     ->step(0.01)
                     ->min(0)
                     ->required()

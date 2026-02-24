@@ -36,9 +36,9 @@ class AccountPayableDetailPage extends DetailPage
                 ID::make(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
                 BelongsTo::make('Fornecedor', 'supplier', resource: SupplierResource::class),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
                 Text::make('Categoria', 'category'),
-                Text::make('DescriÃ§Ã£o', 'description'),
+                Text::make('Descrição', 'description'),
                 Number::make('Valor (R$)', 'amount'),
                 Date::make('Data de Vencimento', 'due_date')->format('d/m/Y'),
                 Select::make('Status', 'status')->options([
@@ -53,8 +53,8 @@ class AccountPayableDetailPage extends DetailPage
             ]),
             Box::make('Pagamento', [
                 Date::make('Data do Pagamento', 'paid_at')->format('d/m/Y H:i'),
-                Text::make('MÃ©todo de Pagamento', 'payment_method'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Text::make('Mé©todo de Pagamento', 'payment_method'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

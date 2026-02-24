@@ -34,21 +34,21 @@ class PaymentDetailPage extends DetailPage
             Box::make('Dados do Pagamento', [
                 ID::make(),
                 BelongsTo::make('Fatura Recebida', 'invoice', resource: InvoiceResource::class),
-                Enum::make('MÃ©todo de Pagamento', 'method')->attach(PaymentMethod::class),
+                Enum::make('Mé©todo de Pagamento', 'method')->attach(PaymentMethod::class),
                 Number::make('Valor Pago (R$)', 'amount'),
                 Date::make('Data e Hora', 'paid_at')->format('d/m/Y H:i'),
             ]),
-            Box::make('IntegraÃ§Ãµes (Mercado Pago / Outros)', [
+            Box::make('Integrações (Mercado Pago / Outros)', [
                 Text::make('ID MP (Gateway)', 'mp_payment_id'),
                 Text::make('Status MP', 'mp_status'),
-                Text::make('ID TransaÃ§Ã£o', 'transaction_id'),
+                Text::make('ID Transação', 'transaction_id'),
             ]),
             Box::make('Reembolsos & Notas', [
                 Date::make('Data do Reembolso', 'refunded_at')->format('d/m/Y H:i'),
                 Number::make('Valor Reembolsado', 'refund_amount'),
-                Textarea::make('AnotaÃ§Ãµes', 'notes'),
+                Textarea::make('Anotações', 'notes'),
             ]),
-            Box::make('PIX CobranÃ§a', [
+            Box::make('PIX Cobrané§a', [
                 Preview::make('QR Code', 'pix_qr_code_base64', function($item) {
                     if (!$item->pix_qr_code_base64) return '';
                     $src = str_starts_with($item->pix_qr_code_base64, 'data:image') 

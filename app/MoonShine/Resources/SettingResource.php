@@ -17,7 +17,7 @@ use MoonShine\UI\Fields\Select;
 class SettingResource extends ModelResource
 {
     protected string $model = Setting::class;
-    protected string $title = 'Chaves e APIs (ConfiguraÃ§Ãµes)';
+    protected string $title = 'Parâmetros do Sistema';
     protected string $column = 'key';
     protected function pages(): array
     {
@@ -40,7 +40,7 @@ class SettingResource extends ModelResource
             ])->badge('purple'),
             Text::make('Chave (Nome)', 'key'),
             Text::make('Valor', 'value')->changePreview(fn($value) => strlen((string) $value) > 30 ? substr((string) $value, 0, 30) . '...' : $value),
-            Text::make('DescriÃ§Ã£o', 'description'),
+            Text::make('Descrição', 'description'),
         ];
     }
     protected function formFields(): iterable
@@ -62,17 +62,35 @@ class SettingResource extends ModelResource
                     ->required(),
                 Select::make('Tipo de Dado', 'type')->options([
                     'string' => 'Texto',
-                    'integer' => 'NÃºmero Inteiro',
+                    'integer' => 'Número Inteiro',
                     'boolean' => 'Booleano (1/0)',
                     'json' => 'Objeto JSON'
                 ])->default('string')->required(),
-                Text::make('DescriÃ§Ã£o', 'description'),
+                Text::make('Descrição', 'description'),
             ])
         ];
     }
     protected function detailFields(): iterable
     {
-        return $this->formFields();
+        return [
+            ID::make(),
+            Select::make('Grupo', 'group')->options([
+                'socialite' => 'Social Login (Socialite)',
+                'whatsapp' => 'WhatsApp (Evolution API)',
+                'payment' => 'Gateway de Pagamento',
+                'theme' => 'Visual e Cores do Painel',
+                'general' => 'Geral'
+            ]),
+            Text::make('Chave (Nome)', 'key'),
+            Textarea::make('Valor da Chave', 'value'),
+            Select::make('Tipo de Dado', 'type')->options([
+                'string' => 'Texto',
+                'integer' => 'Número Inteiro',
+                'boolean' => 'Booleano (1/0)',
+                'json' => 'Objeto JSON'
+            ]),
+            Text::make('Descrição', 'description'),
+        ];
     }
     public function rules(Model $item): array
     {

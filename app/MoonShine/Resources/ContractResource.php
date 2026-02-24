@@ -73,11 +73,11 @@ class ContractResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('NÂº Contrato', 'contract_number')->sortable(),
+            Text::make('Nº Contrato', 'contract_number')->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
             Date::make('Retirada', 'pickup_date')->sortable(),
-            Date::make('DevoluÃ§Ã£o', 'return_date'),
+            Date::make('Devolução', 'return_date'),
             Number::make('Total (R$)', 'total')
                 ->sortable(),
             Enum::make('Status', 'status')
@@ -89,7 +89,7 @@ class ContractResource extends ModelResource
         return [
             Box::make('Contrato', [
                 ID::make(),
-                Text::make('NÂº Contrato', 'contract_number'),
+                Text::make('Nº Contrato', 'contract_number'),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
                 BelongsTo::make('Reserva', 'reservation', resource: ReservationResource::class)
                     ->nullable()
@@ -101,27 +101,27 @@ class ContractResource extends ModelResource
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)
                     ->required()
                     ->searchable(),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
             ]),
             Box::make('Datas', [
                 Date::make('Data Retirada', 'pickup_date')->required(),
-                Date::make('Data DevoluÃ§Ã£o Prevista', 'return_date')->required(),
-                Date::make('Data DevoluÃ§Ã£o Real', 'actual_return_date'),
+                Date::make('Data Devolução Prevista', 'return_date')->required(),
+                Date::make('Data Devolução Real', 'actual_return_date'),
             ]),
             Box::make('Quilometragem', [
                 Number::make('Km Retirada', 'pickup_mileage')->min(0),
-                Number::make('Km DevoluÃ§Ã£o', 'return_mileage')->min(0),
+                Number::make('Km Devolução', 'return_mileage')->min(0),
             ]),
             Box::make('Valores', [
-                Number::make('DiÃ¡ria (R$)', 'daily_rate')
+                Number::make('Dié¡ria (R$)', 'daily_rate')
                     ->step(0.01)->min(0),
                 Number::make('Total Dias', 'total_days')
                     ->min(1),
                 Number::make('Extras (R$)', 'extras_total')
                     ->step(0.01)->min(0),
-                Number::make('CauÃ§Ã£o (R$)', 'caution_amount')
+                Number::make('Caução (R$)', 'caution_amount')
                     ->step(0.01)->min(0),
                 Number::make('Desconto (R$)', 'discount')
                     ->step(0.01)->min(0),
@@ -133,10 +133,10 @@ class ContractResource extends ModelResource
                     ->attach(ContractStatus::class),
                 Date::make('Assinado em', 'signed_at'),
                 Text::make('IP Assinatura', 'signature_ip'),
-                Text::make('MÃ©todo', 'signature_method'),
+                Text::make('Mé©todo', 'signature_method'),
             ]),
-            Box::make('ObservaÃ§Ãµes', [
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            Box::make('Observações', [
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }
@@ -212,7 +212,7 @@ class ContractResource extends ModelResource
                 ->success()
                 ->method('checkout')
                 ->canSee(fn($item) => in_array($item->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE])),
-            ActionButton::make('Check-in (DevoluÃ§Ã£o)', '#')
+            ActionButton::make('Check-in (Devolução)', '#')
                 ->icon('arrow-uturn-left')
                 ->warning()
                 ->method('checkin')
@@ -253,7 +253,7 @@ class ContractResource extends ModelResource
         if ($success) {
             MoonShineUI::toast('Contrato assinado digitalmente com sucesso!', 'success');
         } else {
-            MoonShineUI::toast('NÃ£o foi possÃ­vel assinar o contrato. Verifique o status.', 'error');
+            MoonShineUI::toast('Né£o foi possé­vel assinar o contrato. Verifique o status.', 'error');
         }
         return back();
     }
@@ -313,7 +313,7 @@ class ContractResource extends ModelResource
         if ($contract->reservation) {
             $contract->reservation->update(['status' => \App\Enums\ReservationStatus::COMPLETED]);
         }
-        // Liberar VeÃ­culo
+        // Liberar Veé­culo
         $contract->vehicle->update(['status' => \App\Enums\VehicleStatus::AVAILABLE]);
         $resource = new VehicleInspectionResource();
         $uri = to_page(FormPage::class, $resource, ['resourceItem' => $inspection->id]);

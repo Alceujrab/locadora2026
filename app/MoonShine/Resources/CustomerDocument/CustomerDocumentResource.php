@@ -33,13 +33,13 @@ class CustomerDocumentResource extends ModelResource
                 'cnh' => 'CNH',
                 'rg' => 'RG',
                 'cpf' => 'CPF',
-                'comprovante_residencia' => 'Comprovante de ResidÃªncia',
+                'comprovante_residencia' => 'Comprovante de Residéªncia',
                 'contrato_social' => 'Contrato Social',
                 'outros' => 'Outros',
             ])->required(),
             \MoonShine\UI\Fields\File::make('Arquivo ou Foto', 'file_path')->dir('customers/documents')->removable()->required(),
             \MoonShine\UI\Fields\Text::make('Nome Original', 'original_name'),
-            \MoonShine\UI\Fields\Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            \MoonShine\UI\Fields\Textarea::make('Observações', 'notes'),
         ];
     }
     protected function detailFields(): iterable

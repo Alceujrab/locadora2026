@@ -35,9 +35,9 @@ class InvoiceFormPage extends FormPage
     protected function fields(): iterable
     {
         return [
-            Box::make('InformaÃ§Ãµes Gerais da Fatura', [
+            Box::make('Informações Gerais da Fatura', [
                 ID::make(),
-                Text::make('NÂº Fatura', 'invoice_number')->required(),
+                Text::make('Nº Fatura', 'invoice_number')->required(),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class)->required(),
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato Vinculado', 'contract', resource: ContractResource::class)->nullable()->searchable(),
@@ -52,9 +52,9 @@ class InvoiceFormPage extends FormPage
                 Number::make('Desconto (R$)', 'discount')->step(0.01)->min(0),
                 Number::make('Total Final (R$)', 'total')->step(0.01)->min(0)->required(),
             ]),
-            Box::make('Nota Fiscal / IntegraÃ§Ã£o', [
-                Text::make('NÂº NFS-e', 'nfse_number'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            Box::make('Nota Fiscal / Integração', [
+                Text::make('Nº NFS-e', 'nfse_number'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }

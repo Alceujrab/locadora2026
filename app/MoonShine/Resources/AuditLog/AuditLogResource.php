@@ -32,11 +32,11 @@ class AuditLogResource extends ModelResource
             Text::make('Modelo', 'model_type', fn($item) => class_basename($item->model_type))
                 ->sortable(),
             Text::make('ID Registro', 'model_id'),
-            Select::make('AÃ§Ã£o', 'action')
+            Select::make('Ação', 'action')
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'ExcluÃ­do',
+                    'deleted' => 'Exclué­do',
                 ])
                 ->badge(fn(string $value) => match($value) {
                     'created' => 'success',
@@ -45,7 +45,7 @@ class AuditLogResource extends ModelResource
                     default => 'secondary',
                 })
                 ->sortable(),
-            Text::make('UsuÃ¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema')
+            Text::make('Usué¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema')
                 ->sortable(),
             Text::make('IP', 'ip'),
             Date::make('Data', 'created_at')
@@ -59,13 +59,13 @@ class AuditLogResource extends ModelResource
             ID::make(),
             Text::make('Modelo', 'model_type'),
             Text::make('ID Registro', 'model_id'),
-            Select::make('AÃ§Ã£o', 'action')
+            Select::make('Ação', 'action')
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'ExcluÃ­do',
+                    'deleted' => 'Exclué­do',
                 ]),
-            Text::make('UsuÃ¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema'),
+            Text::make('Usué¡rio', 'user_id', fn($item) => $item->user?->name ?? 'Sistema'),
             Text::make('IP', 'ip'),
             Text::make('User Agent', 'user_agent'),
             Textarea::make('Valores Anteriores', 'old_values', fn($item) => json_encode($item->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)),
@@ -77,11 +77,11 @@ class AuditLogResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-            Select::make('AÃ§Ã£o', 'action')
+            Select::make('Ação', 'action')
                 ->options([
                     'created' => 'Criado',
                     'updated' => 'Alterado',
-                    'deleted' => 'ExcluÃ­do',
+                    'deleted' => 'Exclué­do',
                 ])
                 ->nullable(),
             Text::make('Modelo', 'model_type')

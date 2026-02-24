@@ -16,7 +16,7 @@ use MoonShine\Contracts\Core\PageContract;
 class MaintenanceAlertResource extends ModelResource
 {
     protected string $model = MaintenanceAlert::class;
-    protected string $title = 'Alertas de ManutenÃ§Ã£o';
+    protected string $title = 'Alertas de Manutenção';
     protected string $column = 'id';
     public function iconValue(): string
     {

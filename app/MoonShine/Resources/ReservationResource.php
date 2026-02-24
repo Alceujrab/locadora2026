@@ -57,9 +57,9 @@ class ReservationResource extends ModelResource
         return [
             ID::make()->sortable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
-            BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class),
             Date::make('Retirada', 'pickup_date')->sortable(),
-            Date::make('DevoluÃ§Ã£o', 'return_date')->sortable(),
+            Date::make('Devolução', 'return_date')->sortable(),
             Number::make('Total (R$)', 'total')
                 ->sortable(),
             Enum::make('Status', 'status')
@@ -75,19 +75,19 @@ class ReservationResource extends ModelResource
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class)
                     ->required()
                     ->searchable(),
-                BelongsTo::make('VeÃ­culo', 'vehicle', resource: VehicleResource::class)
+                BelongsTo::make('Veé­culo', 'vehicle', resource: VehicleResource::class)
                     ->required()
                     ->searchable(),
                 BelongsTo::make('Categoria', 'category', resource: VehicleCategoryResource::class),
             ]),
             Box::make('Datas e Local', [
                 Date::make('Data Retirada', 'pickup_date')->required(),
-                Date::make('Data DevoluÃ§Ã£o', 'return_date')->required(),
+                Date::make('Data Devolução', 'return_date')->required(),
                 BelongsTo::make('Filial Retirada', 'pickupBranch', resource: BranchResource::class),
-                BelongsTo::make('Filial DevoluÃ§Ã£o', 'returnBranch', resource: BranchResource::class),
+                BelongsTo::make('Filial Devolução', 'returnBranch', resource: BranchResource::class),
             ]),
             Box::make('Valores', [
-                Number::make('DiÃ¡ria (R$)', 'daily_rate')
+                Number::make('Dié¡ria (R$)', 'daily_rate')
                     ->step(0.01)->min(0),
                 Number::make('Total Dias', 'total_days')
                     ->min(1),
@@ -103,7 +103,7 @@ class ReservationResource extends ModelResource
             Box::make('Status', [
                 Enum::make('Status', 'status')
                     ->attach(ReservationStatus::class),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                Textarea::make('Observações', 'notes'),
             ]),
         ];
     }
@@ -137,10 +137,10 @@ class ReservationResource extends ModelResource
                                 $start = new \DateTime($pickupDate);
                                 $end = new \DateTime($returnDate);
                                 if (!$vehicle->isAvailableForPeriod($start, $end, $item?->id)) {
-                                    $fail('O veÃ­culo selecionado nÃ£o estÃ¡ disponÃ­vel neste perÃ­odo.');
+                                    $fail('O veé­culo selecionado né£o esté¡ disponé­vel neste peré­odo.');
                                 }
                             } catch (\Exception $e) {
-                                $fail('Datas de reserva invÃ¡lidas.');
+                                $fail('Datas de reserva invé¡lidas.');
                             }
                         }
                     }
@@ -158,7 +158,7 @@ class ReservationResource extends ModelResource
             request()->input('return_date'),
             (int)request()->input('vehicle_id'),
             request()->filled('category_id') ? (int)request()->input('category_id') : null,
-            [], // Extras serÃ£o integrados posteriormente
+            [], // Extras seré£o integrados posteriormente
             (float)request()->input('discount', 0)
         );
         $item->total_days = $pricing['total_days'];
@@ -167,7 +167,7 @@ class ReservationResource extends ModelResource
         $item->extras_total = $pricing['extras_total'];
         $item->discount = $pricing['discount'];
         $item->total = $pricing['total'];
-        // Associar filial automaticamente se nÃ£o informada
+        // Associar filial automaticamente se né£o informada
         if (!$item->branch_id && $item->vehicle_id) {
             $vehicle = \App\Models\Vehicle::find($item->vehicle_id);
             $item->branch_id = $vehicle?->branch_id;
@@ -210,7 +210,7 @@ class ReservationResource extends ModelResource
     public function formButtons(): iterable
     {
         return [
-            // Extra buttons na ediÃ§Ã£o se necessÃ¡rio
+            // Extra buttons na edição se necessé¡rio
         ];
     }
     public function approve(MoonShineRequest $request): mixed
@@ -232,11 +232,11 @@ class ReservationResource extends ModelResource
         $item = $request->getResource()->getItem();
         $vehicle = $item->vehicle;
         if (!$vehicle) {
-            MoonShineUI::toast('VeÃ­culo nÃ£o encontrado na reserva.', 'error');
+            MoonShineUI::toast('Veé­culo né£o encontrado na reserva.', 'error');
             return back();
         }
         if ($item->contract()->exists()) {
-            MoonShineUI::toast('JÃ¡ existe um contrato gerado para esta reserva.', 'error');
+            MoonShineUI::toast('Jé¡ existe um contrato gerado para esta reserva.', 'error');
             return back();
         }
         $contract = \App\Models\Contract::create([

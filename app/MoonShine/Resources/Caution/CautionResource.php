@@ -19,7 +19,7 @@ use App\Models\AccountReceivable;
 class CautionResource extends ModelResource
 {
     protected string $model = Caution::class;
-    protected string $title = 'CauÃ§Ãµes';
+    protected string $title = 'Cauções';
     protected string $column = 'contract_id';
     public function search(): array
     {
@@ -43,7 +43,7 @@ class CautionResource extends ModelResource
                 'status' => 'liberada',
                 'released_at' => now(),
             ]);
-            MoonShineUI::toast('CauÃ§Ã£o liberada com sucesso!', 'success');
+            MoonShineUI::toast('Caução liberada com sucesso!', 'success');
             return back();
         });
         $this->addRoute('charge', 'charge/{resourceItem}', function (Caution $resourceItem, Request $request) {
@@ -54,7 +54,7 @@ class CautionResource extends ModelResource
                 return back();
             }
             if ($amount > $resourceItem->amount) {
-                MoonShineUI::toast('O valor nÃ£o pode ser superior Ã  cauÃ§Ã£o retida.', 'error');
+                MoonShineUI::toast('O valor né£o pode ser superior é  caução retida.', 'error');
                 return back();
             }
             $resourceItem->update([
@@ -65,14 +65,14 @@ class CautionResource extends ModelResource
             // Create an automatic Account Receivable for the charged caution
             AccountReceivable::create([
                 'customer_id' => $resourceItem->customer_id,
-                'description' => "CobranÃ§a de CauÃ§Ã£o - Contrato {$resourceItem->contract_id}: {$reason}",
+                'description' => "Cobrané§a de Caução - Contrato {$resourceItem->contract_id}: {$reason}",
                 'amount' => $amount,
                 'due_date' => now(),
                 'received_at' => now(), // already "received" since it was a deposit or preauth capture
                 'status' => 'pago',
-                'notes' => 'Gerado automaticamente via registro de cobranÃ§a da CauÃ§Ã£o #' . $resourceItem->id,
+                'notes' => 'Gerado automaticamente via registro de cobrané§a da Caução #' . $resourceItem->id,
             ]);
-            MoonShineUI::toast('CobranÃ§a registrada e lanÃ§ada no Contas a Receber.', 'success');
+            MoonShineUI::toast('Cobrané§a registrada e lané§ada no Contas a Receber.', 'success');
             return back();
         });
     }

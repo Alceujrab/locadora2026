@@ -24,7 +24,7 @@ use App\Enums\PaymentMethod;
 class FineTrafficResource extends ModelResource
 {
     protected string $model = FineTraffic::class;
-    protected string $title = 'Multas de TrÃ¢nsito';
+    protected string $title = 'Multas de Tré¢nsito';
     protected string $column = 'auto_infraction_number';
     protected SortDirection $sortDirection = SortDirection::DESC;
     public function getActiveActions(): array
@@ -41,15 +41,15 @@ class FineTrafficResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('VeÃ­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
+            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
                 ->sortable(),
             BelongsTo::make('Cliente', 'customer', fn($item) => $item->name ?? $item->id)
                 ->sortable(),
-            Text::make('NÂº Auto InfraÃ§Ã£o', 'auto_infraction_number'),
-            Text::make('CÃ³digo', 'fine_code'),
+            Text::make('Nº Auto Infração', 'auto_infraction_number'),
+            Text::make('Cé³digo', 'fine_code'),
             Number::make('Valor (R$)', 'amount')
                 ->sortable(),
-            Date::make('Data InfraÃ§Ã£o', 'fine_date')
+            Date::make('Data Infração', 'fine_date')
                 ->format('d/m/Y')
                 ->sortable(),
             Date::make('Vencimento', 'due_date')
@@ -82,7 +82,7 @@ class FineTrafficResource extends ModelResource
     {
         return [
             ID::make(),
-            BelongsTo::make('VeÃ­culo', 'vehicle', fn($item) => $item->plate . ' - ' . ($item->brand ?? '') . ' ' . ($item->model ?? ''))
+            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate . ' - ' . ($item->brand ?? '') . ' ' . ($item->model ?? ''))
                 ->required()
                 ->searchable(),
             BelongsTo::make('Contrato', 'contract', fn($item) => $item->contract_number ?? 'Contrato #' . $item->id)
@@ -91,20 +91,20 @@ class FineTrafficResource extends ModelResource
             BelongsTo::make('Cliente', 'customer', fn($item) => $item->name ?? $item->id)
                 ->nullable()
                 ->searchable(),
-            Text::make('NÂº Auto InfraÃ§Ã£o', 'auto_infraction_number')
+            Text::make('Nº Auto Infração', 'auto_infraction_number')
                 ->required(),
-            Text::make('CÃ³digo da Multa', 'fine_code'),
-            Text::make('DescriÃ§Ã£o', 'description')
+            Text::make('Cé³digo da Multa', 'fine_code'),
+            Text::make('Descrição', 'description')
                 ->required(),
             Number::make('Valor (R$)', 'amount')
                 ->min(0)
                 ->step(0.01)
                 ->required(),
-            Date::make('Data da InfraÃ§Ã£o', 'fine_date')
+            Date::make('Data da Infração', 'fine_date')
                 ->required(),
             Date::make('Vencimento', 'due_date')
                 ->required(),
-            Date::make('Data NotificaÃ§Ã£o', 'notification_date'),
+            Date::make('Data Notificação', 'notification_date'),
             Select::make('Status', 'status')
                 ->options([
                     'pendente' => 'Pendente',
@@ -122,7 +122,7 @@ class FineTrafficResource extends ModelResource
                 ])
                 ->default('empresa')
                 ->required(),
-            Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            Textarea::make('Observações', 'notes'),
         ];
     }
     protected function detailFields(): iterable
@@ -132,7 +132,7 @@ class FineTrafficResource extends ModelResource
     protected function filters(): iterable
     {
         return [
-            BelongsTo::make('VeÃ­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
+            BelongsTo::make('Veé­culo', 'vehicle', fn($item) => $item->plate ?? $item->id)
                 ->nullable(),
             Select::make('Status', 'status')
                 ->options([
@@ -182,11 +182,11 @@ class FineTrafficResource extends ModelResource
         // Criar Conta a Receber (Cobrar do Cliente)
         AccountReceivable::create([
             'customer_id' => $item->customer_id,
-            'description' => 'Repasse de Multa de TrÃ¢nsito: ' . $item->auto_infraction_number,
+            'description' => 'Repasse de Multa de Tré¢nsito: ' . $item->auto_infraction_number,
             'amount' => $item->amount,
             'due_date' => now()->addDays(10), // Vencimento em 10 dias
             'status' => 'pendente',
-            'notes' => 'Multa de infraÃ§Ã£o cometida no contrato ' . ($item->contract->contract_number ?? 'N/A'),
+            'notes' => 'Multa de infração cometida no contrato ' . ($item->contract->contract_number ?? 'N/A'),
         ]);
         MoonShineUI::toast('Multa transferida para o cliente. Conta a receber gerada.', 'success');
         return back();
@@ -195,11 +195,11 @@ class FineTrafficResource extends ModelResource
     {
         $item = $request->getResource()->getItem();
         $item->update(['status' => 'pago']);
-        // Criar Conta a Pagar (Para o Detran/Ã“rgÃ£o de autuaÃ§Ã£o)
-        // (Seria ideal associar a um 'Supplier' do Detran, aqui deixaremos supplier_id null se nÃ£o houver um padrÃ£o)
+        // Criar Conta a Pagar (Para o Detran/é“rgé£o de autuação)
+        // (Seria ideal associar a um 'Supplier' do Detran, aqui deixaremos supplier_id null se né£o houver um padré£o)
         AccountPayable::create([
             'supplier_id' => null, // Poderia buscar um supplier com nome "DETRAN"
-            'description' => 'Pagamento de Multa de TrÃ¢nsito: ' . $item->auto_infraction_number,
+            'description' => 'Pagamento de Multa de Tré¢nsito: ' . $item->auto_infraction_number,
             'amount' => $item->amount,
             'due_date' => $item->due_date ?? now(),
             'status' => 'pendente', // Deixa pendente pro financeiro apenas baixar

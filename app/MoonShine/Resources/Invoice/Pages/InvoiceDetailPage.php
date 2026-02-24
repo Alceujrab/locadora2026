@@ -39,9 +39,9 @@ class InvoiceDetailPage extends DetailPage
     protected function fields(): iterable
     {
         return [
-            Box::make('InformaÃ§Ãµes Gerais da Fatura', [
+            Box::make('Informações Gerais da Fatura', [
                 ID::make(),
-                Text::make('NÂº Fatura', 'invoice_number'),
+                Text::make('Nº Fatura', 'invoice_number'),
                 BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
                 BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
                 BelongsTo::make('Contrato Vinculado', 'contract', resource: ContractResource::class),
@@ -56,9 +56,9 @@ class InvoiceDetailPage extends DetailPage
                 Number::make('Desconto (R$)', 'discount'),
                 Number::make('Total Final (R$)', 'total'),
             ]),
-            Box::make('Nota Fiscal / IntegraÃ§Ã£o', [
-                Text::make('NÂº NFS-e', 'nfse_number'),
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
+            Box::make('Nota Fiscal / Integração', [
+                Text::make('Nº NFS-e', 'nfse_number'),
+                Textarea::make('Observações', 'notes'),
             ]),
             HasMany::make('Pagamentos Relacionados', 'payments', resource: \App\MoonShine\Resources\Payment\PaymentResource::class),
         ];

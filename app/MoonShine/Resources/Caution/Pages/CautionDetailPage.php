@@ -52,11 +52,11 @@ class CautionDetailPage extends DetailPage
                             }),
                     ])->columnSpan(6),
                     Column::make([
-                        Text::make('ID PrÃ©-Auth Mercado Pago', 'mp_preauth_id'),
-                        Date::make('Data de LiberaÃ§Ã£o', 'released_at')->format('d/m/Y H:i'),
+                        Text::make('ID Pré©-Auth Mercado Pago', 'mp_preauth_id'),
+                        Date::make('Data de Liberação', 'released_at')->format('d/m/Y H:i'),
                         Number::make('Valor Cobrado', 'charged_amount'),
-                        Text::make('Motivo da CobranÃ§a', 'charge_reason'),
-                        Text::make('ObservaÃ§Ãµes', 'notes'),
+                        Text::make('Motivo da Cobrané§a', 'charge_reason'),
+                        Text::make('Observações', 'notes'),
                     ])->columnSpan(6),
                 ])
             ])
@@ -74,11 +74,11 @@ class CautionDetailPage extends DetailPage
                 ->icon('currency-dollar')
                 ->error()
                 ->inModal(
-                    title: 'Cobrar ParticipaÃ§Ã£o da CauÃ§Ã£o',
+                    title: 'Cobrar Participação da Caução',
                     content: fn($item) => FormBuilder::make($this->getResource()->route('charge', $item->getKey()))
                         ->fields([
                             Number::make('Valor a Ser Cobrado', 'charged_amount')->required()->step(0.01),
-                            Text::make('Motivo da CobranÃ§a', 'charge_reason')->required(),
+                            Text::make('Motivo da Cobrané§a', 'charge_reason')->required(),
                         ])
                         ->submit('Cobrar')
                 )

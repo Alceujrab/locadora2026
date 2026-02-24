@@ -22,7 +22,7 @@ use MoonShine\UI\Components\Layout\Box;
 class VehicleCategoryResource extends ModelResource
 {
     protected string $model = VehicleCategory::class;
-    protected string $title = 'Categorias de VeÃ­culos';
+    protected string $title = 'Categorias de Veé­culos';
     protected string $column = 'name';
     protected bool $columnSelection = true;
     protected function pages(): array
@@ -42,7 +42,7 @@ class VehicleCategoryResource extends ModelResource
         return [
             ID::make()->sortable(),
             Text::make('Nome', 'name')->sortable(),
-            Number::make('DiÃ¡ria', 'daily_rate')
+            Number::make('Dié¡ria', 'daily_rate')
                 ->sortable(),
             Number::make('Semanal', 'weekly_rate'),
             Number::make('Mensal', 'monthly_rate'),
@@ -58,10 +58,10 @@ class VehicleCategoryResource extends ModelResource
             Box::make('Categoria', [
                 ID::make(),
                 Text::make('Nome', 'name')->required(),
-                Textarea::make('DescriÃ§Ã£o', 'description'),
+                Textarea::make('Descrição', 'description'),
             ]),
-            Box::make('PreÃ§os', [
-                Number::make('DiÃ¡ria (R$)', 'daily_rate')
+            Box::make('Preé§os', [
+                Number::make('Dié¡ria (R$)', 'daily_rate')
                     ->step(0.01)
                     ->min(0)
                     ->required(),
@@ -72,7 +72,7 @@ class VehicleCategoryResource extends ModelResource
                     ->step(0.01)
                     ->min(0),
             ]),
-            Box::make('PolÃ­tica de Km', [
+            Box::make('Polé­tica de Km', [
                 Select::make('Tipo Km', 'km_type')
                     ->options([
                         'livre' => 'Km Livre',

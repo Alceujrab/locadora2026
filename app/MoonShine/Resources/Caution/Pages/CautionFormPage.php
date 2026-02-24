@@ -46,8 +46,8 @@ class CautionFormPage extends FormPage
                     Column::make([
                         Select::make('Tipo', 'type')
                             ->options([
-                                'cartao' => 'CartÃ£o de CrÃ©dito (PrÃ©-AutorizaÃ§Ã£o)',
-                                'deposito' => 'DepÃ³sito BancÃ¡rio/PIX',
+                                'cartao' => 'Carté£o de Cré©dito (Pré©-Autorização)',
+                                'deposito' => 'Depé³sito Bancé¡rio/PIX',
                             ])
                             ->required(),
                         Number::make('Valor Retido', 'amount')
@@ -63,12 +63,12 @@ class CautionFormPage extends FormPage
                             ->required(),
                     ])->columnSpan(6),
                     Column::make([
-                        Text::make('ID PrÃ©-Auth Mercado Pago', 'mp_preauth_id')
-                            ->hint('CÃ³digo gerado pelo Mercado Pago'),
+                        Text::make('ID Pré©-Auth Mercado Pago', 'mp_preauth_id')
+                            ->hint('Cé³digo gerado pelo Mercado Pago'),
                         Number::make('Valor Cobrado (se houver)', 'charged_amount')
                             ->step(0.01),
-                        Text::make('Motivo da CobranÃ§a', 'charge_reason'),
-                        Textarea::make('ObservaÃ§Ãµes', 'notes'),
+                        Text::make('Motivo da Cobrané§a', 'charge_reason'),
+                        Textarea::make('Observações', 'notes'),
                     ])->columnSpan(12)
                 ])
             ]),

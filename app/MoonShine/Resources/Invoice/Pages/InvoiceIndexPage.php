@@ -34,7 +34,7 @@ class InvoiceIndexPage extends IndexPage
     {
         return [
             ID::make()->sortable(),
-            Text::make('NÂº Fatura', 'invoice_number')->sortable(),
+            Text::make('Nº Fatura', 'invoice_number')->sortable(),
             BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable(),
             BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
             Date::make('Vencimento', 'due_date')->format('d/m/Y')->sortable(),
