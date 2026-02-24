@@ -22,16 +22,43 @@ class InspectionItemResource extends ModelResource
 {
     protected string $model = InspectionItem::class;
     protected string $title = 'InspectionItems';
-    public function fields(): array
+    protected function pages(): array
     {
         return [
-            ID::make(),
-            Text::make('Categoria', 'category')->required()->hint('Ex: Exterior, Interior, MecÃ¢nica'),
-            Text::make('Nome do Item', 'item_name')->required()->hint('Ex: Para-choque Dianteiro, RÃ¡dio'),
-            Text::make('CondiÃ§Ã£o', 'condition')->required()->hint('Ex: Bom, Regular, Ruim, Danificado'),
-            Textarea::make('DescriÃ§Ã£o do Dano', 'damage_description'),
-            Number::make('Valor Dano (R$)', 'damage_value')->step(0.01)->min(0),
-            Image::make('Fotos', 'photos')->multiple()->removable()->dir('inspections'),
+            IndexPage::class,
+            FormPage::class,
+            DetailPage::class,
         ];
+    }
+
+    protected function indexFields(): iterable
+    {
+        return [
+            ID::make()->sortable(),
+            Text::make('Categoria', 'category')->sortable(),
+            Text::make('Nome do Item', 'item_name'),
+            Text::make('Condição', 'condition'),
+            Number::make('Valor Dano Base (R$)', 'damage_value')->sortable(),
+        ];
+    }
+
+    protected function formFields(): iterable
+    {
+        return [
+            \MoonShine\UI\Components\Layout\Box::make([
+                ID::make(),
+                Text::make('Categoria', 'category')->required()->hint('Ex: Exterior, Interior, Mecânica'),
+                Text::make('Nome do Item', 'item_name')->required()->hint('Ex: Para-choque Dianteiro, Rádio'),
+                Text::make('Condição Default', 'condition')->required()->hint('Ex: Bom, Regular, Ruim, Danificado'),
+                Textarea::make('Descrição do Dano Padrão', 'damage_description'),
+                Number::make('Valor Dano Base (R$)', 'damage_value')->step(0.01)->min(0),
+                Image::make('Fotos de Exemplo', 'photos')->multiple()->removable()->dir('inspections'),
+            ])
+        ];
+    }
+
+    protected function detailFields(): iterable
+    {
+        return $this->formFields();
     }
 }

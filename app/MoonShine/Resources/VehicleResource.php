@@ -63,94 +63,120 @@ class VehicleResource extends ModelResource
     protected function formFields(): iterable
     {
         return [
-            Box::make('Dados do VeÃ­culo', [
-                ID::make(),
-                BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
-                BelongsTo::make('Categoria', 'category', resource: VehicleCategoryResource::class)
-                    ->required(),
-                Text::make('Placa', 'plate')->required(),
-                Text::make('Renavam', 'renavam'),
-                Text::make('Chassi', 'chassis'),
-            ]),
-            Box::make('IdentificaÃ§Ã£o', [
-                Text::make('Marca', 'brand')->required(),
-                Text::make('Modelo', 'model')->required(),
-                Number::make('Ano FabricaÃ§Ã£o', 'year_fab')
-                    ->min(1900)->max(2030),
-                Number::make('Ano Modelo', 'year_model')
-                    ->min(1900)->max(2030),
-                Text::make('Cor', 'color'),
-            ]),
-            Box::make('EspecificaÃ§Ãµes', [
-                Select::make('CombustÃ­vel', 'fuel')
-                    ->options([
-                        'flex' => 'Flex',
-                        'gasolina' => 'Gasolina',
-                        'etanol' => 'Etanol',
-                        'diesel' => 'Diesel',
-                        'eletrico' => 'ElÃ©trico',
-                        'hibrido' => 'HÃ­brido',
+            \MoonShine\UI\Components\Layout\Tabs::make([
+                \MoonShine\UI\Components\Layout\Tab::make('Ficha Técnica', [
+                    Box::make('Dados do Veículo', [
+                        ID::make(),
+                        BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
+                        BelongsTo::make('Categoria', 'category', resource: VehicleCategoryResource::class)
+                            ->required(),
+                        Text::make('Placa', 'plate')->required(),
+                        Text::make('Renavam', 'renavam'),
+                        Text::make('Chassi', 'chassis'),
                     ]),
-                Select::make('CÃ¢mbio', 'transmission')
-                    ->options([
-                        'manual' => 'Manual',
-                        'automatico' => 'AutomÃ¡tico',
-                        'cvt' => 'CVT',
-                        'automatizado' => 'Automatizado',
+                    Box::make('Identificação', [
+                        Text::make('Marca', 'brand')->required(),
+                        Text::make('Modelo', 'model')->required(),
+                        Number::make('Ano Fabricação', 'year_fab')
+                            ->min(1900)->max(2030),
+                        Number::make('Ano Modelo', 'year_model')
+                            ->min(1900)->max(2030),
+                        Text::make('Cor', 'color'),
                     ]),
-                Number::make('Portas', 'doors')->min(1)->max(6),
-                Number::make('Lugares', 'seats')->min(1)->max(50),
-                Number::make('Porta-Malas (L)', 'trunk_capacity'),
-                Number::make('Quilometragem', 'mileage')->min(0),
-            ]),
-            Box::make('Status e PreÃ§os', [
-                Enum::make('Status', 'status')
-                    ->attach(VehicleStatus::class),
-                Number::make('DiÃ¡ria Override (R$)', 'daily_rate_override')
-                    ->step(0.01)->min(0),
-                Number::make('Semanal Override (R$)', 'weekly_rate_override')
-                    ->step(0.01)->min(0),
-                Number::make('Mensal Override (R$)', 'monthly_rate_override')
-                    ->step(0.01)->min(0),
-            ]),
-            Box::make('Valores', [
-                Number::make('Valor Seguro (R$)', 'insurance_value')
-                    ->step(0.01)->min(0),
-                Number::make('Valor FIPE (R$)', 'fipe_value')
-                    ->step(0.01)->min(0),
-                Number::make('Valor Compra (R$)', 'purchase_value')
-                    ->step(0.01)->min(0),
-                Date::make('Data Compra', 'purchase_date'),
-            ]),
-            Box::make('DocumentaÃ§Ã£o', [
-                Text::make('NÂº CRLV', 'crlv_number'),
-                Date::make('Validade CRLV', 'crlv_expiry'),
-                Date::make('Validade IPVA', 'ipva_expiry'),
-            ]),
-            Box::make('ObservaÃ§Ãµes', [
-                Textarea::make('ObservaÃ§Ãµes', 'notes'),
-            ]),
+                    Box::make('Especificações', [
+                        Select::make('Combustível', 'fuel')
+                            ->options([
+                                'flex' => 'Flex',
+                                'gasolina' => 'Gasolina',
+                                'etanol' => 'Etanol',
+                                'diesel' => 'Diesel',
+                                'eletrico' => 'Elétrico',
+                                'hibrido' => 'Híbrido',
+                            ]),
+                        Select::make('Câmbio', 'transmission')
+                            ->options([
+                                'manual' => 'Manual',
+                                'automatico' => 'Automático',
+                                'cvt' => 'CVT',
+                                'automatizado' => 'Automatizado',
+                            ]),
+                        Number::make('Portas', 'doors')->min(1)->max(6),
+                        Number::make('Lugares', 'seats')->min(1)->max(50),
+                        Number::make('Porta-Malas (L)', 'trunk_capacity'),
+                        Number::make('Quilometragem', 'mileage')->min(0),
+                    ]),
+                    Box::make('Status e Preços', [
+                        Enum::make('Status', 'status')
+                            ->attach(VehicleStatus::class),
+                        Number::make('Diária Override (R$)', 'daily_rate_override')
+                            ->step(0.01)->min(0),
+                        Number::make('Semanal Override (R$)', 'weekly_rate_override')
+                            ->step(0.01)->min(0),
+                        Number::make('Mensal Override (R$)', 'monthly_rate_override')
+                            ->step(0.01)->min(0),
+                    ]),
+                    Box::make('Valores', [
+                        Number::make('Valor Seguro (R$)', 'insurance_value')
+                            ->step(0.01)->min(0),
+                        Number::make('Valor FIPE (R$)', 'fipe_value')
+                            ->step(0.01)->min(0),
+                        Number::make('Valor Compra (R$)', 'purchase_value')
+                            ->step(0.01)->min(0),
+                        Date::make('Data Compra', 'purchase_date'),
+                    ]),
+                    Box::make('Documentação', [
+                        Text::make('Nº CRLV', 'crlv_number'),
+                        Date::make('Validade CRLV', 'crlv_expiry'),
+                        Date::make('Validade IPVA', 'ipva_expiry'),
+                    ]),
+                    Box::make('Observações', [
+                        Textarea::make('Observações', 'notes'),
+                    ]),
+                ]),
+                \MoonShine\UI\Components\Layout\Tab::make('Galeria de Fotos', [
+                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
+                        ->creatable()
+                ]),
+            ])
         ];
     }
     protected function detailFields(): iterable
     {
         return [
             \MoonShine\UI\Components\Layout\Tabs::make([
-                \MoonShine\UI\Components\Layout\Tab::make('Dados Principais', $this->formFields()),
-                \MoonShine\UI\Components\Layout\Tab::make('HistÃ³rico MecÃ¢nico', [
-                    \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Custo Total de ManutenÃ§Ã£o')
+                \MoonShine\UI\Components\Layout\Tab::make('Visão Geral', [
+                    // Reaproveitando a exata formatação do formFields para ficha técnica visual
+                    $this->formFields()[0]
+                ]),
+                \MoonShine\UI\Components\Layout\Tab::make('Locações e Faturamento', [
+                    \MoonShine\UI\Components\Layout\Grid::make([
+                        \MoonShine\UI\Components\Layout\Column::make([
+                            \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Faturamento Total (R$)')
+                                ->value(fn($vehicle) => 'R$ ' . number_format($vehicle->contracts()->whereIn('status', [\App\Enums\ContractStatus::ACTIVE, \App\Enums\ContractStatus::FINISHED])->sum('total'), 2, ',', '.'))
+                                ->icon('banknotes')
+                        ])->columnSpan(6),
+                        \MoonShine\UI\Components\Layout\Column::make([
+                            \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Total de Locações')
+                                ->value(fn($vehicle) => (string) $vehicle->contracts()->count())
+                                ->icon('document-duplicate')
+                        ])->columnSpan(6),
+                    ]),
+                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Contratos', 'contracts', resource: ContractResource::class)
+                        ->hideOnForm()
+                ]),
+                \MoonShine\UI\Components\Layout\Tab::make('Histórico Mecânico', [
+                    \MoonShine\UI\Components\Metrics\Wrapped\ValueMetric::make('Custo Total de Manutenção')
                         ->value(fn($vehicle) => 'R$ ' . number_format($vehicle->serviceOrders()->where('status', \App\Enums\ServiceOrderStatus::COMPLETED)->sum('total'), 2, ',', '.'))
-                        ->icon('currency-dollar'),
-                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ordens de ServiÃ§o', 'serviceOrders', resource: ServiceOrderResource::class)
+                        ->icon('wrench-screwdriver'),
+                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Ordens de Serviço', 'serviceOrders', resource: ServiceOrderResource::class)
                         ->hideOnForm()
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('Galeria de Fotos', [
-                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
-                        ->creatable()
+                \MoonShine\UI\Components\Layout\Tab::make('Multas de Trânsito', [
+                    \MoonShine\Laravel\Fields\Relationships\HasMany::make('Multas', 'fines', resource: \App\MoonShine\Resources\FineTraffic\FineTrafficResource::class)
                         ->hideOnForm()
                 ]),
-                \MoonShine\UI\Components\Layout\Tab::make('HistÃ³rico (Auditoria)', [
-                    \MoonShine\ChangeLog\Components\ChangeLog::make('HistÃ³rico de EdiÃ§Ãµes')
+                \MoonShine\UI\Components\Layout\Tab::make('Histórico (Auditoria)', [
+                    \MoonShine\ChangeLog\Components\ChangeLog::make('Histórico de Edições')
                 ]),
             ])
         ];
