@@ -32,7 +32,7 @@ class PageResource extends ModelResource
             \MoonShine\UI\Components\Layout\Box::make([
                 \MoonShine\UI\Fields\Text::make('TÃ­tulo', 'title')->required(),
                 \MoonShine\UI\Fields\Text::make('Slug (URL)', 'slug')->required(),
-                \MoonShine\UI\Fields\TinyMce::make('ConteÃºdo HTML', 'content')->hideOnIndex(),
+                \MoonShine\UI\Fields\Textarea::make('Conteúdo HTML', 'content')->hideOnIndex(),
                 \MoonShine\UI\Fields\Switcher::make('Publicado', 'is_published')->default(true),
             ])
         ];

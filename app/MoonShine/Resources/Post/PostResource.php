@@ -35,7 +35,7 @@ class PostResource extends ModelResource
                 \MoonShine\UI\Fields\Text::make('TÃ­tulo', 'title')->required(),
                 \MoonShine\UI\Fields\Text::make('Slug (URL)', 'slug')->required(),
                 \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('Categoria', 'postCategory', resource: \App\MoonShine\Resources\PostCategory\PostCategoryResource::class)->nullable(),
-                \MoonShine\UI\Fields\TinyMce::make('ConteÃºdo HTML', 'content')->hideOnIndex(),
+                \MoonShine\UI\Fields\Textarea::make('Conteúdo HTML', 'content')->hideOnIndex(),
                 \MoonShine\UI\Fields\Switcher::make('Publicado', 'is_published')->default(true),
             ])
         ];
