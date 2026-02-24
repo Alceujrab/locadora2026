@@ -7,9 +7,9 @@ use App\Models\Contract;
 use App\Enums\ContractStatus;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
-use MoonShine\Laravel\Pages\Crud\IndexPage;
+use App\MoonShine\Pages\Contract\ContractIndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
-use MoonShine\Laravel\Pages\Crud\DetailPage;
+use App\MoonShine\Pages\Contract\ContractDetailPage;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Number;
@@ -45,9 +45,9 @@ class ContractResource extends ModelResource
     protected function pages(): array
     {
         return [
-            IndexPage::class,
+            ContractIndexPage::class,
             FormPage::class,
-            DetailPage::class,
+            ContractDetailPage::class,
         ];
     }
     public function search(): array
