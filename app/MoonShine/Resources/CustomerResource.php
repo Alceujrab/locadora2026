@@ -26,6 +26,7 @@ use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Textarea;
+use MoonShine\UI\Fields\File;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 /**
@@ -137,6 +138,24 @@ class CustomerResource extends ModelResource
                 Switcher::make('Bloqueado', 'is_blocked'),
                 Textarea::make('Motivo Bloqueio', 'blocked_reason'),
                 Textarea::make('Observações', 'notes'),
+            ]),
+            Box::make('Documentos Anexos', [
+                File::make('CNH (Frente e Verso)', 'doc_cnh')
+                    ->dir('customers/cnh')
+                    ->removable()
+                    ->allowedExtensions(['jpg', 'jpeg', 'png', 'pdf']),
+                File::make('Cartão CPF/CNPJ', 'doc_cpf_cnpj_card')
+                    ->dir('customers/cpf_cnpj')
+                    ->removable()
+                    ->allowedExtensions(['jpg', 'jpeg', 'png', 'pdf']),
+                File::make('Comprovante de Endereço', 'doc_address_proof')
+                    ->dir('customers/address')
+                    ->removable()
+                    ->allowedExtensions(['jpg', 'jpeg', 'png', 'pdf']),
+                File::make('Contrato Social (PJ)', 'doc_social_contract')
+                    ->dir('customers/social_contract')
+                    ->removable()
+                    ->allowedExtensions(['jpg', 'jpeg', 'png', 'pdf']),
             ]),
         ];
     }

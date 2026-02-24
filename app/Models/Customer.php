@@ -22,6 +22,7 @@ class Customer extends Model
         'address_neighborhood', 'address_city', 'address_state', 'address_zip',
         'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
         'is_blocked', 'blocked_reason', 'notes',
+        'doc_cnh', 'doc_cpf_cnpj_card', 'doc_address_proof', 'doc_social_contract',
     ];
 
     protected $casts = [
