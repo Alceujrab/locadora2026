@@ -87,7 +87,10 @@ class CustomerResource extends ModelResource
             \MoonShine\UI\Components\ActionButton::make(
                 '📄 PDF',
                 fn($item) => route('admin.customer.pdf', $item->getKey())
-            )->blank()->showInLine(),
+            )
+            ->blank()
+            ->showInLine()
+            ->icon('printer'),
         ];
     }
     protected function indexFields(): iterable
