@@ -22,7 +22,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use App\MoonShine\Resources\VehicleResource;
 use App\MoonShine\Resources\ContractResource;
-use App\MoonShine\Resources\UserResource;
+use App\MoonShine\Resources\MoonShineUser\MoonShineUserResource;
 use App\MoonShine\Resources\InspectionItem\InspectionItemResource;
 use MoonShine\UI\Components\Layout\Box;
 use App\Enums\InspectionType;
@@ -63,7 +63,7 @@ class VehicleInspectionResource extends ModelResource
                 ID::make(),
                 BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class)->required()->searchable(),
                 BelongsTo::make('Contrato', 'contract', resource: ContractResource::class)->nullable()->searchable(),
-                BelongsTo::make('Inspetor', 'inspector', resource: UserResource::class)->required()->searchable(),
+                BelongsTo::make('Inspetor', 'inspector', resource: MoonShineUserResource::class)->required()->searchable(),
                 Enum::make('Tipo', 'type')->attach(InspectionType::class)->required(),
                 Date::make('Data da Vistoria', 'inspection_date')->withTime()->required(),
             ]),
