@@ -17,11 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Renderizar erros mais descritivos para o painel admin MoonShine
+        // Handler específico para erros de banco de dados
         $exceptions->renderable(function (\Illuminate\Database\QueryException $e, $request) {
             if ($request->is('admin/*') || $request->is('admin')) {
                 $message = $e->getMessage();
-                // Extrair mensagem amigável de erros SQL comuns
                 if (str_contains($message, 'Column not found')) {
                     preg_match("/Unknown column '(.+?)'/", $message, $matches);
                     $col = $matches[1] ?? 'desconhecida';
@@ -35,12 +34,24 @@ return Application::configure(basePath: dirname(__DIR__))
                 } elseif (str_contains($message, 'Data too long')) {
                     preg_match("/Data too long for column '(.+?)'/", $message, $matches);
                     $friendly = "Texto muito longo para o campo '{$matches[1]}'.";
-                } elseif (str_contains($message, 'a]foreign key constraint fails')) {
+                } elseif (str_contains($message, 'foreign key constraint fails')) {
                     $friendly = "Não é possível salvar: referência a registro inexistente.";
                 } else {
                     $friendly = "Erro no banco de dados: " . \Illuminate\Support\Str::limit($message, 200);
                 }
-                \MoonShine\Laravel\MoonShineRequest::session()?->flash('alert', json_encode(['type' => 'error', 'message' => $friendly]));
+                return back()->withInput()->with('toast', ['type' => 'error', 'message' => $friendly]);
+            }
+        });
+        // Handler genérico para qualquer outro erro no admin
+        $exceptions->renderable(function (\Throwable $e, $request) {
+            if ($request->is('admin/*') || $request->is('admin')) {
+                $class = class_basename($e);
+                $msg = \Illuminate\Support\Str::limit($e->getMessage(), 200);
+                $friendly = "Erro ({$class}): {$msg}";
+                \Illuminate\Support\Facades\Log::error("Admin error: {$e->getMessage()}", [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
                 return back()->withInput()->with('toast', ['type' => 'error', 'message' => $friendly]);
             }
         });

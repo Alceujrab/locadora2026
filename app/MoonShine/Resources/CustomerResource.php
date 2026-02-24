@@ -53,28 +53,31 @@ class CustomerResource extends ModelResource
     }
     protected function afterSave(DataWrapperContract $item, FieldsContract $fields): DataWrapperContract
     {
-        $customer = $item->getOriginal(); // Extract Eloquent Model
-        if ($customer->email) {
-            // Find existing user or create a new one for portal access
-            $user = User::firstOrNew(['email' => $customer->email]);
-            if (!$user->exists) {
-                // Determine a safe password if creating
-                // Ex: First 4 digits of CPF/CNPJ + "!"
-                $docClean = preg_replace('/\D/', '', $customer->cpf_cnpj);
-                $passwordBase = strlen($docClean) >= 4 ? substr($docClean, 0, 4) : Str::random(6);
-                $user->name = $customer->name;
-                $user->password = Hash::make('Muda@' . $passwordBase); // Temporary explicit password for locadora demo
+        try {
+            $customer = $item->toModel();
+            if ($customer && $customer->email) {
+                // Find existing user or create a new one for portal access
+                $user = User::firstOrNew(['email' => $customer->email]);
+                if (!$user->exists) {
+                    $docClean = preg_replace('/\D/', '', $customer->cpf_cnpj ?? '');
+                    $passwordBase = strlen($docClean) >= 4 ? substr($docClean, 0, 4) : Str::random(6);
+                    $user->name = $customer->name;
+                    $user->password = Hash::make('Muda@' . $passwordBase);
+                }
+                $user->branch_id = $customer->branch_id;
+                $user->save();
+                // Assign 'cliente' role via Spatie (if available)
+                if (method_exists($user, 'hasRole') && !$user->hasRole('cliente')) {
+                    $user->assignRole('cliente');
+                }
+                // Bind user to customer
+                if ($customer->user_id !== $user->id) {
+                    $customer->updateQuietly(['user_id' => $user->id]);
+                }
             }
-            $user->branch_id = $customer->branch_id;
-            $user->save();
-            // Assign the exact 'cliente' role natively via Spatie
-            if (!$user->hasRole('cliente')) {
-                $user->assignRole('cliente');
-            }
-            // Bind the user to the customer record
-            if ($customer->user_id !== $user->id) {
-                $customer->updateQuietly(['user_id' => $user->id]);
-            }
+        } catch (\Throwable $e) {
+            // Log error but don't block the save
+            \Illuminate\Support\Facades\Log::warning('CustomerResource afterSave: ' . $e->getMessage());
         }
         return $item;
     }
