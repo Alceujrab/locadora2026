@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use App\Models\Reservation;
 use App\Enums\ReservationStatus;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -28,6 +29,7 @@ use MoonShine\Contracts\UI\ActionButtonContract;
 class ReservationResource extends ModelResource
 {
     protected string $model = Reservation::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Reservas';
     protected string $column = 'id';
     protected bool $columnSelection = true;

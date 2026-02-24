@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
@@ -24,6 +25,7 @@ use MoonShine\UI\Components\Layout\Box;
 class SupportTicketResource extends ModelResource
 {
     protected string $model = SupportTicket::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Chamados de Suporte';
     /**
      * @return list<class-string<PageContract>>

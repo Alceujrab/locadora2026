@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 use App\Models\Branch;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -23,6 +24,7 @@ use MoonShine\UI\Components\Layout\Box;
 class BranchResource extends ModelResource
 {
     protected string $model = Branch::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Filiais';
     protected string $column = 'name';
     protected bool $columnSelection = true;

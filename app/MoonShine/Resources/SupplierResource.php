@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 use App\Models\Supplier;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -24,6 +25,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 class SupplierResource extends ModelResource
 {
     protected string $model = Supplier::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Fornecedores';
     protected string $column = 'name';
     protected bool $columnSelection = true;

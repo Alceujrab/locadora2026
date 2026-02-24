@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\FineTraffic;
 use App\Models\FineTraffic;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Number;
@@ -24,6 +25,7 @@ use App\Enums\PaymentMethod;
 class FineTrafficResource extends ModelResource
 {
     protected string $model = FineTraffic::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Multas de Tré¢nsito';
     protected string $column = 'auto_infraction_number';
     protected SortDirection $sortDirection = SortDirection::DESC;

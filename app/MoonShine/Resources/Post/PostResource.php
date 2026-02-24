@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 /**
  * @extends ModelResource<Post, PostIndexPage, PostFormPage, PostDetailPage>
@@ -16,6 +17,7 @@ use MoonShine\Contracts\Core\PageContract;
 class PostResource extends ModelResource
 {
     protected string $model = Post::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Noté­cias / Blog';
     protected function indexFields(): iterable
     {

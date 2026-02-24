@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use App\Models\Vehicle;
 use App\Enums\VehicleStatus;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
@@ -26,6 +27,7 @@ use MoonShine\Laravel\Fields\Relationships\HasMany;
 class VehicleResource extends ModelResource
 {
     protected string $model = Vehicle::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Veículos';
     protected string $column = 'plate';
     protected bool $columnSelection = true;

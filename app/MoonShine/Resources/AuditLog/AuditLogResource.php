@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\AuditLog;
 use App\Models\AuditLog;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Date;
@@ -16,6 +17,7 @@ use MoonShine\Support\Enums\SortDirection;
 class AuditLogResource extends ModelResource
 {
     protected string $model = AuditLog::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Logs de Auditoria';
     protected string $column = 'id';
     protected SortDirection $sortDirection = SortDirection::DESC;

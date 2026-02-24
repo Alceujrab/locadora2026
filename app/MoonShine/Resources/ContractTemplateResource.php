@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 use App\Models\ContractTemplate;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -20,6 +21,7 @@ use MoonShine\UI\Components\Layout\Box;
 class ContractTemplateResource extends ModelResource
 {
     protected string $model = ContractTemplate::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Templates de Contrato';
     protected string $column = 'name';
     protected function pages(): array

@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use App\Models\Customer;
 use App\Enums\CustomerType;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -33,6 +34,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 class CustomerResource extends ModelResource
 {
     protected string $model = Customer::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Clientes';
     protected string $column = 'name';
     protected bool $columnSelection = true;

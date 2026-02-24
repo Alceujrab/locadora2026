@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use App\Models\Contract;
 use App\Enums\ContractStatus;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use App\MoonShine\Pages\Contract\ContractIndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -40,6 +41,7 @@ use MoonShine\Support\Enums\HttpMethod;
 class ContractResource extends ModelResource
 {
     protected string $model = Contract::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Contratos';
     protected string $column = 'contract_number';
     protected bool $columnSelection = true;

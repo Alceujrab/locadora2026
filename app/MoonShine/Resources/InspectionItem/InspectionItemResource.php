@@ -14,6 +14,7 @@ use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Fields\Image;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 /**
  * @extends ModelResource<InspectionItem, InspectionItemIndexPage, InspectionItemFormPage, InspectionItemDetailPage>
@@ -21,6 +22,7 @@ use MoonShine\Contracts\Core\PageContract;
 class InspectionItemResource extends ModelResource
 {
     protected string $model = InspectionItem::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'InspectionItems';
     protected function pages(): array
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\MoonShineUser;
 use MoonShine\Laravel\Models\MoonshineUser;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\MenuManager\Attributes\Group;
@@ -21,6 +22,7 @@ use MoonShine\Support\ListOf;
 class MoonShineUserResource extends ModelResource
 {
     protected string $model = MoonshineUser::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $column = 'name';
     protected array $with = ['moonshineUserRole'];
     protected bool $simplePaginate = true;

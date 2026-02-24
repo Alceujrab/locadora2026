@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 /**
  * @extends ModelResource<MaintenanceAlert, MaintenanceAlertIndexPage, MaintenanceAlertFormPage, MaintenanceAlertDetailPage>
@@ -16,6 +17,7 @@ use MoonShine\Contracts\Core\PageContract;
 class MaintenanceAlertResource extends ModelResource
 {
     protected string $model = MaintenanceAlert::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Alertas de Manutenção';
     protected string $column = 'id';
     public function iconValue(): string

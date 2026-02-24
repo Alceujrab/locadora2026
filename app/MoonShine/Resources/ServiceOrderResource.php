@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use App\Models\ServiceOrder;
 use App\Enums\ServiceOrderStatus;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -25,6 +26,7 @@ use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 class ServiceOrderResource extends ModelResource
 {
     protected string $model = ServiceOrder::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Ordens de Servié§o';
     protected string $column = 'id';
     protected bool $columnSelection = true;

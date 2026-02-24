@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Http\Responses\MoonShineJsonResponse;
 use App\Services\MercadoPagoService;
@@ -20,6 +21,7 @@ use App\Enums\PaymentMethod;
 class InvoiceResource extends ModelResource
 {
     protected string $model = Invoice::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Invoices';
     /**
      * @return list<class-string<PageContract>>

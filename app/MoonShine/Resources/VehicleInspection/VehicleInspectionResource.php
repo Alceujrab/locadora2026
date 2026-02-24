@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\Core\DependencyInjection\FieldsContract;
 use MoonShine\UI\Fields\ID;
@@ -31,6 +32,7 @@ use App\Enums\InspectionType;
 class VehicleInspectionResource extends ModelResource
 {
     protected string $model = VehicleInspection::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Vistorias de Veé­culos';
     /**
      * @return list<class-string<PageContract>>

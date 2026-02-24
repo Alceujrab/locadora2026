@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources\SeoMetadata;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SeoMetadata;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -16,6 +17,7 @@ use MoonShine\Laravel\Pages\Crud\DetailPage;
 class SeoMetadataResource extends ModelResource
 {
     protected string $model = SeoMetadata::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'SEO: Metadados (URLs)';
     protected function indexFields(): iterable
     {

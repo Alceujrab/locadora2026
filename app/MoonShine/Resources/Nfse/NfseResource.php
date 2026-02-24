@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\Nfse;
 use App\Models\Nfse;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Number;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 class NfseResource extends ModelResource
 {
     protected string $model = Nfse::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Notas Fiscais (NFS-e)';
     protected string $column = 'numero';
     protected SortDirection $sortDirection = SortDirection::DESC;

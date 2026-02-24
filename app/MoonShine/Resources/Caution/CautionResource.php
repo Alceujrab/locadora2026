@@ -9,6 +9,7 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use Illuminate\Http\Request;
 use MoonShine\Laravel\MoonShineUI;
@@ -19,6 +20,7 @@ use App\Models\AccountReceivable;
 class CautionResource extends ModelResource
 {
     protected string $model = Caution::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Cauções';
     protected string $column = 'contract_id';
     public function search(): array

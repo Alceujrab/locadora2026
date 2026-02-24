@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 use App\Models\VehicleCategory;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
@@ -22,6 +23,7 @@ use MoonShine\UI\Components\Layout\Box;
 class VehicleCategoryResource extends ModelResource
 {
     protected string $model = VehicleCategory::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Categorias de Veículos';
     protected string $column = 'name';
     protected bool $columnSelection = true;

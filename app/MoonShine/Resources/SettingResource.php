@@ -6,6 +6,7 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Setting;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\PageType;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
@@ -17,6 +18,7 @@ use MoonShine\UI\Fields\Select;
 class SettingResource extends ModelResource
 {
     protected string $model = Setting::class;
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Parâmetros do Sistema';
     protected string $column = 'key';
     protected function pages(): array
