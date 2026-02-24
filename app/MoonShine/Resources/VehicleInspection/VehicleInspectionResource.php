@@ -18,6 +18,7 @@ use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\Textarea;
+use MoonShine\UI\Fields\Select;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
 use App\MoonShine\Resources\VehicleResource;
@@ -72,7 +73,7 @@ class VehicleInspectionResource extends ModelResource
                 Number::make('Nível de Combustível (%)', 'fuel_level')->min(0)->max(100)->required(),
                 Text::make('Condição Geral', 'overall_condition')->required(),
                 Textarea::make('Observações Gerais', 'notes'),
-                Enum::make('Status', 'status')->attach(['rascunho' => 'Rascunho', 'concluida' => 'Concluída'])->required(),
+                Select::make('Status', 'status')->options(['rascunho' => 'Rascunho', 'concluida' => 'Concluída'])->required(),
             ]),
             HasMany::make('Itens Avaliados', 'items', resource: InspectionItemResource::class)
                 ->creatable()
