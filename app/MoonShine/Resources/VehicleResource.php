@@ -8,19 +8,18 @@ use App\Enums\VehicleStatus;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Enum;
 use MoonShine\UI\Fields\Select;
-use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\Textarea;
-use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
-use App\MoonShine\Pages\VehicleDetailPage;
+
 /**
  * @extends ModelResource<Vehicle>
  */
@@ -36,7 +35,7 @@ class VehicleResource extends ModelResource
         return [
             IndexPage::class,
             FormPage::class,
-            VehicleDetailPage::class,
+            DetailPage::class,
         ];
     }
 
@@ -133,17 +132,53 @@ class VehicleResource extends ModelResource
             Box::make('Observações', [
                 Textarea::make('Observações', 'notes'),
             ]),
-            Box::make('Galeria de Fotos', [
-                HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
-                    ->creatable(),
-            ]),
+            HasMany::make('Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
+                ->creatable(),
         ];
     }
 
     protected function detailFields(): iterable
     {
-        // Detalhes completos renderizados pela VehicleDetailPage custom (com Tabs)
-        return $this->formFields();
+        return [
+            ID::make(),
+            Text::make('Placa', 'plate'),
+            BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
+            BelongsTo::make('Categoria', 'category', resource: VehicleCategoryResource::class),
+            Text::make('Marca', 'brand'),
+            Text::make('Modelo', 'model'),
+            Text::make('Ano Modelo', 'year_model'),
+            Text::make('Cor', 'color'),
+            Enum::make('Status', 'status')->attach(VehicleStatus::class),
+            Number::make('Quilometragem (Km)', 'mileage'),
+            Number::make('Diária Override (R$)', 'daily_rate_override'),
+            Number::make('Semanal Override (R$)', 'weekly_rate_override'),
+            Number::make('Mensal Override (R$)', 'monthly_rate_override'),
+            Number::make('Valor Seguro (R$)', 'insurance_value'),
+            Number::make('Valor FIPE (R$)', 'fipe_value'),
+            Number::make('Valor Compra (R$)', 'purchase_value'),
+            Date::make('Data Compra', 'purchase_date'),
+            Text::make('Nº CRLV', 'crlv_number'),
+            Date::make('Validade CRLV', 'crlv_expiry'),
+            Date::make('Validade IPVA', 'ipva_expiry'),
+            Textarea::make('Observações', 'notes'),
+
+            // Relacionamentos renderizados como Abas com links para os Resources completos
+            HasMany::make('Galeria de Fotos', 'photos', resource: \App\MoonShine\Resources\VehiclePhoto\VehiclePhotoResource::class)
+                ->creatable()
+                ->tabMode(),
+
+            HasMany::make('Locações e Faturamento', 'contracts', resource: ContractResource::class)
+                ->relatedLink()
+                ->tabMode(),
+
+            HasMany::make('Histórico Mecânico', 'serviceOrders', resource: ServiceOrderResource::class)
+                ->relatedLink()
+                ->tabMode(),
+
+            HasMany::make('Multas de Trânsito', 'fines', resource: \App\MoonShine\Resources\FineTraffic\FineTrafficResource::class)
+                ->relatedLink()
+                ->tabMode(),
+        ];
     }
 
     protected function filters(): iterable

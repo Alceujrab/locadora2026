@@ -29,7 +29,13 @@ class FineTrafficResource extends ModelResource
     protected SortDirection $sortDirection = SortDirection::DESC;
     public function getActiveActions(): array
     {
-        return ['create', 'view', 'update', 'delete', 'massDelete', 'export'];
+        return [
+            \MoonShine\Support\Enums\Action::CREATE,
+            \MoonShine\Support\Enums\Action::VIEW,
+            \MoonShine\Support\Enums\Action::UPDATE,
+            \MoonShine\Support\Enums\Action::DELETE,
+            \MoonShine\Support\Enums\Action::MASS_DELETE,
+        ];
     }
     protected function indexFields(): iterable
     {

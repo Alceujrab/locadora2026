@@ -61,7 +61,13 @@ class ContractResource extends ModelResource
     }
     public function getActiveActions(): array
     {
-        return ['create', 'view', 'update', 'delete', 'massDelete', 'export'];
+        return [
+            \MoonShine\Support\Enums\Action::CREATE,
+            \MoonShine\Support\Enums\Action::VIEW,
+            \MoonShine\Support\Enums\Action::UPDATE,
+            \MoonShine\Support\Enums\Action::DELETE,
+            \MoonShine\Support\Enums\Action::MASS_DELETE,
+        ];
     }
     protected function indexFields(): iterable
     {
@@ -137,23 +143,29 @@ class ContractResource extends ModelResource
     protected function detailFields(): iterable
     {
         return [
-            ...$this->formFields(),
-            HasMany::make('Logs de AlteraÃ§Ã£o', 'logs', resource: new class extends ModelResource {
-                protected string $model = \App\Models\ContractLog::class;
-                protected string $title = 'Logs';
-                public function fields(): array {
-                    return [
-                        \MoonShine\UI\Fields\ID::make(),
-                        \MoonShine\Laravel\Fields\Relationships\BelongsTo::make('UsuÃ¡rio', 'user', resource: new class extends ModelResource {
-                            protected string $model = \App\Models\User::class;
-                            public function fields(): array { return [\MoonShine\UI\Fields\Text::make('Nome', 'name')]; }
-                        }),
-                        \MoonShine\UI\Fields\Text::make('AÃ§Ã£o', 'action'),
-                        \MoonShine\UI\Fields\Text::make('DescriÃ§Ã£o', 'description'),
-                        \MoonShine\UI\Fields\Date::make('Data', 'created_at')->format('d/m/Y H:i:s'),
-                    ];
-                }
-            })
+            ID::make(),
+            Text::make('Nº Contrato', 'contract_number'),
+            BelongsTo::make('Filial', 'branch', resource: BranchResource::class),
+            BelongsTo::make('Cliente', 'customer', resource: CustomerResource::class),
+            BelongsTo::make('Veículo', 'vehicle', resource: VehicleResource::class),
+            BelongsTo::make('Reserva', 'reservation', resource: ReservationResource::class)->nullable(),
+            BelongsTo::make('Template', 'template', resource: ContractTemplateResource::class)->nullable(),
+            Date::make('Data Retirada', 'pickup_date'),
+            Date::make('Data Devolução Prevista', 'return_date'),
+            Date::make('Data Devolução Real', 'actual_return_date'),
+            Number::make('Km Retirada', 'pickup_mileage'),
+            Number::make('Km Devolução', 'return_mileage'),
+            Number::make('Diária (R$)', 'daily_rate'),
+            Number::make('Total Dias', 'total_days'),
+            Number::make('Extras (R$)', 'extras_total'),
+            Number::make('Caução (R$)', 'caution_amount'),
+            Number::make('Desconto (R$)', 'discount'),
+            Number::make('Total (R$)', 'total'),
+            Enum::make('Status', 'status')->attach(ContractStatus::class),
+            Date::make('Assinado em', 'signed_at'),
+            Text::make('IP Assinatura', 'signature_ip'),
+            Text::make('Método', 'signature_method'),
+            Textarea::make('Observações', 'notes'),
         ];
     }
     protected function filters(): iterable

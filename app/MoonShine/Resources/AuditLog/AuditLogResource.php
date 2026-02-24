@@ -21,7 +21,9 @@ class AuditLogResource extends ModelResource
     protected SortDirection $sortDirection = SortDirection::DESC;
     public function getActiveActions(): array
     {
-        return ['view', 'export'];
+        return [
+            \MoonShine\Support\Enums\Action::VIEW,
+        ];
     }
     protected function indexFields(): iterable
     {
