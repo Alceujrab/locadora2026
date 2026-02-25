@@ -28,9 +28,11 @@ return new class extends Migration
             try {
                 $table->dropUnique('customers_cpf_cnpj_unique');
             } catch (\Exception $e) {}
-            try {
-                $table->index('cpf_cnpj', 'customers_cpf_cnpj_index');
-            } catch (\Exception $e) {}
+            // Só cria index se não existir
+            $indexes = collect(DB::select("SHOW INDEX FROM customers WHERE Key_name = 'customers_cpf_cnpj_index'"));
+            if ($indexes->isEmpty()) {
+                try { $table->index('cpf_cnpj', 'customers_cpf_cnpj_index'); } catch (\Exception $e) {}
+            }
         });
     }
 
