@@ -77,10 +77,17 @@ class InvoiceConfirmationController extends Controller
         // Buscar OS vinculada
         $serviceOrder = ServiceOrder::where('invoice_id', $invoice->id)->with('vehicle')->first();
 
+        // Buscar Reserva vinculada (via notes "Reserva #ID")
+        $reservation = null;
+        if ($invoice->notes && preg_match('/Reserva #(\d+)/', $invoice->notes, $matches)) {
+            $reservation = \App\Models\Reservation::with(['vehicle', 'extras.rentalExtra', 'pickupBranch', 'returnBranch'])->find($matches[1]);
+        }
+
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.invoice-pdf', [
             'invoice' => $invoice,
             'logoBase64' => $logoBase64,
             'serviceOrder' => $serviceOrder,
+            'reservation' => $reservation,
         ]);
 
         $filename = 'fatura-' . $invoice->invoice_number . '-' . now()->format('YmdHis') . '.pdf';

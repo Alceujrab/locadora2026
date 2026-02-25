@@ -139,6 +139,63 @@
     </div>
     @endif
 
+    {{-- ORIGEM DA FATURA (quando vem de uma Reserva) --}}
+    @if(isset($reservation) && $reservation)
+    <div class="origin-box" style="background: #fefce8; border-color: #fde68a;">
+        <div class="title" style="color: #92400e;">📅 ORIGEM: RESERVA #{{ $reservation->id }}</div>
+        <table class="info-table">
+            <tr>
+                <td class="info-label">Veiculo:</td>
+                <td class="info-value">{{ $reservation->vehicle?->plate ?? '-' }} - {{ $reservation->vehicle?->brand ?? '' }} {{ $reservation->vehicle?->model ?? '' }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Periodo:</td>
+                <td class="info-value">{{ $reservation->pickup_date?->format('d/m/Y H:i') }} a {{ $reservation->return_date?->format('d/m/Y H:i') }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Dias:</td>
+                <td class="info-value">{{ $reservation->total_days }} dias x R$ {{ number_format((float) $reservation->daily_rate, 2, ',', '.') }}/dia</td>
+            </tr>
+            <tr>
+                <td class="info-label">Subtotal Diarias:</td>
+                <td class="info-value">R$ {{ number_format((float) $reservation->subtotal, 2, ',', '.') }}</td>
+            </tr>
+            @if($reservation->extras && $reservation->extras->count() > 0)
+            <tr>
+                <td class="info-label">Opcionais:</td>
+                <td class="info-value">
+                    @foreach($reservation->extras as $extra)
+                        {{ $extra->rentalExtra?->name ?? 'Extra' }} ({{ $extra->quantity }}x R$ {{ number_format((float) $extra->unit_price, 2, ',', '.') }})@if(!$loop->last), @endif
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
+                <td class="info-label">Total Extras:</td>
+                <td class="info-value">R$ {{ number_format((float) $reservation->extras_total, 2, ',', '.') }}</td>
+            </tr>
+            @endif
+            @if((float) $reservation->discount > 0)
+            <tr>
+                <td class="info-label">Desconto:</td>
+                <td class="info-value" style="color: #16a34a;">- R$ {{ number_format((float) $reservation->discount, 2, ',', '.') }}</td>
+            </tr>
+            @endif
+            <tr>
+                <td class="info-label"><strong>Total Reserva:</strong></td>
+                <td class="info-value"><strong>R$ {{ number_format((float) $reservation->total, 2, ',', '.') }}</strong></td>
+            </tr>
+            <tr>
+                <td class="info-label">Local Retirada:</td>
+                <td class="info-value">{{ $reservation->pickupBranch?->name ?? $reservation->branch?->name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Local Devolucao:</td>
+                <td class="info-value">{{ $reservation->returnBranch?->name ?? $reservation->branch?->name ?? '-' }}</td>
+            </tr>
+        </table>
+    </div>
+    @endif
+
     {{-- ITENS DA FATURA --}}
     @if($invoice->items && $invoice->items->count() > 0)
     <div class="section">
