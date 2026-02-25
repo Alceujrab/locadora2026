@@ -21,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Auth event listeners for login logs
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Login::class, [\App\Listeners\LogAuthenticationEvents::class, 'handleLogin']);
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Logout::class, [\App\Listeners\LogAuthenticationEvents::class, 'handleLogout']);
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Failed::class, [\App\Listeners\LogAuthenticationEvents::class, 'handleFailed']);
+
         \App\Models\Invoice::observe(\App\Observers\InvoiceObserver::class);
         \App\Models\Contract::observe(\App\Observers\ContractObserver::class);
         \App\Models\ServiceOrder::observe(\App\Observers\ServiceOrderObserver::class);
