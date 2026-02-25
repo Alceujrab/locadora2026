@@ -35,11 +35,11 @@
                     <a href="{{ route('public.vehicles') }}" class="text-sm font-medium text-gray-600 hover:text-primary-600 transition">Nossa Frota</a>
                     
                     @auth
-                        <a href="{{ route('moonshine.index') }}" class="px-4 py-2 rounded-md bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition shadow-sm">
+                        <a href="{{ url('/admin') }}" class="px-4 py-2 rounded-md bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition shadow-sm">
                             Acessar Painel
                         </a>
                     @else
-                        <a href="{{ route('moonshine.login') }}" class="px-4 py-2 rounded-md bg-primary-600 text-white hover:bg-primary-700 text-sm font-medium transition shadow-md">
+                        <a href="{{ url('/admin/login') }}" class="px-4 py-2 rounded-md bg-primary-600 text-white hover:bg-primary-700 text-sm font-medium transition shadow-md">
                             Login Portal
                         </a>
                     @endauth
@@ -71,7 +71,7 @@
                     <ul class="space-y-2 text-sm text-gray-400">
                         <li><a href="{{ route('public.home') }}" class="hover:text-primary-400 transition">Início</a></li>
                         <li><a href="{{ route('public.vehicles') }}" class="hover:text-primary-400 transition">Frota</a></li>
-                        <li><a href="{{ route('moonshine.login') }}" class="hover:text-primary-400 transition">Painel do Cliente</a></li>
+                        <li><a href="{{ url('/admin/login') }}" class="hover:text-primary-400 transition">Painel do Cliente</a></li>
                     </ul>
                 </div>
                 <div>
