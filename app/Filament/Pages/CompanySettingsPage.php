@@ -24,7 +24,10 @@ class CompanySettingsPage extends Page
 
     protected static ?int $navigationSort = 0;
 
-    protected static string $view = 'filament.pages.company-settings';
+    public function getView(): string
+    {
+        return 'filament.pages.company-settings';
+    }
 
     public ?array $data = [];
 
