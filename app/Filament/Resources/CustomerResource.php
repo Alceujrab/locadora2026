@@ -42,7 +42,7 @@ class CustomerResource extends Resource
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload(),
                     Components\TextInput::make('name')->label('Nome')->required()->maxLength(255),
                     Components\Select::make('type')->label('Tipo')->options(CustomerType::class)->required()->live(),
-                    Components\TextInput::make('cpf_cnpj')->label('CPF/CNPJ')->required()->maxLength(18),
+                    Components\TextInput::make('cpf_cnpj')->label('CPF/CNPJ')->required()->maxLength(18)->unique(ignoreRecord: true),
                     Components\TextInput::make('rg')->label('RG/IE')->maxLength(20),
                     Components\DatePicker::make('birth_date')->label('Data de Nascimento'),
                     Components\TextInput::make('company_name')->label('Razao Social')->visible(fn (Get $get) => $get('type') === 'pj'),
