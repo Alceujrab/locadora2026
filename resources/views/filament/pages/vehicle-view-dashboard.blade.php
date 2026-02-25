@@ -37,7 +37,7 @@
                 {{ $vehicle->status->value === 'alugado' ? 'bg-blue-500/20 text-blue-400' : '' }}
                 {{ $vehicle->status->value === 'manutencao' ? 'bg-yellow-500/20 text-yellow-400' : '' }}
                 {{ $vehicle->status->value === 'inativo' ? 'bg-red-500/20 text-red-400' : '' }}
-            ">{{ $vehicle->status->getLabel() }}</span>
+            ">{{ $vehicle->status->label() }}</span>
         </div>
     </div>
 
@@ -150,7 +150,7 @@
                         <td class="px-4 py-2 text-center">
                             <span class="px-2 py-0.5 rounded-full text-xs
                                 {{ $contract->status?->value === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}
-                            ">{{ $contract->status?->getLabel() ?? $contract->status }}</span>
+                            ">{{ $contract->status?->label() ?? $contract->status }}</span>
                         </td>
                     </tr>
                     @empty
@@ -185,7 +185,7 @@
                         <td class="px-4 py-2">{{ \Illuminate\Support\Str::limit($os->description ?? $os->notes ?? '-', 50) }}</td>
                         <td class="px-4 py-2 text-right font-medium text-red-600">R$ {{ number_format((float)$os->total, 2, ',', '.') }}</td>
                         <td class="px-4 py-2 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">{{ $os->status?->getLabel() ?? $os->status }}</span>
+                            <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">{{ $os->status?->label() ?? $os->status }}</span>
                         </td>
                     </tr>
                     @empty

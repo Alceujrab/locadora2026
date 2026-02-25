@@ -151,7 +151,11 @@ class VehicleResource extends Resource
                         }),
                 ])->label('Acoes Rapidas')->icon('heroicon-m-bolt')->color('primary'),
                 
-                Actions\ViewAction::make()->label('Dashboard'),
+                Actions\Action::make('dashboard')
+                    ->label('Dashboard')
+                    ->icon('heroicon-o-chart-pie')
+                    ->color('info')
+                    ->url(fn (Vehicle $record): string => static::getUrl('view', ['record' => $record])),
                 Actions\EditAction::make(),
                 Actions\DeleteAction::make(),
             ])
