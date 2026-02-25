@@ -83,4 +83,52 @@ class EvolutionApiService
 
         return $number;
     }
+
+    /**
+     * Envia um documento (PDF) via Evolution API
+     */
+    public function sendDocument(string $number, string $mediaUrl, string $fileName, ?string $caption = null): ?array
+    {
+        if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
+            Log::warning('Configurações da Evolution API incompletas no .env.');
+            return null;
+        }
+
+        try {
+            $endpoint = "{$this->baseUrl}/message/sendMedia/{$this->instanceName}";
+
+            $payload = [
+                'number' => $this->formatNumber($number),
+                'mediatype' => 'document',
+                'media' => $mediaUrl,
+                'fileName' => $fileName,
+            ];
+
+            if ($caption) {
+                $payload['caption'] = $caption;
+            }
+
+            $response = Http::withHeaders([
+                'apikey' => $this->apiKey,
+                'Content-Type' => 'application/json',
+            ])
+                ->timeout(60)
+                ->post($endpoint, $payload);
+
+            if ($response->successful()) {
+                Log::info("Documento WhatsApp enviado p/ {$number}: {$fileName}");
+                return $response->json();
+            }
+
+            Log::error("Erro Evolution API no envio de documento p/ {$number}", [
+                'status' => $response->status(),
+                'response' => $response->body(),
+            ]);
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Exceção ao enviar documento WhatsApp: '.$e->getMessage());
+            return null;
+        }
+    }
 }

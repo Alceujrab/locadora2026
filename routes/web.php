@@ -53,6 +53,13 @@ Route::get('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::
 Route::post('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController::class, 'sign'])->name('contract.signature.sign');
 
 // ==========================================
+// ASSINATURA DIGITAL OS (PÚBLICA)
+// ==========================================
+Route::get('/os/{id}/assinatura', [App\Http\Controllers\ServiceOrderSignatureController::class, 'show'])->name('os.signature.show');
+Route::post('/os/{id}/assinatura', [App\Http\Controllers\ServiceOrderSignatureController::class, 'sign'])->name('os.signature.sign');
+Route::get('/os/{id}/pdf', [App\Http\Controllers\ServiceOrderSignatureController::class, 'downloadPdf'])->name('os.signature.pdf');
+
+// ==========================================
 // CLIENT PORTAL ROUTES
 // ==========================================
 Route::prefix('cliente')->name('cliente.')->group(function () {
