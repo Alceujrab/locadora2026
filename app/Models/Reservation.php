@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\ReservationStatus;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Enums\ReservationStatus;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reservation extends Model
 {
@@ -94,6 +93,6 @@ class Reservation extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('pickup_date', '>=', now())
-                     ->whereIn('status', [ReservationStatus::PENDING, ReservationStatus::CONFIRMED]);
+            ->whereIn('status', [ReservationStatus::PENDING, ReservationStatus::CONFIRMED]);
     }
 }

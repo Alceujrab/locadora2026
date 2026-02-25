@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SupportTicket;
 use App\Http\Requests\StoreSupportTicketRequest;
 use App\Http\Requests\UpdateSupportTicketRequest;
+use App\Models\SupportTicket;
 
 class SupportTicketController extends Controller
 {

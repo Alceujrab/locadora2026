@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Customer;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
 class GdprAnonymize extends Command
@@ -28,6 +28,7 @@ class GdprAnonymize extends Command
 
         if ($count === 0) {
             $this->info('Nenhum cliente elegível para anonimização encontrado.');
+
             return self::SUCCESS;
         }
 
@@ -38,11 +39,13 @@ class GdprAnonymize extends Command
             $query->each(function ($customer) {
                 $this->line(" - ID: {$customer->id} | Nome: {$customer->name} | Últ. Atualização: {$customer->updated_at}");
             });
+
             return self::SUCCESS;
         }
 
-        if (!$this->confirm('Confirma a anonimização? Esta ação é IRREVERSÍVEL.')) {
+        if (! $this->confirm('Confirma a anonimização? Esta ação é IRREVERSÍVEL.')) {
             $this->info('Operação cancelada.');
+
             return self::SUCCESS;
         }
 
@@ -51,7 +54,7 @@ class GdprAnonymize extends Command
             foreach ($customers as $customer) {
                 $customer->update([
                     'name' => 'Anonimizado',
-                    'email' => 'anonimizado_' . $customer->id . '@lgpd.local',
+                    'email' => 'anonimizado_'.$customer->id.'@lgpd.local',
                     'cpf_cnpj' => Hash::make($customer->cpf_cnpj ?? ''),
                     'phone' => null,
                     'whatsapp' => null,

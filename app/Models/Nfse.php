@@ -38,6 +38,7 @@ class Nfse extends Model
     {
         $last = self::max('numero');
         $next = $last ? ((int) $last + 1) : 1;
+
         return str_pad((string) $next, 8, '0', STR_PAD_LEFT);
     }
 

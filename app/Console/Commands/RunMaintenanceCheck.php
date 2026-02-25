@@ -25,8 +25,8 @@ class RunMaintenanceCheck extends Command
      */
     public function handle()
     {
-        $this->info("Iniciando varredura de Alertas Preventivos de Manutenção...");
+        $this->info('Iniciando varredura de Alertas Preventivos de Manutenção...');
         \App\Jobs\DetectMaintenanceNeedsJob::dispatchSync();
-        $this->info("Varredura concluída. Verifique os tickets de Help Desk (Suporte) para alertas vigentes.");
+        $this->info('Varredura concluída. Verifique os tickets de Help Desk (Suporte) para alertas vigentes.');
     }
 }

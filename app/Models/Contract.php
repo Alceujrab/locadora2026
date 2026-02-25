@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ContractStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Enums\ContractStatus;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contract extends Model
 {
@@ -39,26 +39,83 @@ class Contract extends Model
     ];
 
     // Relationships
-    public function branch(): BelongsTo { return $this->belongsTo(Branch::class); }
-    public function reservation(): BelongsTo { return $this->belongsTo(Reservation::class); }
-    public function customer(): BelongsTo { return $this->belongsTo(Customer::class); }
-    public function vehicle(): BelongsTo { return $this->belongsTo(Vehicle::class); }
-    public function template(): BelongsTo { return $this->belongsTo(ContractTemplate::class, 'template_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
-    public function extras(): HasMany { return $this->hasMany(ContractExtra::class); }
-    public function logs(): HasMany { return $this->hasMany(ContractLog::class)->orderByDesc('created_at'); }
-    public function invoices(): HasMany { return $this->hasMany(Invoice::class); }
-    public function inspections(): HasMany { return $this->hasMany(VehicleInspection::class); }
-    public function caution(): HasOne { return $this->hasOne(Caution::class); }
+    public function reservation(): BelongsTo
+    {
+        return $this->belongsTo(Reservation::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(ContractTemplate::class, 'template_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function extras(): HasMany
+    {
+        return $this->hasMany(ContractExtra::class);
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(ContractLog::class)->orderByDesc('created_at');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function inspections(): HasMany
+    {
+        return $this->hasMany(VehicleInspection::class);
+    }
+
+    public function caution(): HasOne
+    {
+        return $this->hasOne(Caution::class);
+    }
 
     // Scopes
-    public function scopeActive($query) { return $query->where('status', ContractStatus::ACTIVE); }
-    public function scopeByStatus($query, ContractStatus $status) { return $query->where('status', $status); }
+    public function scopeActive($query)
+    {
+        return $query->where('status', ContractStatus::ACTIVE);
+    }
+
+    public function scopeByStatus($query, ContractStatus $status)
+    {
+        return $query->where('status', $status);
+    }
 
     // Helpers
-    public function isSigned(): bool { return $this->signed_at !== null; }
-    public function isActive(): bool { return $this->status === ContractStatus::ACTIVE; }
+    public function isSigned(): bool
+    {
+        return $this->signed_at !== null;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === ContractStatus::ACTIVE;
+    }
+
     public function isOverdue(): bool
     {
         return $this->isActive() && $this->return_date->isPast() && $this->actual_return_date === null;
@@ -74,6 +131,7 @@ class Contract extends Model
         $prefix = 'LOC';
         $year = date('Y');
         $last = static::whereYear('created_at', $year)->count() + 1;
+
         return sprintf('%s-%s-%05d', $prefix, $year, $last);
     }
 }

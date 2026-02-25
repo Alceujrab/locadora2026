@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use MoonShine\ChangeLog\Traits\HasChangeLog;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Post extends Model
 {
-    use HasFactory, HasChangeLog, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'post_category_id',

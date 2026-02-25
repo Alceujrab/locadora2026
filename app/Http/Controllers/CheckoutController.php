@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CustomerType;
+use App\Models\Customer;
+use App\Models\RentalExtra;
+use App\Models\User;
+use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Vehicle;
-use App\Models\RentalExtra;
-use App\Models\User;
-use App\Models\Customer;
-use App\Enums\CustomerType;
-use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
@@ -26,7 +26,7 @@ class CheckoutController extends Controller
         ]);
 
         $vehicle = Vehicle::with('category')->findOrFail($request->vehicle_id);
-        
+
         // Verifica se o veículo está disponível no período (Opcional, mas recomendado adicionar uma query de conflito aqui futuramente se necessário)
         if ($vehicle->status->value !== 'disponivel') {
             return redirect()->back()->with('error', 'O veículo não está disponível.');
@@ -39,7 +39,9 @@ class CheckoutController extends Controller
         $startDate = Carbon::parse($request->start);
         $endDate = Carbon::parse($request->end);
         $days = $startDate->diffInDays($endDate);
-        if ($days === 0) $days = 1; // Mínimo 1 diária
+        if ($days === 0) {
+            $days = 1;
+        } // Mínimo 1 diária
 
         $dailyRate = $vehicle->category->daily_rate ?? 0;
         $vehicleTotal = $dailyRate * $days;
@@ -52,9 +54,9 @@ class CheckoutController extends Controller
             'days' => $days,
             'daily_rate' => $dailyRate,
             'vehicle_total' => $vehicleTotal,
-            'selected_extras' => []
+            'selected_extras' => [],
         ];
-        
+
         $request->session()->put('checkout_reservation', $reservationData);
 
         return view('public.checkout.extras', compact('vehicle', 'extras', 'days', 'vehicleTotal', 'startDate', 'endDate'));
@@ -67,11 +69,11 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'extras' => 'nullable|array',
-            'extras.*' => 'exists:rental_extras,id'
+            'extras.*' => 'exists:rental_extras,id',
         ]);
 
         $reservationData = $request->session()->get('checkout_reservation');
-        if (!$reservationData) {
+        if (! $reservationData) {
             return redirect()->route('public.vehicles')->with('error', 'Sessão expirada. Por favor, reinicie a reserva.');
         }
 
@@ -85,13 +87,13 @@ class CheckoutController extends Controller
                 // Se o extra for cobrado 'por_dia', multiplica pelos dias da reserva
                 $itemTotal = $extra->charge_type === 'por_dia' ? ($extra->price * $reservationData['days']) : $extra->price;
                 $totalExtras += $itemTotal;
-                
+
                 $selectedExtrasDetails[] = [
                     'id' => $extra->id,
                     'name' => $extra->name,
                     'price' => $extra->price,
                     'charge_type' => $extra->charge_type,
-                    'total' => $itemTotal
+                    'total' => $itemTotal,
                 ];
             }
         }
@@ -111,7 +113,7 @@ class CheckoutController extends Controller
     public function identify(Request $request)
     {
         $reservationData = $request->session()->get('checkout_reservation');
-        if (!$reservationData) {
+        if (! $reservationData) {
             return redirect()->route('public.vehicles')->with('error', 'Sessão expirada. Por favor, reinicie a reserva.');
         }
 
@@ -123,7 +125,7 @@ class CheckoutController extends Controller
         return view('public.checkout.identify', [
             'vehicleTotal' => $reservationData['vehicle_total'],
             'extrasTotal' => $reservationData['extras_total'] ?? 0,
-            'grandTotal' => $reservationData['grand_total'] ?? $reservationData['vehicle_total']
+            'grandTotal' => $reservationData['grand_total'] ?? $reservationData['vehicle_total'],
         ]);
     }
 
@@ -141,10 +143,11 @@ class CheckoutController extends Controller
             $request->session()->regenerate();
             $user = Auth::guard('web')->user();
 
-            if (!$user->hasRole('cliente')) {
+            if (! $user->hasRole('cliente')) {
                 Auth::guard('web')->logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
+
                 return back()->with('error', 'Acesso negado. Apenas clientes podem reservar.');
             }
 
@@ -173,7 +176,7 @@ class CheckoutController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        
+
         $user->assignRole('cliente');
 
         // Criar Cliente
@@ -199,11 +202,11 @@ class CheckoutController extends Controller
     public function confirm(Request $request)
     {
         $reservationData = $request->session()->get('checkout_reservation');
-        if (!$reservationData) {
+        if (! $reservationData) {
             return redirect()->route('public.vehicles')->with('error', 'Sessão expirada. Por favor, reinicie a reserva.');
         }
 
-        if (!Auth::guard('web')->check() || !Auth::guard('web')->user()->hasRole('cliente')) {
+        if (! Auth::guard('web')->check() || ! Auth::guard('web')->user()->hasRole('cliente')) {
             return redirect()->route('checkout.identify');
         }
 
@@ -213,7 +216,7 @@ class CheckoutController extends Controller
         return view('public.checkout.confirm', [
             'reservationData' => $reservationData,
             'vehicle' => $vehicle,
-            'customer' => $customer
+            'customer' => $customer,
         ]);
     }
 
@@ -223,11 +226,11 @@ class CheckoutController extends Controller
     public function finish(Request $request)
     {
         $reservationData = $request->session()->get('checkout_reservation');
-        if (!$reservationData) {
+        if (! $reservationData) {
             return redirect()->route('public.vehicles')->with('error', 'Sessão expirada. Por favor, reinicie a reserva.');
         }
 
-        if (!Auth::guard('web')->check() || !Auth::guard('web')->user()->hasRole('cliente')) {
+        if (! Auth::guard('web')->check() || ! Auth::guard('web')->user()->hasRole('cliente')) {
             return redirect()->route('checkout.identify');
         }
 
@@ -239,21 +242,21 @@ class CheckoutController extends Controller
         }
 
         // 1. Criar a Reserva
-        $reservation = new \App\Models\Reservation();
+        $reservation = new \App\Models\Reservation;
         $reservation->branch_id = $vehicle->branch_id ?? 1; // Fallback se o veículo não tiver filial
         $reservation->customer_id = $customer->id;
         $reservation->vehicle_id = $vehicle->id;
         $reservation->status = \App\Enums\ReservationStatus::PENDENTE;
-        
+
         $reservation->pickup_date = Carbon::parse($reservationData['start_date']);
         $reservation->return_date = Carbon::parse($reservationData['end_date']);
         $reservation->pickup_location = $vehicle->branch->name ?? 'Loja Principal';
         $reservation->return_location = $vehicle->branch->name ?? 'Loja Principal';
-        
+
         $reservation->daily_rate = $reservationData['daily_rate'];
         $reservation->rental_days = $reservationData['days'];
         $reservation->daily_total = $reservationData['vehicle_total'];
-        
+
         $reservation->extras_total = $reservationData['extras_total'] ?? 0;
         $reservation->discount_amount = 0;
         $reservation->total_amount = $reservationData['grand_total'];
@@ -263,11 +266,11 @@ class CheckoutController extends Controller
         $reservation->save();
 
         // 2. Salvar Extras da Reserva
-        if (!empty($reservationData['selected_extras'])) {
+        if (! empty($reservationData['selected_extras'])) {
             foreach ($reservationData['selected_extras'] as $extra) {
                 // Check if extra is per day
                 $qty = $extra['charge_type'] === 'por_dia' ? $reservationData['days'] : 1;
-                
+
                 \App\Models\ReservationExtra::create([
                     'reservation_id' => $reservation->id,
                     'rental_extra_id' => $extra['id'],

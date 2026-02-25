@@ -17,6 +17,13 @@ class InspectionItem extends Model
         'photos' => 'array',
     ];
 
-    public function inspection(): BelongsTo { return $this->belongsTo(VehicleInspection::class, 'inspection_id'); }
-    public function isDamaged(): bool { return in_array($this->condition, ['ruim', 'danificado']); }
+    public function inspection(): BelongsTo
+    {
+        return $this->belongsTo(VehicleInspection::class, 'inspection_id');
+    }
+
+    public function isDamaged(): bool
+    {
+        return in_array($this->condition, ['ruim', 'danificado']);
+    }
 }

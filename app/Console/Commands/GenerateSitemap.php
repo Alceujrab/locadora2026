@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Post;
+use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
-use App\Models\Vehicle;
-use App\Models\Post;
 
 class GenerateSitemap extends Command
 {

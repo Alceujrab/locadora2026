@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class EvolutionApiService
 {
     protected string $baseUrl;
+
     protected string $instanceName;
+
     protected string $apiKey;
 
     public function __construct()
@@ -21,43 +23,45 @@ class EvolutionApiService
     /**
      * Envia uma mensagem de texto via Evolution API
      *
-     * @param string $number Telefone com código do país (ex: 5511999999999)
-     * @param string $text Conteúdo da mensagem
-     * @return array|null
+     * @param  string  $number  Telefone com código do país (ex: 5511999999999)
+     * @param  string  $text  Conteúdo da mensagem
      */
     public function sendText(string $number, string $text): ?array
     {
         if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
             Log::warning('Configurações da Evolution API incompletas no .env.');
+
             return null;
         }
 
         try {
             $endpoint = "{$this->baseUrl}/message/sendText/{$this->instanceName}";
-            
+
             $response = Http::withHeaders([
                 'apikey' => $this->apiKey,
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
             ])
-            ->timeout(30)
-            ->post($endpoint, [
-                'number' => $this->formatNumber($number),
-                'text' => $text,
-            ]);
+                ->timeout(30)
+                ->post($endpoint, [
+                    'number' => $this->formatNumber($number),
+                    'text' => $text,
+                ]);
 
             if ($response->successful()) {
                 Log::info("WhatsApp disparado p/ {$number}");
+
                 return $response->json();
             }
 
             Log::error("Erro Evolution API no envio p/ {$number}", [
                 'status' => $response->status(),
-                'response' => $response->body()
+                'response' => $response->body(),
             ]);
 
             return null;
         } catch (\Exception $e) {
-            Log::error("Exceção disparando WhatsApp: " . $e->getMessage());
+            Log::error('Exceção disparando WhatsApp: '.$e->getMessage());
+
             return null;
         }
     }
@@ -68,13 +72,13 @@ class EvolutionApiService
     protected function formatNumber(string $number): string
     {
         $number = preg_replace('/[^0-9]/', '', $number);
-        
+
         if (str_starts_with($number, '0')) {
             $number = substr($number, 1);
         }
 
         if (strlen($number) <= 11) {
-            $number = '55' . $number;
+            $number = '55'.$number;
         }
 
         return $number;

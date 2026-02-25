@@ -21,22 +21,22 @@ class ContractObserver
     {
         if ($contract->wasChanged('status') && $contract->status === \App\Enums\ContractStatus::ACTIVE) {
             $customer = $contract->customer;
-            
+
             if ($customer) {
                 // Email
-                if (!empty($customer->email)) {
+                if (! empty($customer->email)) {
                     $customer->notify(new \App\Notifications\ContractSignedNotification($contract));
                 }
 
                 // WhatsApp
                 $phone = $customer->phone ?? $customer->whatsapp;
-                if (!empty($phone)) {
+                if (! empty($phone)) {
                     $name = explode(' ', $customer->name)[0];
                     $message = "Olá *{$name}*!\n\n";
                     $message .= "Seu contrato com a *Locadora 2026* foi assinado digitalmente.\n";
                     $message .= "Contrato: *#{$contract->contract_number}*\n\n";
-                    $message .= "Você pode baixar a sua via assinada no portal do cliente:\n" . route('cliente.login');
-                    
+                    $message .= "Você pode baixar a sua via assinada no portal do cliente:\n".route('cliente.login');
+
                     \App\Jobs\SendWhatsAppMessageJob::dispatch($phone, $message);
                 }
             }

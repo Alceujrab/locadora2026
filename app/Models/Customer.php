@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\CustomerType;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use App\Enums\CustomerType;
 
 class Customer extends Model
 {
-    use HasUuids, SoftDeletes, Notifiable;
+    use HasUuids, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'branch_id', 'user_id', 'type', 'name', 'cpf_cnpj', 'rg', 'birth_date',
@@ -103,9 +103,9 @@ class Customer extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('cpf_cnpj', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%")
-              ->orWhere('phone', 'like', "%{$search}%");
+                ->orWhere('cpf_cnpj', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%");
         });
     }
 
@@ -116,6 +116,7 @@ class Customer extends Model
         if (strlen($doc) === 11) {
             return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $doc);
         }
+
         return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $doc);
     }
 

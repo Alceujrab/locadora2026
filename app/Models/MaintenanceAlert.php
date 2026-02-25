@@ -17,6 +17,13 @@ class MaintenanceAlert extends Model
         'last_triggered_at' => 'datetime',
     ];
 
-    public function vehicle() { return $this->belongsTo(Vehicle::class); }
-    public function scopeActive($query) { return $query->where('is_active', true); }
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

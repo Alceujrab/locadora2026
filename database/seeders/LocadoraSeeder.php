@@ -2,25 +2,23 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use App\Models\Branch;
-use App\Models\VehicleCategory;
-use App\Models\Vehicle;
-use App\Models\Customer;
-use App\Models\RentalExtra;
-use App\Models\Supplier;
-use App\Models\Contract;
-use App\Models\Invoice;
-use App\Models\ServiceOrder;
 use App\Enums\ContractStatus;
 use App\Enums\InvoiceStatus;
-use App\Enums\PaymentMethod;
 use App\Enums\ServiceOrderStatus;
 use App\Enums\VehicleStatus;
+use App\Models\Branch;
+use App\Models\Contract;
+use App\Models\Customer;
+use App\Models\Invoice;
+use App\Models\RentalExtra;
+use App\Models\ServiceOrder;
+use App\Models\Supplier;
+use App\Models\Vehicle;
+use App\Models\VehicleCategory;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class LocadoraSeeder extends Seeder
@@ -49,10 +47,10 @@ class LocadoraSeeder extends Seeder
         $suppliers = [];
         for ($i = 1; $i <= 3; $i++) {
             $suppliers[] = Supplier::firstOrCreate([
-                'cnpj' => $faker->cnpj(false)
+                'cnpj' => $faker->cnpj(false),
             ], [
                 'branch_id' => $branch->id,
-                'name' => 'Oficina Mecânica ' . $faker->company,
+                'name' => 'Oficina Mecânica '.$faker->company,
                 'email' => $faker->companyEmail,
                 'phone' => $faker->cellphone,
                 'type' => 'oficina',
@@ -186,11 +184,11 @@ class LocadoraSeeder extends Seeder
             $days = rand(3, 15);
             $pickup = Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 20));
             $return = (clone $pickup)->addDays($days);
-            
+
             $total = $days * $vehicle->category->daily_rate;
 
             $contract = Contract::create([
-                'contract_number' => 'LOC-' . rand(1000, 9999) . '-' . Str::upper(Str::random(4)),
+                'contract_number' => 'LOC-'.rand(1000, 9999).'-'.Str::upper(Str::random(4)),
                 'branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'vehicle_id' => $vehicle->id,
@@ -205,7 +203,7 @@ class LocadoraSeeder extends Seeder
 
             // Gerar Fatura Paga para este contrato antigo
             Invoice::create([
-                'invoice_number' => 'INV-' . rand(10000, 99999),
+                'invoice_number' => 'INV-'.rand(10000, 99999),
                 'branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'contract_id' => $contract->id,
@@ -241,7 +239,7 @@ class LocadoraSeeder extends Seeder
             $amount = rand(500, 3500);
 
             Invoice::create([
-                'invoice_number' => 'INV-' . rand(10000, 99999),
+                'invoice_number' => 'INV-'.rand(10000, 99999),
                 'branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'amount' => $amount,
@@ -251,7 +249,7 @@ class LocadoraSeeder extends Seeder
                 'updated_at' => $issueDate,
                 'penalty_amount' => $amount * 0.02, // 2% multa base
                 'interest_amount' => $amount * 0.05, // 5% juros acumulado fictício
-                'notes' => "Mensalidade/Locação (Inadimplente - Auto-gerada) - Gerada via Seeder",
+                'notes' => 'Mensalidade/Locação (Inadimplente - Auto-gerada) - Gerada via Seeder',
             ]);
         }
 
@@ -259,16 +257,16 @@ class LocadoraSeeder extends Seeder
         for ($k = 0; $k < 5; $k++) {
             $customer = collect($customers)->random();
             $vehicle = collect($vehicles)->where('status', VehicleStatus::AVAILABLE)->random();
-            
+
             // Marca o veículo como alugado "dummy" pro seeder
             $vehicle->update(['status' => VehicleStatus::RENTED]);
 
             $days = rand(5, 30);
             $pickup = Carbon::now()->subDays(rand(1, 4)); // Pegou dias atrás
             $return = Carbon::now()->addDays($days); // Devolve no futuro
-            
+
             Contract::create([
-                'contract_number' => 'LOC-' . rand(1000, 9999) . '-' . Str::upper(Str::random(4)),
+                'contract_number' => 'LOC-'.rand(1000, 9999).'-'.Str::upper(Str::random(4)),
                 'branch_id' => $branch->id,
                 'customer_id' => $customer->id,
                 'vehicle_id' => $vehicle->id,
@@ -283,10 +281,11 @@ class LocadoraSeeder extends Seeder
 
     private static function generateCpf(): string
     {
-        return rand(111, 999) . '.' . rand(111, 999) . '.' . rand(111, 999) . '-' . rand(11, 99);
+        return rand(111, 999).'.'.rand(111, 999).'.'.rand(111, 999).'-'.rand(11, 99);
     }
+
     private static function generateCnpj(): string
     {
-        return rand(11, 99) . '.' . rand(111, 999) . '.' . rand(111, 999) . '/0001-' . rand(11, 99);
+        return rand(11, 99).'.'.rand(111, 999).'.'.rand(111, 999).'/0001-'.rand(11, 99);
     }
 }

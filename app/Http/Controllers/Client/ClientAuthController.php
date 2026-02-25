@@ -17,7 +17,7 @@ class ClientAuthController extends Controller
         if (Auth::guard('web')->check() && Auth::guard('web')->user()->hasRole('cliente')) {
             return redirect()->route('cliente.dashboard');
         }
-        
+
         return view('client.auth.login');
     }
 
@@ -36,11 +36,12 @@ class ClientAuthController extends Controller
 
             $user = Auth::guard('web')->user();
 
-            if (!$user->hasRole('cliente')) {
+            if (! $user->hasRole('cliente')) {
                 // Se um admin tentar usar essa porta, barra.
                 Auth::guard('web')->logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
+
                 return back()->withErrors([
                     'email' => 'Acesso negado. Apenas clientes podem acessar este portal.',
                 ])->onlyInput('email');

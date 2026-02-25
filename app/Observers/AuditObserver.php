@@ -21,7 +21,7 @@ class AuditObserver
         // Remove timestamp noise
         unset($changes['updated_at'], $original['updated_at']);
 
-        if (!empty($changes)) {
+        if (! empty($changes)) {
             $oldValues = array_intersect_key($original, $changes);
             $this->logAction($model, 'updated', $oldValues, $changes);
         }
@@ -49,7 +49,7 @@ class AuditObserver
             ]);
         } catch (\Throwable $e) {
             // Silently fail — audit should never break the main flow
-            \Log::warning('AuditObserver failed: ' . $e->getMessage());
+            \Log::warning('AuditObserver failed: '.$e->getMessage());
         }
     }
 }

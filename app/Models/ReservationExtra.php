@@ -14,6 +14,13 @@ class ReservationExtra extends Model
         'total' => 'decimal:2',
     ];
 
-    public function reservation(): BelongsTo { return $this->belongsTo(Reservation::class); }
-    public function rentalExtra(): BelongsTo { return $this->belongsTo(RentalExtra::class); }
+    public function reservation(): BelongsTo
+    {
+        return $this->belongsTo(Reservation::class);
+    }
+
+    public function rentalExtra(): BelongsTo
+    {
+        return $this->belongsTo(RentalExtra::class);
+    }
 }

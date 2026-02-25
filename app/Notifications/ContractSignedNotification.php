@@ -37,17 +37,17 @@ class ContractSignedNotification extends Notification implements ShouldQueue
         $vehicle = $this->contract->vehicle->title ?? 'Veículo';
 
         $mail = (new MailMessage)
-                    ->subject("Cópia do seu Contrato - Locadora 2026")
-                    ->greeting("Olá, {$name}!")
-                    ->line("Sua locação do veículo {$vehicle} foi confirmada e o contrato assinado digitalmente.")
-                    ->line("O arquivo com as vias completas do seu contrato está anexado ou disponível no seu Portal.");
+            ->subject('Cópia do seu Contrato - Locadora 2026')
+            ->greeting("Olá, {$name}!")
+            ->line("Sua locação do veículo {$vehicle} foi confirmada e o contrato assinado digitalmente.")
+            ->line('O arquivo com as vias completas do seu contrato está anexado ou disponível no seu Portal.');
 
         if ($this->contract->pdf_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->contract->pdf_path)) {
             $mail->attach(\Illuminate\Support\Facades\Storage::disk('public')->path($this->contract->pdf_path));
         }
 
         return $mail->action('Acessar Painel do Cliente', route('cliente.login'))
-                    ->line('Desejamos uma ótima viagem!');
+            ->line('Desejamos uma ótima viagem!');
     }
 
     /**
@@ -59,7 +59,7 @@ class ContractSignedNotification extends Notification implements ShouldQueue
     {
         return [
             'contract_id' => $this->contract->id,
-            'status' => 'signed'
+            'status' => 'signed',
         ];
     }
 }

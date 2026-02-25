@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use MoonShine\ChangeLog\Traits\HasChangeLog;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\VehicleStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Vehicle extends Model
 {
-    use HasFactory, SoftDeletes, HasChangeLog;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'branch_id', 'category_id', 'plate', 'renavam', 'chassis',
@@ -130,6 +130,7 @@ class Vehicle extends Model
     public function getCoverPhotoAttribute(): ?string
     {
         $cover = $this->photos->firstWhere('is_cover', true);
+
         return $cover?->path ?? $this->photos->first()?->path;
     }
 
@@ -146,7 +147,7 @@ class Vehicle extends Model
 
     public function isAvailableForPeriod(\DateTime $start, \DateTime $end, ?int $ignoreReservationId = null): bool
     {
-        if (!$this->isAvailable()) {
+        if (! $this->isAvailable()) {
             return false;
         }
 
@@ -157,13 +158,13 @@ class Vehicle extends Model
             ])
             ->where(function ($q) use ($start, $end) {
                 $q->where('pickup_date', '<=', $end)
-                  ->where('return_date', '>=', $start);
+                    ->where('return_date', '>=', $start);
             });
 
         if ($ignoreReservationId) {
             $query->where('id', '!=', $ignoreReservationId);
         }
 
-        return !$query->exists();
+        return ! $query->exists();
     }
 }

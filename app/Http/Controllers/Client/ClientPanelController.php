@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ClientPanelController extends Controller
@@ -15,8 +14,8 @@ class ClientPanelController extends Controller
     {
         $user = Auth::guard('web')->user();
         $customer = $user->customer;
-        
-        if (!$customer) {
+
+        if (! $customer) {
             abort(403, 'Registro de cliente não encontrado.');
         }
 
@@ -34,9 +33,9 @@ class ClientPanelController extends Controller
             ->get();
 
         return view('client.dashboard', compact(
-            'customer', 
-            'activeContractsCount', 
-            'pendingInvoicesCount', 
+            'customer',
+            'activeContractsCount',
+            'pendingInvoicesCount',
             'openTicketsCount',
             'upcomingReservations'
         ));
@@ -49,6 +48,7 @@ class ClientPanelController extends Controller
     {
         $customer = Auth::guard('web')->user()->customer;
         $invoices = $customer->invoices()->with('contract.vehicle')->orderBy('due_date', 'desc')->get();
+
         return view('client.invoices', compact('invoices'));
     }
 
@@ -59,6 +59,7 @@ class ClientPanelController extends Controller
     {
         $customer = Auth::guard('web')->user()->customer;
         $contracts = $customer->contracts()->with('vehicle')->orderBy('created_at', 'desc')->get();
+
         return view('client.contracts', compact('contracts'));
     }
 
@@ -69,6 +70,7 @@ class ClientPanelController extends Controller
     {
         $customer = Auth::guard('web')->user()->customer;
         $reservations = $customer->reservations()->with(['vehicle', 'pickupBranch'])->orderBy('pickup_date', 'desc')->get();
+
         return view('client.reservations', compact('reservations'));
     }
 
@@ -79,6 +81,7 @@ class ClientPanelController extends Controller
     {
         $customer = Auth::guard('web')->user()->customer;
         $tickets = $customer->supportTickets()->orderBy('created_at', 'desc')->get();
+
         return view('client.support', compact('tickets'));
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Contract;
 use App\Enums\ContractStatus;
+use App\Models\Contract;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -23,12 +23,12 @@ class SignatureController extends Controller
         }
 
         // Se não tem PDF gerado, não pode assinar
-        if (!$contract->pdf_path || !Storage::disk('public')->exists($contract->pdf_path)) {
+        if (! $contract->pdf_path || ! Storage::disk('public')->exists($contract->pdf_path)) {
             abort(404, 'O PDF do contrato não foi gerado ou não está disponível.');
         }
 
         // Gera um token de sessão para a assinatura se não existir
-        if (!$contract->signature_token) {
+        if (! $contract->signature_token) {
             $contract->update(['signature_token' => Str::random(40)]);
         }
 
@@ -44,7 +44,7 @@ class SignatureController extends Controller
 
         if ($contract->isSigned()) {
             return redirect()->route('contract.signature.show', $id)
-                             ->with('error', 'Este contrato já foi assinado.');
+                ->with('error', 'Este contrato já foi assinado.');
         }
 
         $request->validate([
@@ -58,7 +58,7 @@ class SignatureController extends Controller
 
         $ip = $request->ip();
         $userAgent = $request->userAgent();
-        $hashData = $contract->id . $contract->customer_id . now()->toIso8601String() . $ip . $userAgent;
+        $hashData = $contract->id.$contract->customer_id.now()->toIso8601String().$ip.$userAgent;
         $hash = hash('sha256', $hashData);
 
         $contract->update([
@@ -70,6 +70,6 @@ class SignatureController extends Controller
         ]);
 
         return redirect()->route('contract.signature.show', $id)
-                         ->with('success', 'Contrato assinado digitalmente com sucesso!');
+            ->with('success', 'Contrato assinado digitalmente com sucesso!');
     }
 }

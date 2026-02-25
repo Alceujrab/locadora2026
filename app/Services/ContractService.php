@@ -16,19 +16,19 @@ class ContractService
     {
         $template = $contract->template;
 
-        if (!$template || !$template->content) {
+        if (! $template || ! $template->content) {
             return false;
         }
 
         $html = $this->replaceVariables($template->content, $contract);
 
         $pdf = Pdf::loadHTML($html);
-        
+
         // Define papel e orientação se desejar
         $pdf->setPaper('A4', 'portrait');
 
-        $fileName = 'contracts/' . $contract->contract_number . '_' . time() . '.pdf';
-        
+        $fileName = 'contracts/'.$contract->contract_number.'_'.time().'.pdf';
+
         Storage::disk('public')->put($fileName, $pdf->output());
 
         // Atualiza o caminho e status se estiver como rascunho
@@ -36,7 +36,7 @@ class ContractService
         if ($contract->status === \App\Enums\ContractStatus::DRAFT) {
             $data['status'] = \App\Enums\ContractStatus::AWAITING_SIGNATURE;
         }
-        
+
         $contract->update($data);
 
         return $fileName;
@@ -56,19 +56,19 @@ class ContractService
             '{{ customer.email }}' => $customer?->email ?? '',
             '{{ customer.phone }}' => $customer?->phone ?? '',
             '{{ customer.address }}' => $customer ? "{$customer->address_street}, {$customer->address_number}, {$customer->address_city}-{$customer->address_state}" : '',
-            
+
             '{{ vehicle.brand }}' => $vehicle?->brand ?? '',
             '{{ vehicle.model }}' => $vehicle?->model ?? '',
             '{{ vehicle.plate }}' => $vehicle?->plate ?? '',
             '{{ vehicle.renavam }}' => $vehicle?->renavam ?? '',
             '{{ vehicle.year }}' => $vehicle?->year_model ?? '',
-            
+
             '{{ contract.number }}' => $contract->contract_number,
             '{{ contract.pickup_date }}' => $contract->pickup_date?->format('d/m/Y H:i') ?? '',
             '{{ contract.return_date }}' => $contract->return_date?->format('d/m/Y H:i') ?? '',
-            '{{ contract.daily_rate }}' => number_format((float)$contract->daily_rate, 2, ',', '.'),
+            '{{ contract.daily_rate }}' => number_format((float) $contract->daily_rate, 2, ',', '.'),
             '{{ contract.total_days }}' => $contract->total_days,
-            '{{ contract.total }}' => number_format((float)$contract->total, 2, ',', '.'),
+            '{{ contract.total }}' => number_format((float) $contract->total, 2, ',', '.'),
         ];
 
         return str_replace(array_keys($variables), array_values($variables), $html);
@@ -84,7 +84,7 @@ class ContractService
         }
 
         $token = Str::random(32);
-        $hash = hash('sha256', $contract->id . $contract->customer_id . $token . time());
+        $hash = hash('sha256', $contract->id.$contract->customer_id.$token.time());
 
         $contract->update([
             'status' => \App\Enums\ContractStatus::ACTIVE,

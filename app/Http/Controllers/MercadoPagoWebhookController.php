@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\MercadoPagoService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class MercadoPagoWebhookController extends Controller
@@ -14,9 +14,11 @@ class MercadoPagoWebhookController extends Controller
 
         try {
             $mpService->handleWebhook($request->all());
+
             return response()->json(['status' => 'success'], 200);
         } catch (\Exception $e) {
-            Log::error('Erro MercadoPago Webhook: ' . $e->getMessage());
+            Log::error('Erro MercadoPago Webhook: '.$e->getMessage());
+
             return response()->json(['status' => 'error'], 500);
         }
     }

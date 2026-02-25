@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Invoice;
 use App\Enums\InvoiceStatus;
+use App\Models\Invoice;
+use Illuminate\Console\Command;
 
 class CheckOverdueInvoices extends Command
 {
@@ -27,17 +27,17 @@ class CheckOverdueInvoices extends Command
      */
     public function handle()
     {
-        $this->info("Iniciando verificação de faturas vencidas...");
-        
+        $this->info('Iniciando verificação de faturas vencidas...');
+
         $invoices = Invoice::whereIn('status', [InvoiceStatus::OPEN, InvoiceStatus::OVERDUE])
             ->whereDate('due_date', '<', now()->toDateString())
             ->get();
-            
+
         $count = 0;
 
         foreach ($invoices as $invoice) {
             $charges = $invoice->calculatePenaltyAndInterest();
-            
+
             $invoice->update([
                 'status' => InvoiceStatus::OVERDUE,
                 'penalty_amount' => $charges['penalty'],

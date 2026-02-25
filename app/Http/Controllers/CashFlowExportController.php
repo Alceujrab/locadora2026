@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Invoice;
+use App\Enums\InvoiceStatus;
 use App\Models\AccountPayable;
 use App\Models\AccountReceivable;
-use App\Enums\InvoiceStatus;
+use App\Models\Invoice;
 
 class CashFlowExportController extends Controller
 {
@@ -32,16 +31,16 @@ class CashFlowExportController extends Controller
 
         $filename = "fluxo_caixa_{$currentMonth}_{$currentYear}.csv";
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$filename",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $columns = ['Tipo', 'Descricao', 'Valor (R$)', 'Data'];
 
-        $callback = function() use($invoices, $receivables, $payables, $columns) {
+        $callback = function () use ($invoices, $receivables, $payables, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns, ';');
 

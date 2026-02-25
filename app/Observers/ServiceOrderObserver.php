@@ -20,16 +20,15 @@ class ServiceOrderObserver
     public function updated(ServiceOrder $serviceOrder): void
     {
         // Se a OS foi marcada como Concluída agora, e possui Fornecedor e Valor
-        if ($serviceOrder->wasChanged('status') && 
-            $serviceOrder->status === \App\Enums\ServiceOrderStatus::COMPLETED && 
-            $serviceOrder->total > 0 && 
-            $serviceOrder->supplier_id) 
-        {
+        if ($serviceOrder->wasChanged('status') &&
+            $serviceOrder->status === \App\Enums\ServiceOrderStatus::COMPLETED &&
+            $serviceOrder->total > 0 &&
+            $serviceOrder->supplier_id) {
             // Cria a dívida no Contas a Pagar automaticamente
             \App\Models\AccountPayable::create([
                 'branch_id' => $serviceOrder->branch_id,
                 'supplier_id' => $serviceOrder->supplier_id,
-                'description' => "Manutenção OS #{$serviceOrder->id} - Viatura: " . ($serviceOrder->vehicle->title ?? 'N/D'),
+                'description' => "Manutenção OS #{$serviceOrder->id} - Viatura: ".($serviceOrder->vehicle->title ?? 'N/D'),
                 'amount' => $serviceOrder->total,
                 'due_date' => now()->addDays(15), // Padrão de 15 dias, pode ser ajustado
                 'status' => \App\Enums\AccountPayableStatus::OPEN,

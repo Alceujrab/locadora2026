@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceStatus;
 use App\Models\Contract;
 use App\Models\Invoice;
-use App\Enums\InvoiceStatus;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class InvoiceService
 {
@@ -21,7 +19,7 @@ class InvoiceService
 
         $totalAmount = $contract->total;
         $installmentAmount = round($totalAmount / $installments, 2);
-        
+
         // Ajustar a última parcela para corrigir dízimas
         $totalCalculated = $installmentAmount * $installments;
         $difference = $totalAmount - $totalCalculated;
@@ -31,7 +29,7 @@ class InvoiceService
 
         for ($i = 1; $i <= $installments; $i++) {
             $amount = $installmentAmount;
-            
+
             // Adiciona a diferença do arredondamento na última parcela
             if ($i === $installments && $difference != 0) {
                 $amount += $difference;
@@ -64,7 +62,7 @@ class InvoiceService
         $data['invoice_number'] = $this->generateInvoiceNumber($data['branch_id'] ?? null);
         $data['status'] = $data['status'] ?? InvoiceStatus::OPEN;
         $data['total'] = $data['amount'] - ($data['discount'] ?? 0);
-        
+
         return Invoice::create($data);
     }
 
@@ -73,11 +71,11 @@ class InvoiceService
      */
     private function generateInvoiceNumber(?string $branchId = null): string
     {
-        $prefix = 'INV' . date('ym');
+        $prefix = 'INV'.date('ym');
         $count = Invoice::whereYear('created_at', date('Y'))
             ->whereMonth('created_at', date('m'))
             ->count() + 1;
-            
-        return sprintf("%s%04d", $prefix, $count);
+
+        return sprintf('%s%04d', $prefix, $count);
     }
 }

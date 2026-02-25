@@ -23,11 +23,33 @@ class AccountReceivable extends Model
         'received_at' => 'datetime',
     ];
 
-    public function branch() { return $this->belongsTo(Branch::class); }
-    public function customer() { return $this->belongsTo(Customer::class); }
-    public function contract() { return $this->belongsTo(Contract::class); }
-    public function invoice() { return $this->belongsTo(Invoice::class); }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
-    public function scopePending($query) { return $query->where('status', 'pendente'); }
-    public function scopeOverdue($query) { return $query->where('status', 'pendente')->where('due_date', '<', now()); }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pendente');
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', 'pendente')->where('due_date', '<', now());
+    }
 }

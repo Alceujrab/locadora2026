@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Branch extends Model
 {
@@ -60,6 +60,7 @@ class Branch extends Model
             $this->address_state,
             $this->address_zip,
         ]);
+
         return implode(', ', $parts);
     }
 }

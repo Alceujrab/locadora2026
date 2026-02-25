@@ -17,6 +17,13 @@ class ContractTemplate extends Model
         'is_active' => 'boolean',
     ];
 
-    public function branch() { return $this->belongsTo(Branch::class); }
-    public function scopeActive($query) { return $query->where('is_active', true); }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

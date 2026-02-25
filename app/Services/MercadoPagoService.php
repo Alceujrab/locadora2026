@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceStatus;
+use App\Models\Invoice;
+use App\Models\Payment;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\Payment;
-use App\Models\Invoice;
-use App\Enums\InvoiceStatus;
-use Carbon\Carbon;
-use Exception;
 
 class MercadoPagoService
 {
     protected string $accessToken;
+
     protected string $baseUrl = 'https://api.mercadopago.com/v1';
 
     public function __construct()
@@ -23,7 +23,7 @@ class MercadoPagoService
     /**
      * Gera um pagamento PIX via Mercado Pago
      */
-    public function generatePix(Payment $payment, Invoice $invoice): array|null
+    public function generatePix(Payment $payment, Invoice $invoice): ?array
     {
         try {
             $customer = $invoice->customer;
@@ -31,7 +31,7 @@ class MercadoPagoService
 
             $payload = [
                 'transaction_amount' => (float) $payment->amount,
-                'description' => "Fatura #" . $invoice->invoice_number,
+                'description' => 'Fatura #'.$invoice->invoice_number,
                 'payment_method_id' => 'pix',
                 'payer' => [
                     'email' => $customer->email ?? 'cliente@locadora.com.br',
@@ -40,7 +40,7 @@ class MercadoPagoService
                     'identification' => [
                         'type' => strlen(preg_replace('/\D/', '', $customer->document_number)) == 14 ? 'CNPJ' : 'CPF',
                         'number' => preg_replace('/\D/', '', $customer->document_number),
-                    ]
+                    ],
                 ],
             ];
 
@@ -50,7 +50,7 @@ class MercadoPagoService
 
             if ($response->successful()) {
                 $data = $response->json();
-                
+
                 $payment->update([
                     'mp_payment_id' => (string) $data['id'],
                     'mp_status' => $data['status'],
@@ -61,10 +61,12 @@ class MercadoPagoService
                 return $data;
             }
 
-            Log::error('MercadoPago PIX Error: ' . $response->body());
+            Log::error('MercadoPago PIX Error: '.$response->body());
+
             return null;
         } catch (Exception $e) {
-            Log::error('MercadoPago Exception: ' . $e->getMessage());
+            Log::error('MercadoPago Exception: '.$e->getMessage());
+
             return null;
         }
     }
@@ -75,7 +77,7 @@ class MercadoPagoService
     public function handleWebhook(array $payload)
     {
         try {
-            if (!isset($payload['data']['id'])) {
+            if (! isset($payload['data']['id'])) {
                 return false;
             }
 
@@ -85,8 +87,9 @@ class MercadoPagoService
             $response = Http::withToken($this->accessToken)
                 ->get("{$this->baseUrl}/payments/{$mpPaymentId}");
 
-            if (!$response->successful()) {
-                Log::error('MercadoPago Webhook falhou ao conferir ID: ' . $mpPaymentId);
+            if (! $response->successful()) {
+                Log::error('MercadoPago Webhook falhou ao conferir ID: '.$mpPaymentId);
+
                 return false;
             }
 
@@ -96,14 +99,15 @@ class MercadoPagoService
             // Encontrar o Payment local
             $payment = Payment::where('mp_payment_id', (string) $mpPaymentId)->first();
 
-            if (!$payment) {
+            if (! $payment) {
                 Log::warning("Webhook recebido para Pagamento não encontrado localmente: MP_ID {$mpPaymentId}");
+
                 return false;
             }
 
             $payment->update(['mp_status' => $status]);
 
-            if ($status === 'approved' && !$payment->isPaid()) {
+            if ($status === 'approved' && ! $payment->isPaid()) {
                 $payment->update([
                     'paid_at' => now(),
                 ]);
@@ -123,7 +127,8 @@ class MercadoPagoService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Erro ao processar Webhook MP: ' . $e->getMessage());
+            Log::error('Erro ao processar Webhook MP: '.$e->getMessage());
+
             return false;
         }
     }

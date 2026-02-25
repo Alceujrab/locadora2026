@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contract;
 use App\Enums\ContractStatus;
 use App\Enums\InspectionType;
+use App\Models\Contract;
 use App\Services\ContractService;
 use App\Services\InvoiceService;
-use Illuminate\Http\Request;
 
 class ContractActionController extends Controller
 {
@@ -19,7 +18,7 @@ class ContractActionController extends Controller
     {
         $contract = Contract::findOrFail($id);
 
-        if (!in_array($contract->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE])) {
+        if (! in_array($contract->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE])) {
             return response()->json([
                 'message' => 'Contrato não está em rascunho ou aguardando assinatura.',
             ], 422);
@@ -107,7 +106,7 @@ class ContractActionController extends Controller
     {
         $contract = Contract::findOrFail($id);
 
-        if (!$contract->template_id) {
+        if (! $contract->template_id) {
             return response()->json([
                 'message' => 'Nenhum template selecionado neste contrato.',
                 'messageType' => 'error',
@@ -136,7 +135,7 @@ class ContractActionController extends Controller
     {
         $contract = Contract::findOrFail($id);
 
-        if (!in_array($contract->status, [ContractStatus::ACTIVE, ContractStatus::FINISHED])) {
+        if (! in_array($contract->status, [ContractStatus::ACTIVE, ContractStatus::FINISHED])) {
             return response()->json([
                 'message' => 'Apenas contratos ativos ou finalizados podem gerar faturas.',
                 'messageType' => 'error',
@@ -154,7 +153,7 @@ class ContractActionController extends Controller
 
         if (count($invoices) > 0) {
             return response()->json([
-                'message' => 'Fatura gerada com sucesso! (R$ ' . number_format((float)$contract->total, 2, ',', '.') . ')',
+                'message' => 'Fatura gerada com sucesso! (R$ '.number_format((float) $contract->total, 2, ',', '.').')',
                 'messageType' => 'success',
             ]);
         }

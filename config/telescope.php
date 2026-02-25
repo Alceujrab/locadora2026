@@ -160,7 +160,7 @@ return [
         ],
 
         Watchers\EventWatcher::class => [
-            'enabled' => env('TELESCOPE_EVENT_WATCHER', true),
+            'enabled' => env('TELESCOPE_EVENT_WATCHER', false),
             'ignore' => [],
         ],
 

@@ -27,14 +27,14 @@ class CreateTestClient extends Command
     {
         $email = 'cliente@test.com';
         $password = 'senha123';
-        
+
         $branch = \App\Models\Branch::firstOrCreate(
             ['name' => 'Sede Principal'],
             [
                 'phone' => '11999999999',
                 'active' => true,
                 'matrix' => true,
-                'cnpj' => '00.000.000/0001-00'
+                'cnpj' => '00.000.000/0001-00',
             ]
         );
 
@@ -43,14 +43,14 @@ class CreateTestClient extends Command
             [
                 'name' => 'Senhor Cliente Teste',
                 'password' => \Illuminate\Support\Facades\Hash::make($password),
-                'branch_id' => $branch->id
+                'branch_id' => $branch->id,
             ]
         );
 
         // Forces password reset if it already existed
         $user->update(['password' => \Illuminate\Support\Facades\Hash::make($password)]);
 
-        if (!$user->hasRole('cliente')) {
+        if (! $user->hasRole('cliente')) {
             $user->assignRole('cliente');
         }
 
@@ -67,7 +67,7 @@ class CreateTestClient extends Command
 
         $customer->update(['user_id' => $user->id]);
 
-        $this->info("Cliente de Teste Criado com Sucesso!");
+        $this->info('Cliente de Teste Criado com Sucesso!');
         $this->table(['E-mail', 'Senha', 'Role'], [[$user->email, $password, 'cliente']]);
     }
 }

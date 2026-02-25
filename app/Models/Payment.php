@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\PaymentMethod;
 
 class Payment extends Model
 {
@@ -25,7 +25,18 @@ class Payment extends Model
         'refunded_at' => 'datetime',
     ];
 
-    public function invoice() { return $this->belongsTo(Invoice::class); }
-    public function isRefunded(): bool { return $this->refunded_at !== null; }
-    public function isPaid(): bool { return $this->paid_at !== null; }
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+    public function isRefunded(): bool
+    {
+        return $this->refunded_at !== null;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->paid_at !== null;
+    }
 }

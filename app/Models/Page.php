@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use MoonShine\ChangeLog\Traits\HasChangeLog;
+
 
 class Page extends Model
 {
-    use HasFactory, HasChangeLog, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',

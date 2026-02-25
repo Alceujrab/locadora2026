@@ -30,7 +30,7 @@ class Setting extends Model
     public static function get(string $key, mixed $default = null, ?int $branchId = null): mixed
     {
         $setting = static::where('key', $key)
-            ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
+            ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->first();
 
         return $setting ? $setting->casted_value : $default;

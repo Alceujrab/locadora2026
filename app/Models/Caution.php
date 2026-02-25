@@ -18,9 +18,23 @@ class Caution extends Model
         'released_at' => 'datetime',
     ];
 
-    public function contract() { return $this->belongsTo(Contract::class); }
-    public function customer() { return $this->belongsTo(Customer::class); }
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class);
+    }
 
-    public function isRetained(): bool { return $this->status === 'retida'; }
-    public function isReleased(): bool { return $this->status === 'liberada'; }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function isRetained(): bool
+    {
+        return $this->status === 'retida';
+    }
+
+    public function isReleased(): bool
+    {
+        return $this->status === 'liberada';
+    }
 }

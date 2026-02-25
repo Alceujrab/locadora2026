@@ -10,7 +10,18 @@ class SupportTicketMessage extends Model
 
     protected $casts = ['attachments' => 'array', 'is_internal' => 'boolean'];
 
-    public function ticket() { return $this->belongsTo(SupportTicket::class, 'ticket_id'); }
-    public function user() { return $this->belongsTo(User::class); }
-    public function customer() { return $this->belongsTo(Customer::class); }
+    public function ticket()
+    {
+        return $this->belongsTo(SupportTicket::class, 'ticket_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

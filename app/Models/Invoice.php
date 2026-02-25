@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\InvoiceStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\InvoiceStatus;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
@@ -31,20 +31,51 @@ class Invoice extends Model
         'total' => 'decimal:2',
     ];
 
-    public function branch(): BelongsTo { return $this->belongsTo(Branch::class); }
-    public function contract(): BelongsTo { return $this->belongsTo(Contract::class); }
-    public function customer(): BelongsTo { return $this->belongsTo(Customer::class); }
-    public function items(): HasMany { return $this->hasMany(InvoiceItem::class); }
-    public function payments(): HasMany { return $this->hasMany(Payment::class); }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     // Scopes
-    public function scopeOverdue($query) { return $query->where('status', InvoiceStatus::OVERDUE); }
-    public function scopeOpen($query) { return $query->where('status', InvoiceStatus::OPEN); }
-    public function scopePaid($query) { return $query->where('status', InvoiceStatus::PAID); }
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', InvoiceStatus::OVERDUE);
+    }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('status', InvoiceStatus::OPEN);
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('status', InvoiceStatus::PAID);
+    }
+
     public function scopeDueSoon($query, int $days = 3)
     {
         return $query->where('status', InvoiceStatus::OPEN)
-                     ->whereBetween('due_date', [now(), now()->addDays($days)]);
+            ->whereBetween('due_date', [now(), now()->addDays($days)]);
     }
 
     // Helpers
@@ -55,7 +86,9 @@ class Invoice extends Model
 
     public function calculatePenaltyAndInterest(): array
     {
-        if (!$this->isOverdue()) return ['penalty' => 0, 'interest' => 0];
+        if (! $this->isOverdue()) {
+            return ['penalty' => 0, 'interest' => 0];
+        }
 
         $daysOverdue = $this->due_date->diffInDays(now());
         $penalty = $this->amount * 0.02; // 2%

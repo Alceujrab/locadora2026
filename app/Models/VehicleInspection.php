@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\InspectionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\InspectionType;
 
 class VehicleInspection extends Model
 {
@@ -20,10 +20,25 @@ class VehicleInspection extends Model
         'inspection_date' => 'datetime',
     ];
 
-    public function vehicle(): BelongsTo { return $this->belongsTo(Vehicle::class); }
-    public function contract(): BelongsTo { return $this->belongsTo(Contract::class); }
-    public function inspector(): BelongsTo { return $this->belongsTo(User::class, 'inspector_user_id'); }
-    public function items(): HasMany { return $this->hasMany(InspectionItem::class, 'inspection_id'); }
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function inspector(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'inspector_user_id');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(InspectionItem::class, 'inspection_id');
+    }
 
     public function getDamagedItemsAttribute()
     {

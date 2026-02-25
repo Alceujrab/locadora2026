@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\ServiceOrderStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Enums\ServiceOrderStatus;
 
 class ServiceOrder extends Model
 {
@@ -25,14 +25,40 @@ class ServiceOrder extends Model
         'total' => 'decimal:2',
     ];
 
-    public function branch() { return $this->belongsTo(Branch::class); }
-    public function vehicle() { return $this->belongsTo(Vehicle::class); }
-    public function supplier() { return $this->belongsTo(Supplier::class); }
-    public function items() { return $this->hasMany(ServiceOrderItem::class); }
-    public function createdBy() { return $this->belongsTo(User::class, 'created_by'); }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
-    public function scopeOpen($query) { return $query->where('status', ServiceOrderStatus::OPEN); }
-    public function scopeByVehicle($query, int $vehicleId) { return $query->where('vehicle_id', $vehicleId); }
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(ServiceOrderItem::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('status', ServiceOrderStatus::OPEN);
+    }
+
+    public function scopeByVehicle($query, int $vehicleId)
+    {
+        return $query->where('vehicle_id', $vehicleId);
+    }
 
     public function recalculateTotal(): void
     {

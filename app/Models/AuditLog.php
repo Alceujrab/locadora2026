@@ -29,7 +29,8 @@ class AuditLog extends Model
     public function getModelNameAttribute(): string
     {
         $class = class_basename($this->model_type);
-        return match($class) {
+
+        return match ($class) {
             'Contract' => 'Contrato',
             'Invoice' => 'Fatura',
             'Vehicle' => 'Veículo',

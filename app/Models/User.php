@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,9 +11,19 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Permite acesso ao painel para users que NÃO são apenas 'cliente'
+        if (method_exists($this, 'hasRole')) {
+            return $this->hasRole('admin') || $this->hasRole('gerente') || ! $this->hasRole('cliente');
+        }
+
+        return true;
+    }
 
     protected $fillable = [
         'name', 'email', 'password', 'branch_id',

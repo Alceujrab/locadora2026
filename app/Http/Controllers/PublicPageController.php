@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Vehicle;
-use App\Models\VehicleCategory;
 use App\Models\Faq;
 use App\Models\Testimonial;
+use App\Models\Vehicle;
+use App\Models\VehicleCategory;
+use Illuminate\Http\Request;
 
 class PublicPageController extends Controller
 {
@@ -20,7 +20,7 @@ class PublicPageController extends Controller
 
         $categories = VehicleCategory::orderBy('name')->get();
         $brands = Vehicle::where('status', 'disponivel')->distinct()->pluck('brand')->filter()->sort();
-        
+
         $faqs = Faq::where('is_active', true)->orderBy('position')->get();
         $testimonials = Testimonial::where('is_active', true)->orderBy('id', 'desc')->get();
 
@@ -49,7 +49,7 @@ class PublicPageController extends Controller
 
         // Filter by Max Price (joined with category)
         if ($request->has('price_max') && $request->filled('price_max')) {
-            $query->whereHas('category', function($q) use ($request) {
+            $query->whereHas('category', function ($q) use ($request) {
                 $q->where('daily_rate', '<=', $request->price_max);
             });
         }
@@ -60,13 +60,13 @@ class PublicPageController extends Controller
                 case 'price_asc':
                     // Need to join category to sort by price
                     $query->join('vehicle_categories', 'vehicles.vehicle_category_id', '=', 'vehicle_categories.id')
-                          ->orderBy('vehicle_categories.daily_rate', 'asc')
-                          ->select('vehicles.*');
+                        ->orderBy('vehicle_categories.daily_rate', 'asc')
+                        ->select('vehicles.*');
                     break;
                 case 'price_desc':
                     $query->join('vehicle_categories', 'vehicles.vehicle_category_id', '=', 'vehicle_categories.id')
-                          ->orderBy('vehicle_categories.daily_rate', 'desc')
-                          ->select('vehicles.*');
+                        ->orderBy('vehicle_categories.daily_rate', 'desc')
+                        ->select('vehicles.*');
                     break;
                 case 'recent':
                 default:
@@ -78,7 +78,7 @@ class PublicPageController extends Controller
         }
 
         $vehicles = $query->paginate(12);
-        
+
         // Data for Filters
         $categories = VehicleCategory::orderBy('name')->get();
         $brands = Vehicle::where('status', 'disponivel')->distinct()->pluck('brand')->filter()->sort();
@@ -90,7 +90,7 @@ class PublicPageController extends Controller
     public function vehicleDetails($id)
     {
         $vehicle = Vehicle::with(['category', 'photos', 'accessories'])->findOrFail($id);
-        
+
         // Similar vehicles from the same category
         $relatedVehicles = Vehicle::with(['category', 'photos'])
             ->where('status', 'disponivel')

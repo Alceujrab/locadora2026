@@ -24,10 +24,28 @@ class FineTraffic extends Model
         'notification_date' => 'date',
     ];
 
-    public function vehicle() { return $this->belongsTo(Vehicle::class); }
-    public function contract() { return $this->belongsTo(Contract::class); }
-    public function customer() { return $this->belongsTo(Customer::class); }
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 
-    public function scopePending($query) { return $query->where('status', 'pendente'); }
-    public function isOverdue(): bool { return $this->due_date && $this->due_date->isPast() && $this->status === 'pendente'; }
+    public function contract()
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pendente');
+    }
+
+    public function isOverdue(): bool
+    {
+        return $this->due_date && $this->due_date->isPast() && $this->status === 'pendente';
+    }
 }

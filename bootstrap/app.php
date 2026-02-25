@@ -35,10 +35,11 @@ return Application::configure(basePath: dirname(__DIR__))
                     preg_match("/Data too long for column '(.+?)'/", $message, $matches);
                     $friendly = "Texto muito longo para o campo '{$matches[1]}'.";
                 } elseif (str_contains($message, 'foreign key constraint fails')) {
-                    $friendly = "Não é possível salvar: referência a registro inexistente.";
+                    $friendly = 'Não é possível salvar: referência a registro inexistente.';
                 } else {
-                    $friendly = "Erro no banco de dados: " . \Illuminate\Support\Str::limit($message, 200);
+                    $friendly = 'Erro no banco de dados: '.\Illuminate\Support\Str::limit($message, 200);
                 }
+
                 return back()->withInput()->with('toast', ['type' => 'error', 'message' => $friendly]);
             }
         });
@@ -52,6 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
                 ]);
+
                 return back()->withInput()->with('toast', ['type' => 'error', 'message' => $friendly]);
             }
         });

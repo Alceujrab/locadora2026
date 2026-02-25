@@ -1,9 +1,8 @@
 <?php
 
-return array_filter([
+return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\MoonShineServiceProvider::class,
-    class_exists(\Laravel\Telescope\TelescopeApplicationServiceProvider::class)
-        ? App\Providers\TelescopeServiceProvider::class
-        : null,
-]);
+    App\Providers\Filament\FilamentPanelProvider::class,
+
+    App\Providers\TelescopeServiceProvider::class,
+];

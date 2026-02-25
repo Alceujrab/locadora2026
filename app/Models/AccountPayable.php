@@ -23,10 +23,28 @@ class AccountPayable extends Model
         'paid_at' => 'datetime',
     ];
 
-    public function branch() { return $this->belongsTo(Branch::class); }
-    public function supplier() { return $this->belongsTo(Supplier::class); }
-    public function vehicle() { return $this->belongsTo(Vehicle::class); }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
-    public function scopePending($query) { return $query->where('status', 'pendente'); }
-    public function scopeOverdue($query) { return $query->where('status', 'pendente')->where('due_date', '<', now()); }
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pendente');
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', 'pendente')->where('due_date', '<', now());
+    }
 }

@@ -14,9 +14,23 @@ class SupportTicket extends Model
         'priority', 'status', 'category',
     ];
 
-    public function customer() { return $this->belongsTo(Customer::class); }
-    public function assignedTo() { return $this->belongsTo(User::class, 'assigned_to'); }
-    public function messages() { return $this->hasMany(SupportTicketMessage::class, 'ticket_id'); }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
-    public function scopeOpen($query) { return $query->where('status', 'aberto'); }
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(SupportTicketMessage::class, 'ticket_id');
+    }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('status', 'aberto');
+    }
 }
