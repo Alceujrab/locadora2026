@@ -69,7 +69,7 @@ class SignatureController extends Controller
             'signed_at' => now(),
             'signature_ip' => $ip,
             'signature_hash' => $hash,
-            'signature_method' => 'Digital Web (Manuscrita+Geo)',
+            'signature_method' => 'Web+Manuscrita',
             'signature_image' => $signaturePath,
             'signature_latitude' => $request->input('latitude'),
             'signature_longitude' => $request->input('longitude'),
