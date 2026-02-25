@@ -5,12 +5,12 @@ namespace App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Schemas\Schema;
-use Filament\Infolists\Components;
 
 class ViewVehicle extends ViewRecord
 {
     protected static string $resource = VehicleResource::class;
+
+    protected static string $view = 'filament.pages.vehicle-view-dashboard';
 
     protected function getHeaderActions(): array
     {
@@ -19,7 +19,7 @@ class ViewVehicle extends ViewRecord
         ];
     }
 
-    public function infolist(Schema $schema): Schema
+    protected function getViewData(): array
     {
         $vehicle = $this->record;
         $vehicle->load(['contracts.customer', 'reservations.customer', 'serviceOrders', 'fines', 'inspections', 'maintenanceAlerts', 'category', 'branch', 'photos']);
@@ -51,30 +51,27 @@ class ViewVehicle extends ViewRecord
         $totalDaysRented = $vehicle->contracts->sum('total_days') + $vehicle->reservations->sum('total_days');
         $avgDailyRate = $totalDaysRented > 0 ? $totalRevenue / $totalDaysRented : 0;
 
-        return $schema->schema([
-            // KPIs
-            Components\ViewEntry::make('kpis')
-                ->view('filament.vehicle-dashboard', [
-                    'vehicle' => $vehicle,
-                    'totalContracts' => $totalContracts,
-                    'totalReservations' => $totalReservations,
-                    'totalServiceOrders' => $totalServiceOrders,
-                    'totalFines' => $totalFines,
-                    'totalInspections' => $totalInspections,
-                    'totalRevenue' => $totalRevenue,
-                    'totalExpenses' => $totalExpenses,
-                    'profit' => $profit,
-                    'roi' => $roi,
-                    'expensesOS' => $expensesOS,
-                    'expensesFines' => $expensesFines,
-                    'expensesInsurance' => $expensesInsurance,
-                    'revenueContracts' => $revenueContracts,
-                    'revenueReservations' => $revenueReservations,
-                    'activeContract' => $activeContract,
-                    'nextMaintenance' => $nextMaintenance,
-                    'totalDaysRented' => $totalDaysRented,
-                    'avgDailyRate' => $avgDailyRate,
-                ]),
-        ]);
+        return [
+            'vehicle' => $vehicle,
+            'totalContracts' => $totalContracts,
+            'totalReservations' => $totalReservations,
+            'totalServiceOrders' => $totalServiceOrders,
+            'totalFines' => $totalFines,
+            'totalInspections' => $totalInspections,
+            'totalRevenue' => $totalRevenue,
+            'totalExpenses' => $totalExpenses,
+            'profit' => $profit,
+            'roi' => $roi,
+            'expensesOS' => $expensesOS,
+            'expensesFines' => $expensesFines,
+            'expensesInsurance' => $expensesInsurance,
+            'revenueContracts' => $revenueContracts,
+            'revenueReservations' => $revenueReservations,
+            'activeContract' => $activeContract,
+            'nextMaintenance' => $nextMaintenance,
+            'totalDaysRented' => $totalDaysRented,
+            'avgDailyRate' => $avgDailyRate,
+        ];
     }
 }
+

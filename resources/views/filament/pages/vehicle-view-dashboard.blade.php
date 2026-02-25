@@ -1,3 +1,4 @@
+<x-filament-panels::page>
 <div class="space-y-6">
     {{-- HEADER: Dados do Veículo --}}
     <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-6 text-white flex items-center gap-6">
@@ -248,3 +249,4 @@
         </div>
     </div>
 </div>
+</x-filament-panels::page>
