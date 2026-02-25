@@ -76,6 +76,7 @@ class AccountReceivableResource extends Resource
                     Components\TextInput::make('payment_bank')->label('Banco')->maxLength(255),
                     Components\TextInput::make('payment_reference')->label('Comprovante / Referencia')->maxLength(255),
                 ]),
+                Components\FileUpload::make('payment_proof_path')->label('Comprovante de Pagamento (anexo)')->directory('payment-proofs')->acceptedFileTypes(['image/*', 'application/pdf'])->maxSize(5120),
                 Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
             ])->collapsed(),
         ]);
@@ -142,6 +143,7 @@ class AccountReceivableResource extends Resource
                         Components\TextInput::make('pagador')->label('Pagador (Nome)')->maxLength(255),
                         Components\TextInput::make('banco')->label('Banco')->maxLength(255),
                         Components\TextInput::make('comprovante')->label('Comprovante / Referencia')->maxLength(255),
+                        Components\FileUpload::make('anexo_comprovante')->label('Anexar Comprovante (imagem/PDF)')->directory('payment-proofs')->acceptedFileTypes(['image/*', 'application/pdf'])->maxSize(5120),
                         Components\DateTimePicker::make('data_pagamento')->label('Data/Hora do Pagamento')->default(now())->required()->native(false),
                         Components\Toggle::make('enviar_confirmacao')->label('Enviar confirmacao por WhatsApp')->default(true),
                     ])
@@ -167,6 +169,7 @@ class AccountReceivableResource extends Resource
                             'payer_name' => $data['pagador'] ?? null,
                             'payment_bank' => $data['banco'] ?? null,
                             'payment_reference' => $data['comprovante'] ?? null,
+                            'payment_proof_path' => $data['anexo_comprovante'] ?? $record->payment_proof_path,
                             'received_at' => $data['data_pagamento'],
                             'notes' => ($record->notes ? $record->notes . "\n" : '')
                                 . "[" . now()->format('d/m H:i') . "] Pgto R$ " . number_format($valorPago, 2, ',', '.') . " via " . ($methodLabels[$data['forma_pagamento']] ?? $data['forma_pagamento']),

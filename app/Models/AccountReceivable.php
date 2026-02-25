@@ -14,7 +14,7 @@ class AccountReceivable extends Model
     protected $fillable = [
         'branch_id', 'customer_id', 'contract_id', 'invoice_id', 'description',
         'amount', 'paid_amount', 'due_date', 'received_at', 'payment_method',
-        'payer_name', 'payment_bank', 'payment_reference',
+        'payer_name', 'payment_bank', 'payment_reference', 'payment_proof_path',
         'status', 'recurrence', 'notes',
     ];
 
