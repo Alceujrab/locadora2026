@@ -14,9 +14,17 @@ class ServiceOrder extends Model
         'branch_id', 'vehicle_id', 'supplier_id', 'type', 'description',
         'requested_by', 'vehicle_city', 'procedure_adopted', 'driver_phone',
         'opened_by', 'customer_id',
-        'items_total', 'labor_total', 'total', 'status', 'opened_at',
-        'completed_at', 'nf_number', 'nf_path', 'attachments', 'pdf_path',
+        'items_total', 'labor_total', 'total', 'customer_charge',
+        'status', 'opened_at', 'completed_at',
+        'nf_number', 'nf_path', 'attachments', 'pdf_path',
+        // Assinatura de autorização (1ª)
+        'authorization_signed_at', 'authorization_signature_image', 'authorization_ip',
+        // Assinatura de conclusão (2ª)
+        'completion_signed_at', 'completion_signature_image', 'completion_ip',
+        // Legado (manter compatibilidade)
         'signature_token', 'signed_at', 'signature_ip', 'signature_hash', 'signature_image',
+        // Financeiro
+        'invoice_id',
         'closed_at', 'closing_notes',
         'notes', 'created_by',
     ];
@@ -26,10 +34,13 @@ class ServiceOrder extends Model
         'opened_at' => 'datetime',
         'completed_at' => 'datetime',
         'signed_at' => 'datetime',
+        'authorization_signed_at' => 'datetime',
+        'completion_signed_at' => 'datetime',
         'closed_at' => 'datetime',
         'items_total' => 'decimal:2',
         'labor_total' => 'decimal:2',
         'total' => 'decimal:2',
+        'customer_charge' => 'decimal:2',
         'attachments' => 'array',
     ];
 
@@ -52,6 +63,11 @@ class ServiceOrder extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
     }
 
     public function items()
@@ -85,10 +101,35 @@ class ServiceOrder extends Model
         return $query->where('vehicle_id', $vehicleId);
     }
 
-    // Methods
+    // Status helpers
     public function isSigned(): bool
     {
-        return ! is_null($this->signed_at);
+        return ! is_null($this->signed_at) || $this->isAuthorized();
+    }
+
+    public function isAuthorized(): bool
+    {
+        return ! is_null($this->authorization_signed_at);
+    }
+
+    public function isApproved(): bool
+    {
+        return ! is_null($this->completion_signed_at);
+    }
+
+    public function isInvoiced(): bool
+    {
+        return ! is_null($this->invoice_id);
+    }
+
+    public function needsAuthorization(): bool
+    {
+        return $this->status === ServiceOrderStatus::AWAITING_AUTHORIZATION;
+    }
+
+    public function needsApproval(): bool
+    {
+        return $this->status === ServiceOrderStatus::AWAITING_APPROVAL;
     }
 
     public function recalculateTotal(): void

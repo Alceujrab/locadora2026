@@ -56,7 +56,8 @@ Route::post('/contrato/{id}/assinar', [App\Http\Controllers\SignatureController:
 // ASSINATURA DIGITAL OS (PÚBLICA)
 // ==========================================
 Route::get('/os/{id}/assinatura', [App\Http\Controllers\ServiceOrderSignatureController::class, 'show'])->name('os.signature.show');
-Route::post('/os/{id}/assinatura', [App\Http\Controllers\ServiceOrderSignatureController::class, 'sign'])->name('os.signature.sign');
+Route::post('/os/{id}/autorizar', [App\Http\Controllers\ServiceOrderSignatureController::class, 'signAuthorization'])->name('os.signature.authorize');
+Route::post('/os/{id}/aprovar', [App\Http\Controllers\ServiceOrderSignatureController::class, 'signCompletion'])->name('os.signature.approve');
 Route::get('/os/{id}/pdf', [App\Http\Controllers\ServiceOrderSignatureController::class, 'downloadPdf'])->name('os.signature.pdf');
 
 // ==========================================

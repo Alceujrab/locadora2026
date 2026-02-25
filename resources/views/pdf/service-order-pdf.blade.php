@@ -23,13 +23,18 @@
         .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; color: #fff; font-weight: bold; }
         .badge-open { background: #3498db; }
         .badge-progress { background: #9b59b6; }
-        .badge-signature { background: #f39c12; }
+        .badge-auth { background: #f39c12; }
+        .badge-authorized { background: #2ecc71; }
+        .badge-approval { background: #f39c12; }
         .badge-completed { background: #27ae60; }
+        .badge-invoiced { background: #95a5a6; }
         .badge-closed { background: #7f8c8d; }
         .badge-cancelled { background: #e74c3c; }
         .signature-line { border-bottom: 1px solid #333; width: 200px; margin-top: 40px; }
         .footer { margin-top: 30px; border-top: 1px solid #ddd; padding-top: 8px; font-size: 9px; color: #999; text-align: center; }
         .signature-img { max-width: 200px; max-height: 80px; margin-top: 10px; }
+        .charge-box { background: #fef2f2; border: 2px solid #fca5a5; padding: 10px; text-align: center; border-radius: 4px; margin: 10px 0; }
+        .charge-amount { font-size: 20px; font-weight: bold; color: #dc2626; }
     </style>
 </head>
 <body>
@@ -46,7 +51,10 @@
                 <td>
                     <h1>ORDEM DE SERVICO #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
                     <h2>{{ $order->branch?->name ?? 'Elite Locadora' }}</h2>
-                    <p style="font-size: 10px; color: #888; margin-top: 2px;">Emissao: {{ now()->format('d/m/Y H:i') }}</p>
+                    <p style="font-size: 10px; color: #888; margin-top: 2px;">
+                        {{ isset($stage) && $stage === 'autorizacao' ? 'AUTORIZACAO DE ABERTURA' : (isset($stage) && $stage === 'conclusao' ? 'APROVACAO DE CONCLUSAO' : 'ORDEM DE SERVICO') }}
+                        | Emissao: {{ now()->format('d/m/Y H:i') }}
+                    </p>
                 </td>
                 <td style="text-align: right; width: 200px; font-size: 9px; color: #777;">
                     <p>CNPJ: 00.000.000/0001-00</p>
@@ -89,7 +97,20 @@
             <tr>
                 <td class="info-label">Status:</td>
                 <td class="info-value">
-                    <span class="badge @if($order->status->value === 'aberta') badge-open @elseif($order->status->value === 'em_andamento') badge-progress @elseif($order->status->value === 'aguardando_assinatura') badge-signature @elseif($order->status->value === 'concluida') badge-completed @elseif($order->status->value === 'fechada') badge-closed @else badge-cancelled @endif">{{ $order->status->label() }}</span>
+                    @php
+                        $badgeMap = [
+                            'aberta' => 'badge-open',
+                            'aguardando_autorizacao' => 'badge-auth',
+                            'autorizada' => 'badge-authorized',
+                            'em_andamento' => 'badge-progress',
+                            'aguardando_aprovacao' => 'badge-approval',
+                            'concluida' => 'badge-completed',
+                            'faturada' => 'badge-invoiced',
+                            'fechada' => 'badge-closed',
+                            'cancelada' => 'badge-cancelled',
+                        ];
+                    @endphp
+                    <span class="badge {{ $badgeMap[$order->status->value] ?? 'badge-open' }}">{{ $order->status->label() }}</span>
                 </td>
                 <td class="info-label">Solicitado por:</td>
                 <td class="info-value">{{ $order->requested_by ?? '-' }}</td>
@@ -105,12 +126,6 @@
                 <td class="info-value">{{ $order->opened_at?->format('d/m/Y H:i') ?? '-' }}</td>
                 <td class="info-label">Oficina:</td>
                 <td class="info-value">{{ $order->supplier?->name ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Conclusao:</td>
-                <td class="info-value">{{ $order->completed_at?->format('d/m/Y H:i') ?? '-' }}</td>
-                <td class="info-label">NF/Recibo:</td>
-                <td class="info-value">{{ $order->nf_number ?? '-' }}</td>
             </tr>
         </table>
     </div>
@@ -153,19 +168,19 @@
                 </tr>
                 @endforeach
                 <tr class="total-row">
-                    <td colspan="4" style="text-align:right">TOTAL PECAS:</td>
-                    <td style="text-align:right">R$ {{ number_format($order->items_total, 2, ',', '.') }}</td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="4" style="text-align:right">TOTAL MAO DE OBRA:</td>
-                    <td style="text-align:right">R$ {{ number_format($order->labor_total, 2, ',', '.') }}</td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="4" style="text-align:right; font-size: 13px;">TOTAL GERAL:</td>
-                    <td style="text-align:right; font-size: 13px;">R$ {{ number_format($order->total, 2, ',', '.') }}</td>
+                    <td colspan="4" style="text-align:right">TOTAL:</td>
+                    <td style="text-align:right">R$ {{ number_format($order->total, 2, ',', '.') }}</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    @endif
+
+    {{-- Valor cobrado do cliente --}}
+    @if($order->customer_charge > 0)
+    <div class="charge-box">
+        <p style="font-size: 10px; color: #991b1b; font-weight: bold; text-transform: uppercase;">Valor Cobrado do Cliente</p>
+        <p class="charge-amount">R$ {{ number_format($order->customer_charge, 2, ',', '.') }}</p>
     </div>
     @endif
 
@@ -176,34 +191,37 @@
     </div>
     @endif
 
-    @if($order->closing_notes)
-    <div class="section">
-        <div class="section-title">OBSERVACOES DE FECHAMENTO</div>
-        <p>{{ $order->closing_notes }}</p>
-    </div>
-    @endif
-
-    {{-- Assinaturas --}}
-    <div class="section" style="margin-top: 40px;">
+    {{-- ASSINATURAS DUPLAS --}}
+    <div class="section" style="margin-top: 30px;">
+        <div class="section-title">ASSINATURAS</div>
         <table class="info-table" style="width: 100%;">
             <tr>
-                <td style="width: 45%; text-align: center; padding-top: 50px;">
-                    <div class="signature-line" style="margin: 0 auto;"></div>
-                    <p style="font-size: 10px; color: #666; margin-top: 5px;">Responsavel pela OS</p>
-                </td>
-                <td style="width: 10%;"></td>
+                {{-- Assinatura de Autorização --}}
                 <td style="width: 45%; text-align: center; padding-top: 10px;">
-                    @if(!empty($signatureImageBase64))
-                        <img src="{{ $signatureImageBase64 }}" class="signature-img" alt="Assinatura do Cliente" style="margin: 0 auto;">
-                        <p style="font-size: 10px; color: #666; margin-top: 5px;">Locatario / Cliente</p>
-                        <p style="font-size: 9px; color: #27ae60; margin-top: 3px;">
-                            Assinado em {{ $order->signed_at?->format('d/m/Y H:i') }}
-                            | IP: {{ $order->signature_ip }}
-                        </p>
+                    @if(!empty($authSignatureBase64))
+                        <img src="{{ $authSignatureBase64 }}" class="signature-img" style="margin: 0 auto;">
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">Autorizacao de Abertura</p>
+                        <p style="font-size: 9px; color: #2563eb;">{{ $order->authorization_signed_at?->format('d/m/Y H:i') }} | IP: {{ $order->authorization_ip }}</p>
                     @else
                         <div style="padding-top: 40px;">
                             <div class="signature-line" style="margin: 0 auto;"></div>
-                            <p style="font-size: 10px; color: #666; margin-top: 5px;">Locatario / Cliente</p>
+                            <p style="font-size: 10px; color: #666; margin-top: 5px;">Autorizacao de Abertura</p>
+                            <p style="font-size: 9px; color: #999;">Pendente</p>
+                        </div>
+                    @endif
+                </td>
+                <td style="width: 10%;"></td>
+                {{-- Assinatura de Conclusão --}}
+                <td style="width: 45%; text-align: center; padding-top: 10px;">
+                    @if(!empty($completionSignatureBase64))
+                        <img src="{{ $completionSignatureBase64 }}" class="signature-img" style="margin: 0 auto;">
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">Aprovacao de Conclusao</p>
+                        <p style="font-size: 9px; color: #16a34a;">{{ $order->completion_signed_at?->format('d/m/Y H:i') }} | IP: {{ $order->completion_ip }}</p>
+                    @else
+                        <div style="padding-top: 40px;">
+                            <div class="signature-line" style="margin: 0 auto;"></div>
+                            <p style="font-size: 10px; color: #666; margin-top: 5px;">Aprovacao de Conclusao</p>
+                            <p style="font-size: 9px; color: #999;">Pendente</p>
                         </div>
                     @endif
                 </td>

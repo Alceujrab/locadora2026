@@ -101,10 +101,12 @@ class ServiceOrderResource extends Resource
                     Components\TextInput::make('nf_number')->label('Numero NF/Recibo')->maxLength(255),
                     Components\FileUpload::make('nf_path')->label('Arquivo NF (PDF)')->directory('so-nfs')->acceptedFileTypes(['application/pdf']),
                 ]),
-                Grid::make(3)->schema([
+                Grid::make(4)->schema([
                     Components\TextInput::make('items_total')->label('Total Pecas (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
                     Components\TextInput::make('labor_total')->label('Total Mao de Obra (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
-                    Components\TextInput::make('total')->label('Total Geral (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
+                    Components\TextInput::make('total')->label('Total Geral OS (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
+                    Components\TextInput::make('customer_charge')->label('Valor Cobrado do Cliente (R$)')->numeric()->prefix('R$')->default(0)
+                        ->helperText('Valor que sera faturado ao cliente (pode ser diferente do total da OS)'),
                 ]),
                 Components\Textarea::make('notes')->label('Observacoes da OS')->columnSpanFull(),
                 Components\Textarea::make('closing_notes')->label('Observacoes de Fechamento')->columnSpanFull()->helperText('Preencher ao fechar a OS'),
@@ -123,7 +125,8 @@ class ServiceOrderResource extends Resource
                 Tables\Columns\TextColumn::make('type')->label('Tipo')->badge(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('opened_at')->label('Abertura')->dateTime('d/m/Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
+                Tables\Columns\TextColumn::make('total')->label('Total OS')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
+                Tables\Columns\TextColumn::make('customer_charge')->label('Cobrado')->formatStateUsing(fn ($state) => $state > 0 ? 'R$ '.number_format((float) $state, 2, ',', '.') : '-')->toggleable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->options(ServiceOrderStatus::class),
@@ -148,10 +151,31 @@ class ServiceOrderResource extends Resource
                     ->action(function (ServiceOrder $record) {
                         $record->load(['branch', 'vehicle', 'supplier', 'customer', 'items', 'openedByUser', 'createdBy']);
 
-                        $pdf = Pdf::loadView('pdf.service-order-pdf', ['order' => $record]);
+                        $logoBase64 = null;
+                        $logoPath = public_path('images/logo-elite.png');
+                        if (file_exists($logoPath)) {
+                            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+                        }
+
+                        $authSig = null;
+                        if ($record->authorization_signature_image && Storage::disk('public')->exists($record->authorization_signature_image)) {
+                            $authSig = 'data:image/png;base64,' . base64_encode(Storage::disk('public')->get($record->authorization_signature_image));
+                        }
+
+                        $compSig = null;
+                        if ($record->completion_signature_image && Storage::disk('public')->exists($record->completion_signature_image)) {
+                            $compSig = 'data:image/png;base64,' . base64_encode(Storage::disk('public')->get($record->completion_signature_image));
+                        }
+
+                        $pdf = Pdf::loadView('pdf.service-order-pdf', [
+                            'order' => $record,
+                            'logoBase64' => $logoBase64,
+                            'authSignatureBase64' => $authSig,
+                            'completionSignatureBase64' => $compSig,
+                        ]);
+
                         $filename = 'os-' . $record->id . '-' . now()->format('YmdHis') . '.pdf';
                         $path = 'so-pdfs/' . $filename;
-
                         Storage::disk('public')->put($path, $pdf->output());
                         $record->update(['pdf_path' => $path]);
 
@@ -162,57 +186,144 @@ class ServiceOrderResource extends Resource
                         );
                     }),
 
-                // Enviar WhatsApp
-                Actions\Action::make('send_whatsapp')
-                    ->label('WhatsApp')
-                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
-                    ->color('success')
+                // ===== ENVIAR AUTORIZAÇÃO (1ª assinatura) =====
+                Actions\Action::make('send_authorization')
+                    ->label('Enviar Autorizacao')
+                    ->icon('heroicon-o-paper-airplane')
+                    ->color('info')
                     ->requiresConfirmation()
-                    ->modalHeading('Enviar OS por WhatsApp')
-                    ->modalDescription('A OS sera enviada como PDF para o locatario assinar digitalmente.')
-                    ->visible(fn (ServiceOrder $record) => $record->customer_id && $record->customer?->phone)
+                    ->modalHeading('Enviar para Autorizacao')
+                    ->modalDescription('O cliente recebera a OS via WhatsApp para AUTORIZAR a abertura dos servicos.')
+                    ->visible(fn (ServiceOrder $record) => $record->customer_id && $record->customer?->phone && ! $record->isAuthorized())
                     ->action(function (ServiceOrder $record) {
                         $record->load(['customer', 'vehicle', 'branch']);
 
-                        // Gerar PDF se não existir
-                        if (! $record->pdf_path || ! Storage::disk('public')->exists($record->pdf_path)) {
-                            $pdf = Pdf::loadView('pdf.service-order-pdf', ['order' => $record]);
-                            $filename = 'os-' . $record->id . '-' . now()->format('YmdHis') . '.pdf';
-                            $path = 'so-pdfs/' . $filename;
-                            Storage::disk('public')->put($path, $pdf->output());
-                            $record->update(['pdf_path' => $path]);
-                        }
-
-                        // Gerar token de assinatura
-                        if (! $record->signature_token) {
-                            $record->update(['signature_token' => Str::random(40)]);
-                        }
-
                         $signatureUrl = url("/os/{$record->id}/assinatura");
                         $phone = $record->customer->phone;
-                        $vehiclePlate = $record->vehicle->plate ?? 'N/A';
+                        $plate = $record->vehicle->plate ?? 'N/A';
 
-                        $message = "🔧 *ORDEM DE SERVICO #{$record->id}*\n\n"
-                            . "Veiculo: {$vehiclePlate}\n"
-                            . "Tipo: {$record->type}\n"
-                            . "Descricao: {$record->description}\n\n"
-                            . "📋 Para visualizar e assinar a OS, acesse:\n{$signatureUrl}\n\n"
+                        $message = "🔧 *AUTORIZACAO DE ABERTURA - OS #{$record->id}*\n\n"
+                            . "Veiculo: {$plate}\n"
+                            . "Problema: {$record->description}\n\n"
+                            . "📋 Para AUTORIZAR a abertura da OS, acesse:\n{$signatureUrl}\n\n"
+                            . "Apos sua autorizacao, os servicos serao iniciados.\n\n"
                             . "Elite Locadora";
 
                         $evolution = app(EvolutionApiService::class);
-
-                        // Enviar mensagem de texto
                         $evolution->sendText($phone, $message);
 
-                        // Enviar PDF
-                        $pdfUrl = asset('storage/' . $record->pdf_path);
-                        $evolution->sendDocument($phone, $pdfUrl, 'OS-' . $record->id . '.pdf');
-
-                        $record->update(['status' => ServiceOrderStatus::AWAITING_SIGNATURE]);
+                        $record->update(['status' => ServiceOrderStatus::AWAITING_AUTHORIZATION]);
 
                         \Filament\Notifications\Notification::make()
-                            ->title('OS enviada por WhatsApp!')
-                            ->body("Enviada para {$phone}")
+                            ->title('Autorizacao enviada!')
+                            ->body("Enviada para {$phone} - Aguardando assinatura do cliente")
+                            ->success()
+                            ->send();
+                    }),
+
+                // ===== ENVIAR APROVAÇÃO (2ª assinatura) =====
+                Actions\Action::make('send_approval')
+                    ->label('Enviar Aprovacao')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Enviar para Aprovacao Final')
+                    ->modalDescription('O cliente recebera a OS concluida via WhatsApp para APROVAR os servicos realizados.')
+                    ->visible(fn (ServiceOrder $record) => $record->customer_id && $record->customer?->phone && $record->isAuthorized() && ! $record->isApproved())
+                    ->action(function (ServiceOrder $record) {
+                        $record->load(['customer', 'vehicle', 'branch']);
+
+                        $signatureUrl = url("/os/{$record->id}/assinatura");
+                        $phone = $record->customer->phone;
+                        $plate = $record->vehicle->plate ?? 'N/A';
+                        $charge = $record->customer_charge > 0 ? 'R$ ' . number_format($record->customer_charge, 2, ',', '.') : 'Sem cobranca';
+
+                        $message = "✅ *SERVICO CONCLUIDO - OS #{$record->id}*\n\n"
+                            . "Veiculo: {$plate}\n"
+                            . "Total OS: R$ " . number_format($record->total, 2, ',', '.') . "\n"
+                            . "Valor a cobrar: {$charge}\n\n"
+                            . "📋 Para APROVAR a conclusao, acesse:\n{$signatureUrl}\n\n"
+                            . "Apos sua aprovacao, a fatura sera gerada.\n\n"
+                            . "Elite Locadora";
+
+                        $evolution = app(EvolutionApiService::class);
+                        $evolution->sendText($phone, $message);
+
+                        // Enviar PDF atualizado
+                        if ($record->pdf_path && Storage::disk('public')->exists($record->pdf_path)) {
+                            $pdfUrl = asset('storage/' . $record->pdf_path);
+                            $evolution->sendDocument($phone, $pdfUrl, 'OS-' . $record->id . '.pdf');
+                        }
+
+                        $record->update(['status' => ServiceOrderStatus::AWAITING_APPROVAL]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Aprovacao enviada!')
+                            ->body("Enviada para {$phone} - Aguardando aprovacao do cliente")
+                            ->success()
+                            ->send();
+                    }),
+
+                // ===== GERAR FATURA =====
+                Actions\Action::make('generate_invoice')
+                    ->label('Gerar Fatura')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Gerar Fatura do Cliente')
+                    ->modalDescription(fn (ServiceOrder $record) => "Sera gerada uma fatura de R$ " . number_format((float) $record->customer_charge, 2, ',', '.') . " para o cliente.")
+                    ->visible(fn (ServiceOrder $record) => $record->isApproved() && $record->customer_charge > 0 && ! $record->isInvoiced())
+                    ->action(function (ServiceOrder $record) {
+                        $record->load(['customer', 'vehicle', 'branch']);
+
+                        // Criar Invoice
+                        $invoice = \App\Models\Invoice::create([
+                            'branch_id' => $record->branch_id,
+                            'customer_id' => $record->customer_id,
+                            'invoice_number' => 'OS-' . str_pad($record->id, 5, '0', STR_PAD_LEFT),
+                            'due_date' => now()->addDays(7),
+                            'amount' => $record->customer_charge,
+                            'total' => $record->customer_charge,
+                            'status' => \App\Enums\InvoiceStatus::OPEN,
+                            'notes' => "Fatura ref. OS #{$record->id} - Veiculo {$record->vehicle?->plate}",
+                        ]);
+
+                        // Criar Conta a Receber
+                        \App\Models\AccountReceivable::create([
+                            'branch_id' => $record->branch_id,
+                            'customer_id' => $record->customer_id,
+                            'invoice_id' => $invoice->id,
+                            'category' => 'Ordem de Servico',
+                            'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
+                            'amount' => $record->customer_charge,
+                            'due_date' => now()->addDays(7),
+                            'status' => 'pendente',
+                        ]);
+
+                        $record->update([
+                            'invoice_id' => $invoice->id,
+                            'status' => ServiceOrderStatus::INVOICED,
+                        ]);
+
+                        // Enviar fatura por WhatsApp
+                        if ($record->customer?->phone) {
+                            $phone = $record->customer->phone;
+                            $charge = 'R$ ' . number_format($record->customer_charge, 2, ',', '.');
+
+                            $message = "💰 *FATURA GERADA - OS #{$record->id}*\n\n"
+                                . "Veiculo: {$record->vehicle?->plate}\n"
+                                . "Valor: {$charge}\n"
+                                . "Vencimento: " . now()->addDays(7)->format('d/m/Y') . "\n\n"
+                                . "Para mais detalhes, acesse seu portal do cliente.\n\n"
+                                . "Elite Locadora";
+
+                            $evolution = app(EvolutionApiService::class);
+                            $evolution->sendText($phone, $message);
+                        }
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Fatura gerada!')
+                            ->body("Fatura de R$ " . number_format($record->customer_charge, 2, ',', '.') . " criada + conta a receber")
                             ->success()
                             ->send();
                     }),
