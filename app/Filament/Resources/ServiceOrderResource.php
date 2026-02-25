@@ -102,9 +102,9 @@ class ServiceOrderResource extends Resource
                     Components\FileUpload::make('nf_path')->label('Arquivo NF (PDF)')->directory('so-nfs')->acceptedFileTypes(['application/pdf']),
                 ]),
                 Grid::make(4)->schema([
-                    Components\TextInput::make('items_total')->label('Total Pecas (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
-                    Components\TextInput::make('labor_total')->label('Total Mao de Obra (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
-                    Components\TextInput::make('total')->label('Total Geral OS (R$)')->numeric()->prefix('R$')->disabled()->dehydrated()->default(0),
+                    Components\TextInput::make('items_total')->label('Total Pecas (R$)')->numeric()->prefix('R$')->disabled()->default(0),
+                    Components\TextInput::make('labor_total')->label('Total Mao de Obra (R$)')->numeric()->prefix('R$')->disabled()->default(0),
+                    Components\TextInput::make('total')->label('Total Geral OS (R$)')->numeric()->prefix('R$')->disabled()->default(0),
                     Components\TextInput::make('customer_charge')->label('Valor Cobrado do Cliente (R$)')->numeric()->prefix('R$')->default(0)
                         ->helperText('Valor que sera faturado ao cliente (pode ser diferente do total da OS)'),
                 ]),
@@ -293,7 +293,6 @@ class ServiceOrderResource extends Resource
                             'branch_id' => $record->branch_id,
                             'customer_id' => $record->customer_id,
                             'invoice_id' => $invoice->id,
-                            'category' => 'Ordem de Servico',
                             'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
                             'amount' => $record->customer_charge,
                             'due_date' => now()->addDays(7),

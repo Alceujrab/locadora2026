@@ -12,7 +12,7 @@ class AccountReceivable extends Model
     protected $table = 'accounts_receivable';
 
     protected $fillable = [
-        'branch_id', 'customer_id', 'contract_id', 'invoice_id', 'category', 'description',
+        'branch_id', 'customer_id', 'contract_id', 'invoice_id', 'description',
         'amount', 'due_date', 'received_at', 'payment_method', 'status',
         'recurrence', 'notes',
     ];
