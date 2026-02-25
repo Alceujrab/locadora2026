@@ -14,7 +14,7 @@ use App\Filament\Widgets\PendingMaintenanceWidget;
 
 class FleetDashboard extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Gestao de Frota';
 
