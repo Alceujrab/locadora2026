@@ -22,16 +22,42 @@ class ContractService
 
         $html = $this->replaceVariables($template->content, $contract);
 
-        $pdf = Pdf::loadHTML($html);
+        // Adicionar bloco de assinatura se contrato foi assinado
+        if ($contract->isSigned()) {
+            $signatureBlock = '<div style="margin-top:40px; border-top:2px solid #1a1a2e; padding-top:20px;">';
+            $signatureBlock .= '<h3 style="color:#1a1a2e; font-size:14px; margin-bottom:10px;">ASSINATURA DIGITAL</h3>';
+            $signatureBlock .= '<table style="width:100%; font-size:11px; border:none;">';
+            $signatureBlock .= '<tr><td style="border:none; padding:3px;"><strong>Assinado em:</strong> ' . $contract->signed_at?->format('d/m/Y H:i:s') . '</td>';
+            $signatureBlock .= '<td style="border:none; padding:3px;"><strong>IP:</strong> ' . ($contract->signature_ip ?? '-') . '</td></tr>';
+            if ($contract->signature_latitude) {
+                $signatureBlock .= '<tr><td colspan="2" style="border:none; padding:3px;"><strong>Geolocalização:</strong> ' . $contract->signature_latitude . ', ' . $contract->signature_longitude . '</td></tr>';
+            }
+            $signatureBlock .= '<tr><td colspan="2" style="border:none; padding:3px;"><strong>Método:</strong> ' . ($contract->signature_method ?? '-') . '</td></tr>';
+            $signatureBlock .= '<tr><td colspan="2" style="border:none; padding:3px; font-size:9px; word-break:break-all;"><strong>Hash SHA-256:</strong> ' . ($contract->signature_hash ?? '-') . '</td></tr>';
+            $signatureBlock .= '</table>';
 
-        // Define papel e orientação se desejar
+            // Imagem da assinatura
+            if ($contract->signature_image && Storage::disk('public')->exists($contract->signature_image)) {
+                $sigBase64 = 'data:image/png;base64,' . base64_encode(Storage::disk('public')->get($contract->signature_image));
+                $signatureBlock .= '<div style="margin-top:10px; text-align:center;">';
+                $signatureBlock .= '<p style="font-size:10px; color:#555; margin-bottom:5px;">Assinatura do Locatário:</p>';
+                $signatureBlock .= '<img src="' . $sigBase64 . '" style="max-width:300px; max-height:100px; border:1px solid #ddd; padding:5px; background:#fff;"/>';
+                $signatureBlock .= '<p style="font-size:10px; margin-top:5px;">' . ($contract->customer?->name ?? '') . '</p>';
+                $signatureBlock .= '</div>';
+            }
+
+            $signatureBlock .= '<p style="font-size:8px; color:#999; margin-top:15px; text-align:center;">Documento assinado digitalmente conforme MP 2.200-2/2001. Validação: ' . ($contract->signature_hash ?? '') . '</p>';
+            $signatureBlock .= '</div>';
+
+            $html .= $signatureBlock;
+        }
+
+        $pdf = Pdf::loadHTML($html);
         $pdf->setPaper('A4', 'portrait');
 
         $fileName = 'contracts/'.$contract->contract_number.'_'.time().'.pdf';
-
         Storage::disk('public')->put($fileName, $pdf->output());
 
-        // Atualiza o caminho e status se estiver como rascunho
         $data = ['pdf_path' => $fileName];
         if ($contract->status === \App\Enums\ContractStatus::DRAFT) {
             $data['status'] = \App\Enums\ContractStatus::AWAITING_SIGNATURE;
