@@ -116,6 +116,7 @@ class ContractTemplateResource extends Resource
                     ->label('')
                     ->columnSpanFull()
                     ->required()
+                    ->extraInputAttributes(['style' => 'min-height: 600px;'])
                     ->toolbarButtons([
                         'attachFiles', 'blockquote', 'bold', 'bulletList',
                         'codeBlock', 'h2', 'h3', 'italic', 'link',
