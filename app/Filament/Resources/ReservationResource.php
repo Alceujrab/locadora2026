@@ -110,6 +110,7 @@ class ReservationResource extends Resource
                             ->label('Total Extras (R$)')
                             ->numeric()
                             ->prefix('R$')
+                            ->default(0)
                             ->disabled()
                             ->dehydrated(),
                         Components\TextInput::make('discount')
