@@ -154,6 +154,33 @@ class InvoiceResource extends Resource
                             ->send();
                     }),
 
+                // Enviar para Contas a Receber
+                Actions\Action::make('send_to_receivable')
+                    ->label('Contas a Receber')
+                    ->icon('heroicon-o-arrow-trending-up')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Enviar para Contas a Receber')
+                    ->modalDescription(fn (Invoice $record) => "Criar conta a receber de R$ " . number_format((float) $record->total, 2, ',', '.') . " para {$record->customer?->name}?")
+                    ->visible(fn (Invoice $record) => ! \App\Models\AccountReceivable::where('invoice_id', $record->id)->exists())
+                    ->action(function (Invoice $record) {
+                        \App\Models\AccountReceivable::create([
+                            'branch_id' => $record->branch_id,
+                            'customer_id' => $record->customer_id,
+                            'invoice_id' => $record->id,
+                            'description' => "Fatura {$record->invoice_number}" . ($record->contract ? " - Contrato {$record->contract->contract_number}" : ''),
+                            'amount' => $record->total,
+                            'due_date' => $record->due_date,
+                            'status' => 'pendente',
+                        ]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Conta a receber criada!')
+                            ->body("R$ " . number_format((float) $record->total, 2, ',', '.') . " - Venc: " . $record->due_date?->format('d/m/Y'))
+                            ->success()
+                            ->send();
+                    }),
+
                 Actions\DeleteAction::make(),
             ])
             ->bulkActions([
