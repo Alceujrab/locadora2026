@@ -15,7 +15,7 @@ return new class extends Migration
             $table->text('procedure_adopted')->nullable()->after('vehicle_city')->comment('Procedimento adotado');
             $table->string('driver_phone', 20)->nullable()->after('procedure_adopted')->comment('Telefone do motorista');
             $table->foreignId('opened_by')->nullable()->after('driver_phone')->constrained('users')->nullOnDelete();
-            $table->foreignId('customer_id')->nullable()->after('opened_by')->constrained('customers')->nullOnDelete();
+            $table->foreignUuid('customer_id')->nullable()->after('opened_by')->constrained('customers')->nullOnDelete();
 
             // Anexos (fotos/vídeos)
             $table->json('attachments')->nullable()->after('nf_path')->comment('Fotos e vídeos do problema');
