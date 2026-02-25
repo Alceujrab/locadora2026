@@ -10,7 +10,7 @@ class ViewVehicle extends ViewRecord
 {
     protected static string $resource = VehicleResource::class;
 
-    protected static string $view = 'filament.pages.vehicle-view-dashboard';
+    protected string $view = 'filament.pages.vehicle-view-dashboard';
 
     protected function getHeaderActions(): array
     {
