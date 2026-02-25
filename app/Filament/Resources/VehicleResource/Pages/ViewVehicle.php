@@ -5,7 +5,7 @@ namespace App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Infolists\Infolist;
+use Filament\Schemas\Schema;
 use Filament\Infolists\Components;
 
 class ViewVehicle extends ViewRecord
@@ -19,7 +19,7 @@ class ViewVehicle extends ViewRecord
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
         $vehicle = $this->record;
         $vehicle->load(['contracts.customer', 'reservations.customer', 'serviceOrders', 'fines', 'inspections', 'maintenanceAlerts', 'category', 'branch', 'photos']);
@@ -51,7 +51,7 @@ class ViewVehicle extends ViewRecord
         $totalDaysRented = $vehicle->contracts->sum('total_days') + $vehicle->reservations->sum('total_days');
         $avgDailyRate = $totalDaysRented > 0 ? $totalRevenue / $totalDaysRented : 0;
 
-        return $infolist->schema([
+        return $schema->schema([
             // KPIs
             Components\ViewEntry::make('kpis')
                 ->view('filament.vehicle-dashboard', [
