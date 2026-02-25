@@ -13,15 +13,22 @@ class AccountReceivable extends Model
 
     protected $fillable = [
         'branch_id', 'customer_id', 'contract_id', 'invoice_id', 'description',
-        'amount', 'due_date', 'received_at', 'payment_method', 'status',
-        'recurrence', 'notes',
+        'amount', 'paid_amount', 'due_date', 'received_at', 'payment_method',
+        'payer_name', 'payment_bank', 'payment_reference',
+        'status', 'recurrence', 'notes',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
         'due_date' => 'date',
         'received_at' => 'datetime',
     ];
+
+    public function getRemainingAttribute(): float
+    {
+        return max(0, (float) $this->amount - (float) $this->paid_amount);
+    }
 
     public function branch()
     {
