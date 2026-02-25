@@ -9,31 +9,33 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Users: trocar unique absoluto por validacao no app (soft deletes)
-        Schema::table('users', function (Blueprint $table) {
-            // Dropar unique index do email (permite re-cadastrar email de user deletado)
-            try {
+        // Users: dropar unique se existir
+        $userUnique = collect(DB::select("SHOW INDEX FROM users WHERE Key_name = 'users_email_unique'"));
+        if ($userUnique->isNotEmpty()) {
+            Schema::table('users', function (Blueprint $table) {
                 $table->dropUnique('users_email_unique');
-            } catch (\Exception $e) {
-                // Index pode nao existir
-            }
-            // Adicionar index normal (nao unique) para performance
-            try {
+            });
+        }
+        $userIndex = collect(DB::select("SHOW INDEX FROM users WHERE Key_name = 'users_email_index'"));
+        if ($userIndex->isEmpty()) {
+            Schema::table('users', function (Blueprint $table) {
                 $table->index('email', 'users_email_index');
-            } catch (\Exception $e) {}
-        });
+            });
+        }
 
-        // Customers: trocar unique absoluto por validacao no app
-        Schema::table('customers', function (Blueprint $table) {
-            try {
+        // Customers: dropar unique se existir
+        $custUnique = collect(DB::select("SHOW INDEX FROM customers WHERE Key_name = 'customers_cpf_cnpj_unique'"));
+        if ($custUnique->isNotEmpty()) {
+            Schema::table('customers', function (Blueprint $table) {
                 $table->dropUnique('customers_cpf_cnpj_unique');
-            } catch (\Exception $e) {}
-            // Só cria index se não existir
-            $indexes = collect(DB::select("SHOW INDEX FROM customers WHERE Key_name = 'customers_cpf_cnpj_index'"));
-            if ($indexes->isEmpty()) {
-                try { $table->index('cpf_cnpj', 'customers_cpf_cnpj_index'); } catch (\Exception $e) {}
-            }
-        });
+            });
+        }
+        $custIndex = collect(DB::select("SHOW INDEX FROM customers WHERE Key_name = 'customers_cpf_cnpj_index'"));
+        if ($custIndex->isEmpty()) {
+            Schema::table('customers', function (Blueprint $table) {
+                $table->index('cpf_cnpj', 'customers_cpf_cnpj_index');
+            });
+        }
     }
 
     public function down(): void
