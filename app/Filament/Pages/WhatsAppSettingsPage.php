@@ -25,7 +25,7 @@ class WhatsAppSettingsPage extends Page
 
     protected static ?int $navigationSort = 2;
 
-    protected static string $view = 'filament.pages.whatsapp-settings';
+    protected string $view = 'filament.pages.whatsapp-settings';
 
     // Form data
     public ?string $evolution_api_url = '';
