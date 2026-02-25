@@ -71,7 +71,7 @@ class ServiceOrderResource extends Resource
                 ]),
                 Grid::make(2)->schema([
                     Components\TextInput::make('driver_phone')->label('Telefone do Motorista')->tel()->maxLength(20)->placeholder('(00) 00000-0000'),
-                    Components\Select::make('customer_id')->label('Locatario Vinculado')->relationship('customer', 'full_name')->searchable()->preload()->helperText('Para envio de assinatura digital'),
+                    Components\Select::make('customer_id')->label('Locatario Vinculado')->relationship('customer', 'name')->searchable()->preload()->helperText('Para envio de assinatura digital'),
                 ]),
                 Grid::make(2)->schema([
                     Components\Select::make('opened_by')->label('Funcionario que Abriu')->relationship('openedByUser', 'name')->searchable()->preload()->default(fn () => Auth::id()),
