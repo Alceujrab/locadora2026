@@ -21,7 +21,8 @@ class Contract extends Model
         'extras_total', 'caution_amount', 'discount', 'additional_charges',
         'additional_charges_description', 'total', 'status',
         'signed_at', 'signature_token', 'signature_ip', 'signature_hash',
-        'signature_method', 'pdf_path', 'notes', 'created_by',
+        'signature_method', 'signature_image', 'signature_latitude', 'signature_longitude',
+        'pdf_path', 'notes', 'created_by',
     ];
 
     protected $casts = [

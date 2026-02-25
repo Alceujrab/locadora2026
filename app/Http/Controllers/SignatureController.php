@@ -36,7 +36,7 @@ class SignatureController extends Controller
     }
 
     /**
-     * Process the signature submission.
+     * Process the signature submission with signature image + geolocation.
      */
     public function sign(Request $request, $id)
     {
@@ -50,11 +50,15 @@ class SignatureController extends Controller
         $request->validate([
             'accept_terms' => 'accepted',
             'signature_token' => 'required|string',
+            'signature_data' => 'required|string',
         ]);
 
         if ($request->signature_token !== $contract->signature_token) {
             return back()->with('error', 'Token de assinatura inválido ou expirado.');
         }
+
+        // Salvar imagem da assinatura
+        $signaturePath = $this->saveSignatureImage($request->input('signature_data'), $contract->id);
 
         $ip = $request->ip();
         $userAgent = $request->userAgent();
@@ -65,11 +69,59 @@ class SignatureController extends Controller
             'signed_at' => now(),
             'signature_ip' => $ip,
             'signature_hash' => $hash,
-            'signature_method' => 'Aceite Digital Web (Token)',
-            'status' => $contract->status === ContractStatus::AWAITING_SIGNATURE ? ContractStatus::ACTIVE : $contract->status,
+            'signature_method' => 'Assinatura Digital Web (Manuscrita + Geolocalização)',
+            'signature_image' => $signaturePath,
+            'signature_latitude' => $request->input('latitude'),
+            'signature_longitude' => $request->input('longitude'),
+            'status' => ContractStatus::ACTIVE,
         ]);
 
-        return redirect()->route('contract.signature.show', $id)
-            ->with('success', 'Contrato assinado digitalmente com sucesso!');
+        // Re-gerar PDF com assinatura
+        $this->regeneratePdfWithSignature($contract);
+
+        return view('public.contract.signed_success', compact('contract'));
+    }
+
+    /**
+     * Download do PDF do contrato assinado
+     */
+    public function downloadPdf($id)
+    {
+        $contract = Contract::findOrFail($id);
+
+        if (! $contract->pdf_path || ! Storage::disk('public')->exists($contract->pdf_path)) {
+            abort(404, 'PDF nao disponivel.');
+        }
+
+        return Storage::disk('public')->download($contract->pdf_path, 'Contrato-' . $contract->contract_number . '.pdf');
+    }
+
+    /**
+     * Salva a imagem da assinatura como PNG
+     */
+    private function saveSignatureImage(string $base64Data, string $contractId): ?string
+    {
+        if (! str_starts_with($base64Data, 'data:image/png;base64,')) {
+            return null;
+        }
+
+        $imageData = base64_decode(str_replace('data:image/png;base64,', '', $base64Data));
+        $filename = "contract-signatures/contrato-{$contractId}-" . now()->format('YmdHis') . '.png';
+        Storage::disk('public')->put($filename, $imageData);
+
+        return $filename;
+    }
+
+    /**
+     * Re-gera o PDF do contrato incluindo a assinatura
+     */
+    private function regeneratePdfWithSignature(Contract $contract): void
+    {
+        try {
+            $service = app(\App\Services\ContractService::class);
+            $service->generatePdf($contract);
+        } catch (\Exception $e) {
+            // Não falhar se o PDF não puder ser regenerado
+        }
     }
 }

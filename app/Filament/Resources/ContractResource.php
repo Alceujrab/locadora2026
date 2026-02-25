@@ -95,6 +95,9 @@ class ContractResource extends Resource
                 Tables\Columns\TextColumn::make('return_date')->label('Devolucao')->dateTime('d/m/Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
+                Tables\Columns\IconColumn::make('signed_at')->label('Assinado')->boolean()
+                    ->trueIcon('heroicon-o-check-badge')->falseIcon('heroicon-o-clock')
+                    ->trueColor('success')->falseColor('warning'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Status')->options(ContractStatus::class),
@@ -220,6 +223,56 @@ class ContractResource extends Resource
                 ->url(fn (Contract $record) => $record->pdf_path ? asset('storage/'.$record->pdf_path) : '#')
                 ->openUrlInNewTab()
                 ->visible(fn (Contract $record) => ! empty($record->pdf_path)),
+
+            // ENVIAR PARA ASSINATURA VIA WHATSAPP
+            Actions\Action::make('sendSignatureWhatsApp')
+                ->label('Assinar WhatsApp')
+                ->icon('heroicon-o-pencil-square')
+                ->color('success')
+                ->requiresConfirmation()
+                ->modalHeading('Enviar Contrato para Assinatura')
+                ->modalDescription(fn (Contract $record) => "Enviar link de assinatura do contrato {$record->contract_number} para {$record->customer?->name} via WhatsApp?")
+                ->visible(fn (Contract $record) => ! $record->isSigned() && $record->pdf_path && $record->customer?->phone)
+                ->action(function (Contract $record) {
+                    // Garantir status aguardando_assinatura
+                    if ($record->status === ContractStatus::DRAFT) {
+                        $record->update(['status' => ContractStatus::AWAITING_SIGNATURE]);
+                    }
+
+                    // Garantir token de assinatura
+                    if (! $record->signature_token) {
+                        $record->update(['signature_token' => \Illuminate\Support\Str::random(64)]);
+                    }
+
+                    $phone = $record->customer->phone;
+                    $signUrl = route('contract.signature.show', $record->id);
+                    $total = 'R$ ' . number_format((float) $record->total, 2, ',', '.');
+
+                    $message = "📋 *CONTRATO DE LOCAÇÃO*\n\n"
+                        . "Contrato: {$record->contract_number}\n"
+                        . "Cliente: {$record->customer->name}\n"
+                        . "Veículo: {$record->vehicle?->plate} - {$record->vehicle?->brand} {$record->vehicle?->model}\n"
+                        . "Período: {$record->pickup_date?->format('d/m/Y')} a {$record->return_date?->format('d/m/Y')}\n"
+                        . "Total: {$total}\n\n"
+                        . "✍️ *Clique no link abaixo para assinar digitalmente:*\n{$signUrl}\n\n"
+                        . "Após assinar, você poderá baixar o contrato assinado em PDF.\n\n"
+                        . "Elite Locadora";
+
+                    $evolution = app(\App\Services\EvolutionApiService::class);
+                    $evolution->sendText($phone, $message);
+
+                    // Enviar PDF do contrato
+                    if ($record->pdf_path) {
+                        $pdfUrl = asset('storage/' . $record->pdf_path);
+                        $evolution->sendDocument($phone, $pdfUrl, 'Contrato-' . $record->contract_number . '.pdf');
+                    }
+
+                    Notification::make()
+                        ->title('Contrato enviado para assinatura!')
+                        ->body("Enviado para {$phone} com link de assinatura e PDF")
+                        ->success()
+                        ->send();
+                }),
         ];
     }
 
