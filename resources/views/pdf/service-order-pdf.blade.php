@@ -57,9 +57,9 @@
                     </p>
                 </td>
                 <td style="text-align: right; width: 200px; font-size: 9px; color: #777;">
-                    <p>CNPJ: 00.000.000/0001-00</p>
-                    <p>Tel: (66) 3521-0000</p>
-                    <p>contato@elitelocadora.com.br</p>
+                    <p>CNPJ: {{ \App\Models\Setting::get('company_cnpj', '00.000.000/0001-00') }}</p>
+                    <p>Tel: {{ \App\Models\Setting::get('company_phone', '(66) 3521-0000') }}</p>
+                    <p>{{ \App\Models\Setting::get('company_email', 'contato@elitelocadora.com.br') }}</p>
                 </td>
             </tr>
         </table>

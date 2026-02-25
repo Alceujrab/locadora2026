@@ -96,10 +96,10 @@
                 {{-- Dados de Pagamento --}}
                 <div class="payment-info">
                     <h4>Dados para Pagamento</h4>
-                    <div class="row"><span class="lbl">PIX (CNPJ)</span><span class="val">00.000.000/0001-00</span></div>
-                    <div class="row"><span class="lbl">Titular</span><span class="val">Elite Locadora LTDA</span></div>
-                    <div class="row"><span class="lbl">Banco</span><span class="val">Banco do Brasil</span></div>
-                    <div class="row"><span class="lbl">Agencia/Conta</span><span class="val">0001 / 12345-6</span></div>
+                    <div class="row"><span class="lbl">PIX ({{ \App\Models\Setting::get('pix_type', 'CNPJ') }})</span><span class="val">{{ \App\Models\Setting::get('pix_key', '00.000.000/0001-00') }}</span></div>
+                    <div class="row"><span class="lbl">Titular</span><span class="val">{{ \App\Models\Setting::get('pix_holder', 'Elite Locadora LTDA') }}</span></div>
+                    <div class="row"><span class="lbl">Banco</span><span class="val">{{ \App\Models\Setting::get('bank_name', 'Banco do Brasil') }}</span></div>
+                    <div class="row"><span class="lbl">Agencia/Conta</span><span class="val">{{ \App\Models\Setting::get('bank_agency', '0001') }} / {{ \App\Models\Setting::get('bank_account', '12345-6') }}</span></div>
                 </div>
 
                 {{-- Download PDF --}}

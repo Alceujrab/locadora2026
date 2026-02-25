@@ -55,10 +55,10 @@
                     </p>
                 </td>
                 <td style="text-align: right; width: 200px; font-size: 9px; color: #777;">
-                    <p>Elite Locadora de Veiculos</p>
-                    <p>CNPJ: 00.000.000/0001-00</p>
-                    <p>Tel: (66) 3521-0000</p>
-                    <p>contato@elitelocadora.com.br</p>
+                    <p>{{ \App\Models\Setting::get('company_name', 'Elite Locadora de Veiculos') }}</p>
+                    <p>CNPJ: {{ \App\Models\Setting::get('company_cnpj', '00.000.000/0001-00') }}</p>
+                    <p>Tel: {{ \App\Models\Setting::get('company_phone', '(66) 3521-0000') }}</p>
+                    <p>{{ \App\Models\Setting::get('company_email', 'contato@elitelocadora.com.br') }}</p>
                 </td>
             </tr>
         </table>
@@ -207,19 +207,19 @@
         <div class="title">Dados para Pagamento</div>
         <table class="info-table">
             <tr>
-                <td class="info-label">PIX (CNPJ):</td>
-                <td class="info-value"><strong>00.000.000/0001-00</strong></td>
+                <td class="info-label">PIX ({{ \App\Models\Setting::get('pix_type', 'CNPJ') }}):</td>
+                <td class="info-value"><strong>{{ \App\Models\Setting::get('pix_key', '00.000.000/0001-00') }}</strong></td>
             </tr>
             <tr>
                 <td class="info-label">Titular:</td>
-                <td class="info-value">Elite Locadora de Veiculos LTDA</td>
+                <td class="info-value">{{ \App\Models\Setting::get('pix_holder', 'Elite Locadora de Veiculos LTDA') }}</td>
             </tr>
             <tr>
                 <td class="info-label">Banco:</td>
-                <td class="info-value">Banco do Brasil - Ag 0001 / CC 12345-6</td>
+                <td class="info-value">{{ \App\Models\Setting::get('bank_name', 'Banco do Brasil') }} - Ag {{ \App\Models\Setting::get('bank_agency', '0001') }} / CC {{ \App\Models\Setting::get('bank_account', '12345-6') }}</td>
             </tr>
         </table>
-        <p style="font-size: 9px; color: #6b7280; margin-top: 8px;">Apos o pagamento, envie o comprovante pelo WhatsApp ou para contato@elitelocadora.com.br</p>
+        <p style="font-size: 9px; color: #6b7280; margin-top: 8px;">{{ \App\Models\Setting::get('invoice_terms', 'Apos o pagamento, envie o comprovante pelo WhatsApp ou email.') }}</p>
     </div>
 
     @if($invoice->notes)
@@ -231,7 +231,7 @@
 
     <div class="footer">
         <p>Documento gerado em {{ now()->format('d/m/Y H:i:s') }} | Elite Locadora | Fatura {{ $invoice->invoice_number }}</p>
-        <p style="margin-top: 4px;">Este documento nao possui validade fiscal. Para nota fiscal, solicite a NFS-e.</p>
+        <p style="margin-top: 4px;">{{ \App\Models\Setting::get('invoice_footer', 'Este documento nao possui validade fiscal. Para nota fiscal, solicite a NFS-e.') }}</p>
     </div>
 
 </body>
