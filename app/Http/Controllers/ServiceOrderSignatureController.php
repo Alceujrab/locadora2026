@@ -59,6 +59,8 @@ class ServiceOrderSignatureController extends Controller
             'authorization_signed_at' => now(),
             'authorization_signature_image' => $signaturePath,
             'authorization_ip' => $ip,
+            'authorization_latitude' => $request->input('latitude'),
+            'authorization_longitude' => $request->input('longitude'),
             'signature_hash' => hash('sha256', $hashData),
             'status' => ServiceOrderStatus::AUTHORIZED,
         ]);
@@ -98,6 +100,8 @@ class ServiceOrderSignatureController extends Controller
             'completion_signed_at' => now(),
             'completion_signature_image' => $signaturePath,
             'completion_ip' => $ip,
+            'completion_latitude' => $request->input('latitude'),
+            'completion_longitude' => $request->input('longitude'),
             'signed_at' => now(),
             'signature_ip' => $ip,
             'signature_hash' => hash('sha256', $hashData),

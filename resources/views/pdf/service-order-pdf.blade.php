@@ -202,6 +202,9 @@
                         <img src="{{ $authSignatureBase64 }}" class="signature-img" style="margin: 0 auto;">
                         <p style="font-size: 10px; color: #666; margin-top: 5px;">Autorizacao de Abertura</p>
                         <p style="font-size: 9px; color: #2563eb;">{{ $order->authorization_signed_at?->format('d/m/Y H:i') }} | IP: {{ $order->authorization_ip }}</p>
+                        @if($order->authorization_latitude)
+                            <p style="font-size: 8px; color: #6b7280;">GPS: {{ $order->authorization_latitude }}, {{ $order->authorization_longitude }}</p>
+                        @endif
                     @else
                         <div style="padding-top: 40px;">
                             <div class="signature-line" style="margin: 0 auto;"></div>
@@ -217,6 +220,9 @@
                         <img src="{{ $completionSignatureBase64 }}" class="signature-img" style="margin: 0 auto;">
                         <p style="font-size: 10px; color: #666; margin-top: 5px;">Aprovacao de Conclusao</p>
                         <p style="font-size: 9px; color: #16a34a;">{{ $order->completion_signed_at?->format('d/m/Y H:i') }} | IP: {{ $order->completion_ip }}</p>
+                        @if($order->completion_latitude)
+                            <p style="font-size: 8px; color: #6b7280;">GPS: {{ $order->completion_latitude }}, {{ $order->completion_longitude }}</p>
+                        @endif
                     @else
                         <div style="padding-top: 40px;">
                             <div class="signature-line" style="margin: 0 auto;"></div>

@@ -19,8 +19,10 @@ class ServiceOrder extends Model
         'nf_number', 'nf_path', 'attachments', 'pdf_path',
         // Assinatura de autorização (1ª)
         'authorization_signed_at', 'authorization_signature_image', 'authorization_ip',
+        'authorization_latitude', 'authorization_longitude',
         // Assinatura de conclusão (2ª)
         'completion_signed_at', 'completion_signature_image', 'completion_ip',
+        'completion_latitude', 'completion_longitude',
         // Legado (manter compatibilidade)
         'signature_token', 'signed_at', 'signature_ip', 'signature_hash', 'signature_image',
         // Financeiro

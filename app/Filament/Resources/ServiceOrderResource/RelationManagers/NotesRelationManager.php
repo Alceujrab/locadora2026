@@ -53,7 +53,7 @@ class NotesRelationManager extends RelationManager
             ])
             ->filters([])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->label('Nova Anotacao'),
+                Actions\CreateAction::make()->label('Nova Anotacao'),
             ])
             ->actions([
                 Actions\EditAction::make(),

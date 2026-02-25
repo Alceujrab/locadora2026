@@ -189,6 +189,14 @@
                           id="signForm">
                         @csrf
                         <input type="hidden" name="signature_data" id="signatureData">
+                        <input type="hidden" name="latitude" id="latitude">
+                        <input type="hidden" name="longitude" id="longitude">
+
+                        {{-- Indicador de geolocalização --}}
+                        <div id="geoStatus" style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 12px; background: #f3f4f6; color: #6b7280;">
+                            <span id="geoIcon">📍</span>
+                            <span id="geoText">Obtendo localizacao...</span>
+                        </div>
 
                         <div class="signature-pad-wrapper" id="padWrapper">
                             <div class="signature-pad-label">Desenhe sua assinatura aqui</div>
@@ -283,6 +291,38 @@
             if (!hasDrawn) { e.preventDefault(); alert('Desenhe sua assinatura.'); return false; }
             signatureData.value = canvas.toDataURL('image/png');
         });
+
+        // Geolocalização
+        const geoStatus = document.getElementById('geoStatus');
+        const geoIcon = document.getElementById('geoIcon');
+        const geoText = document.getElementById('geoText');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(pos) {
+                    latInput.value = pos.coords.latitude.toFixed(7);
+                    lngInput.value = pos.coords.longitude.toFixed(7);
+                    geoIcon.textContent = '✅';
+                    geoText.textContent = 'Localizacao capturada';
+                    geoStatus.style.background = '#dcfce7';
+                    geoStatus.style.color = '#166534';
+                },
+                function(err) {
+                    geoIcon.textContent = '⚠️';
+                    geoText.textContent = 'Localizacao nao disponivel';
+                    geoStatus.style.background = '#fef3c7';
+                    geoStatus.style.color = '#92400e';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        } else {
+            geoIcon.textContent = '⚠️';
+            geoText.textContent = 'Navegador nao suporta geolocalizacao';
+            geoStatus.style.background = '#fee2e2';
+            geoStatus.style.color = '#991b1b';
+        }
     })();
     </script>
 </body>
