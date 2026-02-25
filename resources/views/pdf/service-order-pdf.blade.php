@@ -5,9 +5,11 @@
     <title>OS #{{ $order->id }}</title>
     <style>
         body { font-family: sans-serif; font-size: 11px; color: #333; margin: 0; padding: 20px 30px; }
-        h1 { font-size: 20px; color: #e67e22; margin: 0; }
-        h2 { font-size: 13px; color: #555; font-weight: normal; margin: 0; }
+        h1 { font-size: 18px; color: #e67e22; margin: 0; }
+        h2 { font-size: 12px; color: #555; font-weight: normal; margin: 0; }
         .header { border-bottom: 3px solid #e67e22; padding-bottom: 10px; margin-bottom: 15px; }
+        .header-table { width: 100%; }
+        .header-table td { vertical-align: middle; border: none; padding: 0; }
         .section { margin-bottom: 15px; }
         .section-title { font-size: 13px; font-weight: bold; color: #e67e22; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 8px; }
         .info-table { width: 100%; border: none; margin-bottom: 5px; }
@@ -27,14 +29,32 @@
         .badge-cancelled { background: #e74c3c; }
         .signature-line { border-bottom: 1px solid #333; width: 200px; margin-top: 40px; }
         .footer { margin-top: 30px; border-top: 1px solid #ddd; padding-top: 8px; font-size: 9px; color: #999; text-align: center; }
+        .signature-img { max-width: 200px; max-height: 80px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    {{-- Header --}}
+    {{-- Header com Logo --}}
     <div class="header">
-        <h1>ORDEM DE SERVICO #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
-        <h2>{{ $order->branch?->name ?? 'Elite Locadora' }} | Emissao: {{ now()->format('d/m/Y H:i') }}</h2>
+        <table class="header-table">
+            <tr>
+                <td style="width: 80px;">
+                    @if(!empty($logoBase64))
+                        <img src="{{ $logoBase64 }}" style="max-width: 70px; max-height: 70px;" alt="Logo">
+                    @endif
+                </td>
+                <td>
+                    <h1>ORDEM DE SERVICO #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
+                    <h2>{{ $order->branch?->name ?? 'Elite Locadora' }}</h2>
+                    <p style="font-size: 10px; color: #888; margin-top: 2px;">Emissao: {{ now()->format('d/m/Y H:i') }}</p>
+                </td>
+                <td style="text-align: right; width: 200px; font-size: 9px; color: #777;">
+                    <p>CNPJ: 00.000.000/0001-00</p>
+                    <p>Tel: (66) 3521-0000</p>
+                    <p>contato@elitelocadora.com.br</p>
+                </td>
+            </tr>
+        </table>
     </div>
 
     {{-- Dados do Veiculo --}}
@@ -95,13 +115,12 @@
         </table>
     </div>
 
-    {{-- Descricao do Problema --}}
+    {{-- Descricao --}}
     <div class="section">
         <div class="section-title">DESCRICAO DO PROBLEMA</div>
         <p>{{ $order->description }}</p>
     </div>
 
-    {{-- Procedimento Adotado --}}
     @if($order->procedure_adopted)
     <div class="section">
         <div class="section-title">PROCEDIMENTO ADOTADO</div>
@@ -109,7 +128,7 @@
     </div>
     @endif
 
-    {{-- Itens / Pecas e Mao de Obra --}}
+    {{-- Itens --}}
     @if($order->items->count() > 0)
     <div class="section">
         <div class="section-title">ITENS / SERVICOS</div>
@@ -150,7 +169,6 @@
     </div>
     @endif
 
-    {{-- Observacoes --}}
     @if($order->notes)
     <div class="section">
         <div class="section-title">OBSERVACOES</div>
@@ -165,7 +183,7 @@
     </div>
     @endif
 
-    {{-- Assinatura --}}
+    {{-- Assinaturas --}}
     <div class="section" style="margin-top: 40px;">
         <table class="info-table" style="width: 100%;">
             <tr>
@@ -174,21 +192,25 @@
                     <p style="font-size: 10px; color: #666; margin-top: 5px;">Responsavel pela OS</p>
                 </td>
                 <td style="width: 10%;"></td>
-                <td style="width: 45%; text-align: center; padding-top: 50px;">
-                    <div class="signature-line" style="margin: 0 auto;"></div>
-                    <p style="font-size: 10px; color: #666; margin-top: 5px;">Locatario / Cliente</p>
-                    @if($order->isSigned())
-                    <p style="font-size: 9px; color: #27ae60; margin-top: 3px;">
-                        Assinado em {{ $order->signed_at?->format('d/m/Y H:i') }}
-                        | IP: {{ $order->signature_ip }}
-                    </p>
+                <td style="width: 45%; text-align: center; padding-top: 10px;">
+                    @if(!empty($signatureImageBase64))
+                        <img src="{{ $signatureImageBase64 }}" class="signature-img" alt="Assinatura do Cliente" style="margin: 0 auto;">
+                        <p style="font-size: 10px; color: #666; margin-top: 5px;">Locatario / Cliente</p>
+                        <p style="font-size: 9px; color: #27ae60; margin-top: 3px;">
+                            Assinado em {{ $order->signed_at?->format('d/m/Y H:i') }}
+                            | IP: {{ $order->signature_ip }}
+                        </p>
+                    @else
+                        <div style="padding-top: 40px;">
+                            <div class="signature-line" style="margin: 0 auto;"></div>
+                            <p style="font-size: 10px; color: #666; margin-top: 5px;">Locatario / Cliente</p>
+                        </div>
                     @endif
                 </td>
             </tr>
         </table>
     </div>
 
-    {{-- Footer --}}
     <div class="footer">
         Documento gerado em {{ now()->format('d/m/Y H:i:s') }} | Elite Locadora | OS #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
     </div>

@@ -84,4 +84,19 @@ class ClientPanelController extends Controller
 
         return view('client.support', compact('tickets'));
     }
+
+    /**
+     * Ordens de Servico do Cliente
+     */
+    public function serviceOrders()
+    {
+        $customer = Auth::guard('web')->user()->customer;
+
+        $orders = \App\Models\ServiceOrder::where('customer_id', $customer->id)
+            ->with(['vehicle', 'supplier'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('client.service-orders', compact('orders'));
+    }
 }

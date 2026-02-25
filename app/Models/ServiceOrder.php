@@ -16,7 +16,7 @@ class ServiceOrder extends Model
         'opened_by', 'customer_id',
         'items_total', 'labor_total', 'total', 'status', 'opened_at',
         'completed_at', 'nf_number', 'nf_path', 'attachments', 'pdf_path',
-        'signature_token', 'signed_at', 'signature_ip', 'signature_hash',
+        'signature_token', 'signed_at', 'signature_ip', 'signature_hash', 'signature_image',
         'closed_at', 'closing_notes',
         'notes', 'created_by',
     ];

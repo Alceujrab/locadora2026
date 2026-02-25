@@ -76,6 +76,7 @@ Route::prefix('cliente')->name('cliente.')->group(function () {
         Route::get('/contratos', [ClientPanelController::class, 'contracts'])->name('contracts');
         Route::get('/reservas', [ClientPanelController::class, 'reservations'])->name('reservations');
         Route::get('/suporte', [ClientPanelController::class, 'support'])->name('support');
+        Route::get('/ordens-de-servico', [ClientPanelController::class, 'serviceOrders'])->name('service-orders');
     });
 });
 

@@ -35,22 +35,33 @@
         .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
         .footer { text-align: center; padding: 16px; font-size: 11px; color: #9ca3af; }
+
+        /* Canvas de assinatura */
+        .signature-pad-wrapper { border: 2px dashed #d1d5db; border-radius: 12px; padding: 8px; margin: 16px 0; background: #fafafa; position: relative; }
+        .signature-pad-wrapper.active { border-color: #e67e22; background: #fff; }
+        .signature-pad-label { text-align: center; font-size: 12px; color: #9ca3af; margin-bottom: 8px; }
+        #signatureCanvas { display: block; width: 100%; height: 200px; border-radius: 8px; cursor: crosshair; touch-action: none; background: #fff; }
+        .canvas-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .canvas-actions button { flex: 1; padding: 8px; border: 1px solid #d1d5db; background: #fff; border-radius: 6px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .canvas-actions button:hover { background: #f3f4f6; }
+        .canvas-actions .clear-btn { color: #dc2626; border-color: #fca5a5; }
+        .canvas-actions .clear-btn:hover { background: #fee2e2; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
-                <h1>🔧 ORDEM DE SERVICO #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
+                <h1>ORDEM DE SERVICO #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</h1>
                 <p>Elite Locadora</p>
             </div>
 
             <div class="content">
                 @if(session('success'))
-                    <div class="alert alert-success">✅ {{ session('success') }}</div>
+                    <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
                 @if(session('error'))
-                    <div class="alert alert-error">❌ {{ session('error') }}</div>
+                    <div class="alert alert-error">{{ session('error') }}</div>
                 @endif
 
                 <div class="info-group">
@@ -96,33 +107,40 @@
                 </div>
                 @endif
 
-                {{-- Download PDF --}}
-                <a href="{{ route('os.signature.pdf', $order->id) }}" class="pdf-btn" target="_blank">
-                    📄 Baixar PDF da OS
-                </a>
+                <a href="{{ route('os.signature.pdf', $order->id) }}" class="pdf-btn" target="_blank">Baixar PDF da OS</a>
 
-                {{-- Formulário de assinatura --}}
+                {{-- Assinatura com Canvas --}}
                 <div class="sign-form">
-                    <h3>✍️ Assinatura Digital</h3>
-                    <p style="font-size: 13px; color: #6b7280; margin-bottom: 16px;">
-                        Ao assinar, voce confirma que esta ciente dos servicos descritos nesta Ordem de Servico.
+                    <h3>Assinatura Digital</h3>
+                    <p style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">
+                        Desenhe sua assinatura no campo abaixo usando o dedo ou mouse.
                     </p>
 
-                    <form method="POST" action="{{ route('os.signature.sign', $order->id) }}">
+                    <form method="POST" action="{{ route('os.signature.sign', $order->id) }}" id="signForm">
                         @csrf
+                        <input type="hidden" name="signature_data" id="signatureData">
+
+                        <div class="signature-pad-wrapper" id="padWrapper">
+                            <div class="signature-pad-label">Desenhe sua assinatura aqui</div>
+                            <canvas id="signatureCanvas"></canvas>
+                            <div class="canvas-actions">
+                                <button type="button" class="clear-btn" onclick="clearPad()">Limpar</button>
+                            </div>
+                        </div>
+
+                        @error('signature_data')
+                            <div class="alert alert-error">Voce precisa desenhar sua assinatura.</div>
+                        @enderror
+
                         <div class="checkbox-row">
                             <input type="checkbox" name="accept_terms" id="accept_terms" required>
                             <label for="accept_terms">
-                                Li e concordo com os termos desta Ordem de Servico. Estou ciente dos servicos a serem realizados no veiculo acima descrito.
+                                Li e concordo com os termos desta Ordem de Servico. Estou ciente dos servicos descritos acima.
                             </label>
                         </div>
 
-                        @error('accept_terms')
-                            <div class="alert alert-error">Voce precisa aceitar os termos para assinar.</div>
-                        @enderror
-
                         <button type="submit" class="sign-btn" id="signBtn" disabled>
-                            ✅ Assinar Digitalmente
+                            Assinar Digitalmente
                         </button>
                     </form>
                 </div>
@@ -136,9 +154,100 @@
     </div>
 
     <script>
-        document.getElementById('accept_terms').addEventListener('change', function() {
-            document.getElementById('signBtn').disabled = !this.checked;
+    (function() {
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('padWrapper');
+        const signForm = document.getElementById('signForm');
+        const signatureData = document.getElementById('signatureData');
+        const acceptTerms = document.getElementById('accept_terms');
+        const signBtn = document.getElementById('signBtn');
+
+        let isDrawing = false;
+        let hasDrawn = false;
+
+        // Set canvas resolution
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * 2;
+            canvas.height = rect.height * 2;
+            ctx.scale(2, 2);
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches ? e.touches[0] : e;
+            return {
+                x: touch.clientX - rect.left,
+                y: touch.clientY - rect.top
+            };
+        }
+
+        function startDraw(e) {
+            e.preventDefault();
+            isDrawing = true;
+            hasDrawn = true;
+            wrapper.classList.add('active');
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function stopDraw(e) {
+            if (isDrawing) {
+                isDrawing = false;
+                ctx.closePath();
+                updateBtn();
+            }
+        }
+
+        // Mouse
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDraw);
+        canvas.addEventListener('mouseleave', stopDraw);
+        // Touch
+        canvas.addEventListener('touchstart', startDraw, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDraw);
+
+        function updateBtn() {
+            signBtn.disabled = !(hasDrawn && acceptTerms.checked);
+        }
+
+        acceptTerms.addEventListener('change', updateBtn);
+
+        window.clearPad = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasDrawn = false;
+            wrapper.classList.remove('active');
+            updateBtn();
+        };
+
+        signForm.addEventListener('submit', function(e) {
+            if (!hasDrawn) {
+                e.preventDefault();
+                alert('Desenhe sua assinatura antes de enviar.');
+                return false;
+            }
+            // Export canvas as base64 PNG
+            signatureData.value = canvas.toDataURL('image/png');
         });
+    })();
     </script>
 </body>
 </html>
