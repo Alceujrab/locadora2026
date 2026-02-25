@@ -42,7 +42,8 @@ class CustomerResource extends Resource
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload(),
                     Components\TextInput::make('name')->label('Nome')->required()->maxLength(255),
                     Components\Select::make('type')->label('Tipo')->options(CustomerType::class)->required()->live(),
-                    Components\TextInput::make('cpf_cnpj')->label('CPF/CNPJ')->required()->maxLength(18)->unique(ignoreRecord: true),
+                    Components\TextInput::make('cpf_cnpj')->label('CPF/CNPJ')->required()->maxLength(18)
+                        ->unique(table: 'customers', column: 'cpf_cnpj', ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->whereNull('deleted_at')),
                     Components\TextInput::make('rg')->label('RG/IE')->maxLength(20),
                     Components\DatePicker::make('birth_date')->label('Data de Nascimento'),
                     Components\TextInput::make('company_name')->label('Razao Social')->visible(fn (Get $get) => $get('type') === 'pj'),
@@ -119,16 +120,21 @@ class CustomerResource extends Resource
                 Tables\Filters\SelectFilter::make('type')->label('Tipo')->options(CustomerType::class),
                 Tables\Filters\TernaryFilter::make('is_blocked')->label('Bloqueado'),
                 Tables\Filters\SelectFilter::make('branch_id')->label('Filial')->relationship('branch', 'name'),
+                Tables\Filters\TrashedFilter::make()->label('Lixeira'),
             ])
             ->actions([
                 Actions\Action::make('pdf')->label('PDF')->icon('heroicon-o-document-arrow-down')->color('info')
                     ->url(fn (Customer $record) => route('admin.customer.pdf', $record->getKey()))->openUrlInNewTab(),
                 Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\DeleteAction::make()->label('Excluir'),
+                Actions\ForceDeleteAction::make()->label('Excluir Permanentemente'),
+                Actions\RestoreAction::make()->label('Restaurar'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
+                    Actions\ForceDeleteBulkAction::make(),
+                    Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->defaultSort('name');

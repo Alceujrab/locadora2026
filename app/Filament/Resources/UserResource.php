@@ -43,7 +43,7 @@ class UserResource extends Resource
                     Grid::make(2)->schema([
                         Components\TextInput::make('name')->label('Nome Completo')->required()->maxLength(255),
                         Components\TextInput::make('email')->label('E-mail')->email()->required()->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(table: 'users', column: 'email', ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->whereNull('deleted_at')),
                     ]),
                     Grid::make(3)->schema([
                         Components\TextInput::make('phone')->label('Telefone')->tel()->maxLength(20),
@@ -116,6 +116,7 @@ class UserResource extends Resource
                     ->relationship('roles', 'name'),
                 Tables\Filters\SelectFilter::make('branch_id')->label('Filial')
                     ->relationship('branch', 'name'),
+                Tables\Filters\TrashedFilter::make()->label('Lixeira'),
             ])
             ->actions([
                 Actions\EditAction::make(),
@@ -154,11 +155,15 @@ class UserResource extends Resource
                     ->color('gray')
                     ->url(fn (User $record) => LoginLogResource::getUrl('index', ['tableFilters[user_id][value]' => $record->id])),
 
-                Actions\DeleteAction::make(),
+                Actions\DeleteAction::make()->label('Excluir'),
+                Actions\ForceDeleteAction::make()->label('Excluir Permanentemente'),
+                Actions\RestoreAction::make()->label('Restaurar'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),
+                    Actions\ForceDeleteBulkAction::make(),
+                    Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->defaultSort('name', 'asc');
