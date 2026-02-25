@@ -107,6 +107,35 @@
                 </div>
                 @endif
 
+                {{-- Evidencias (Fotos e Videos) --}}
+                @if($order->attachments && count($order->attachments) > 0)
+                <div class="info-group">
+                    <h3>Evidencias do Problema</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 8px;">
+                        @foreach($order->attachments as $attachment)
+                            @php
+                                $ext = strtolower(pathinfo($attachment, PATHINFO_EXTENSION));
+                                $isVideo = in_array($ext, ['mp4', 'mov', 'avi', 'webm']);
+                                $url = asset('storage/' . $attachment);
+                            @endphp
+                            @if($isVideo)
+                                <a href="{{ $url }}" target="_blank" style="display: block; text-decoration: none; border: 2px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #111827; position: relative;">
+                                    <div style="padding: 30px 10px; text-align: center;">
+                                        <div style="font-size: 36px;">🎬</div>
+                                        <p style="color: #9ca3af; font-size: 11px; margin-top: 6px;">Tocar Video</p>
+                                        <p style="color: #6b7280; font-size: 10px; margin-top: 2px;">.{{ $ext }}</p>
+                                    </div>
+                                </a>
+                            @else
+                                <a href="{{ $url }}" target="_blank" style="display: block; border: 2px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
+                                    <img src="{{ $url }}" alt="Evidencia" style="width: 100%; height: 120px; object-fit: cover;">
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <a href="{{ route('os.signature.pdf', $order->id) }}" class="pdf-btn" target="_blank">Baixar PDF da OS</a>
 
                 {{-- Assinatura com Canvas --}}
