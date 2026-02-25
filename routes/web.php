@@ -61,6 +61,13 @@ Route::post('/os/{id}/aprovar', [App\Http\Controllers\ServiceOrderSignatureContr
 Route::get('/os/{id}/pdf', [App\Http\Controllers\ServiceOrderSignatureController::class, 'downloadPdf'])->name('os.signature.pdf');
 
 // ==========================================
+// FATURA (PÚBLICA)
+// ==========================================
+Route::get('/fatura/{id}', [App\Http\Controllers\InvoiceConfirmationController::class, 'show'])->name('invoice.show');
+Route::post('/fatura/{id}/confirmar', [App\Http\Controllers\InvoiceConfirmationController::class, 'confirm'])->name('invoice.confirm');
+Route::get('/fatura/{id}/pdf', [App\Http\Controllers\InvoiceConfirmationController::class, 'downloadPdf'])->name('invoice.pdf');
+
+// ==========================================
 // CLIENT PORTAL ROUTES
 // ==========================================
 Route::prefix('cliente')->name('cliente.')->group(function () {

@@ -83,6 +83,8 @@ class InvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
+                Tables\Columns\IconColumn::make('sent_at')->label('Enviada')->boolean()->trueIcon('heroicon-o-check-circle')->falseIcon('heroicon-o-x-circle')->toggleable(),
+                Tables\Columns\IconColumn::make('confirmed_at')->label('Confirmada')->boolean()->trueIcon('heroicon-o-check-badge')->falseIcon('heroicon-o-clock')->toggleable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Status')->options(InvoiceStatus::class),
@@ -90,6 +92,68 @@ class InvoiceResource extends Resource
             ])
             ->actions([
                 Actions\EditAction::make(),
+
+                // Gerar PDF da fatura
+                Actions\Action::make('generate_pdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('info')
+                    ->action(function (Invoice $record) {
+                        $path = \App\Http\Controllers\InvoiceConfirmationController::generatePdf($record);
+
+                        $record->refresh();
+
+                        return response()->streamDownload(
+                            fn () => print(\Illuminate\Support\Facades\Storage::disk('public')->get($path)),
+                            'Fatura-' . $record->invoice_number . '.pdf',
+                            ['Content-Type' => 'application/pdf']
+                        );
+                    }),
+
+                // Enviar fatura por WhatsApp
+                Actions\Action::make('send_invoice_whatsapp')
+                    ->label('Enviar Fatura')
+                    ->icon('heroicon-o-paper-airplane')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Enviar Fatura por WhatsApp')
+                    ->modalDescription(fn (Invoice $record) => "A fatura {$record->invoice_number} de R$ " . number_format((float) $record->total, 2, ',', '.') . " sera enviada com PDF ao cliente.")
+                    ->visible(fn (Invoice $record) => $record->customer_id && $record->customer?->phone)
+                    ->action(function (Invoice $record) {
+                        // Gerar PDF se não existir
+                        if (! $record->pdf_path || ! \Illuminate\Support\Facades\Storage::disk('public')->exists($record->pdf_path)) {
+                            \App\Http\Controllers\InvoiceConfirmationController::generatePdf($record);
+                            $record->refresh();
+                        }
+
+                        $phone = $record->customer->phone;
+                        $confirmUrl = url("/fatura/{$record->id}");
+                        $charge = 'R$ ' . number_format((float) $record->total, 2, ',', '.');
+
+                        $message = "💰 *FATURA {$record->invoice_number}*\n\n"
+                            . "Cliente: {$record->customer->name}\n"
+                            . "Valor: {$charge}\n"
+                            . "Vencimento: {$record->due_date?->format('d/m/Y')}\n\n"
+                            . "📋 Acesse o link abaixo para ver os detalhes e confirmar o recebimento:\n{$confirmUrl}\n\n"
+                            . "O PDF da fatura esta em anexo.\n\n"
+                            . "Elite Locadora";
+
+                        $evolution = app(\App\Services\EvolutionApiService::class);
+                        $evolution->sendText($phone, $message);
+
+                        // Enviar PDF
+                        $pdfUrl = asset('storage/' . $record->pdf_path);
+                        $evolution->sendDocument($phone, $pdfUrl, 'Fatura-' . $record->invoice_number . '.pdf');
+
+                        $record->update(['sent_at' => now()]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Fatura enviada!')
+                            ->body("Enviada para {$phone} com PDF em anexo")
+                            ->success()
+                            ->send();
+                    }),
+
                 Actions\DeleteAction::make(),
             ])
             ->bulkActions([

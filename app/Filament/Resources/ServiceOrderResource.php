@@ -304,25 +304,39 @@ class ServiceOrderResource extends Resource
                             'status' => ServiceOrderStatus::INVOICED,
                         ]);
 
+                        // Gerar PDF da fatura
+                        \App\Http\Controllers\InvoiceConfirmationController::generatePdf($invoice);
+                        $invoice->refresh();
+
                         // Enviar fatura por WhatsApp
                         if ($record->customer?->phone) {
                             $phone = $record->customer->phone;
                             $charge = 'R$ ' . number_format($record->customer_charge, 2, ',', '.');
+                            $confirmUrl = url("/fatura/{$invoice->id}");
 
-                            $message = "💰 *FATURA GERADA - OS #{$record->id}*\n\n"
-                                . "Veiculo: {$record->vehicle?->plate}\n"
+                            $message = "💰 *FATURA {$invoice->invoice_number}*\n\n"
+                                . "Ref: OS #{$record->id} - {$record->vehicle?->plate}\n"
                                 . "Valor: {$charge}\n"
                                 . "Vencimento: " . now()->addDays(7)->format('d/m/Y') . "\n\n"
-                                . "Para mais detalhes, acesse seu portal do cliente.\n\n"
+                                . "📋 Acesse o link para ver detalhes e confirmar o recebimento:\n{$confirmUrl}\n\n"
+                                . "O PDF da fatura esta em anexo.\n\n"
                                 . "Elite Locadora";
 
                             $evolution = app(EvolutionApiService::class);
                             $evolution->sendText($phone, $message);
+
+                            // Enviar PDF
+                            if ($invoice->pdf_path) {
+                                $pdfUrl = asset('storage/' . $invoice->pdf_path);
+                                $evolution->sendDocument($phone, $pdfUrl, 'Fatura-' . $invoice->invoice_number . '.pdf');
+                            }
+
+                            $invoice->update(['sent_at' => now()]);
                         }
 
                         \Filament\Notifications\Notification::make()
-                            ->title('Fatura gerada!')
-                            ->body("Fatura de R$ " . number_format($record->customer_charge, 2, ',', '.') . " criada + conta a receber")
+                            ->title('Fatura gerada e enviada!')
+                            ->body("Fatura {$invoice->invoice_number} de R$ " . number_format($record->customer_charge, 2, ',', '.') . " criada + PDF + WhatsApp")
                             ->success()
                             ->send();
                     }),

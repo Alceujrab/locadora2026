@@ -18,12 +18,15 @@ class Invoice extends Model
         'installment_number', 'total_installments', 'amount', 'penalty_amount',
         'interest_amount', 'discount', 'total', 'status', 'paid_at', 'payment_method',
         'mp_payment_id', 'nfse_number', 'nfse_xml_path', 'nfse_pdf_path', 'notes',
+        'pdf_path', 'sent_at', 'confirmed_at', 'confirmation_ip', 'confirmation_token',
     ];
 
     protected $casts = [
         'status' => InvoiceStatus::class,
         'due_date' => 'date',
         'paid_at' => 'datetime',
+        'sent_at' => 'datetime',
+        'confirmed_at' => 'datetime',
         'amount' => 'decimal:2',
         'penalty_amount' => 'decimal:2',
         'interest_amount' => 'decimal:2',
