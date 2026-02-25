@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 
 class VehicleResource extends Resource
 {
@@ -110,6 +111,46 @@ class VehicleResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_featured')->label('Destaque'),
             ])
             ->actions([
+                Actions\ActionGroup::make([
+                    Actions\Action::make('mark_available')
+                        ->label('Marcar Disponivel')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->visible(fn (Vehicle $record) => $record->status !== VehicleStatus::AVAILABLE && $record->status !== VehicleStatus::RENTED)
+                        ->requiresConfirmation()
+                        ->action(function (Vehicle $record) {
+                            $record->update(['status' => VehicleStatus::AVAILABLE]);
+                            Notification::make()->title('Veiculo agora esta disponivel!')->success()->send();
+                        }),
+                    Actions\Action::make('send_maintenance')
+                        ->label('Enviar p/ Manutencao')
+                        ->icon('heroicon-o-wrench-screwdriver')
+                        ->color('warning')
+                        ->visible(fn (Vehicle $record) => $record->status === VehicleStatus::AVAILABLE)
+                        ->form([
+                            \Filament\Forms\Components\Textarea::make('reason')->label('Motivo da Manutencao')->required(),
+                        ])
+                        ->action(function (Vehicle $record, array $data) {
+                            $record->update(['status' => VehicleStatus::MAINTENANCE]);
+                            \App\Models\MaintenanceAlert::create([
+                                'vehicle_id' => $record->id,
+                                'type' => 'Corretiva',
+                                'description' => $data['reason'],
+                            ]);
+                            Notification::make()->title('Enviado para manutencao!')->success()->send();
+                        }),
+                    Actions\Action::make('mark_inactive')
+                        ->label('Inativar Veiculo')
+                        ->icon('heroicon-o-no-symbol')
+                        ->color('danger')
+                        ->visible(fn (Vehicle $record) => $record->status !== VehicleStatus::INACTIVE && $record->status !== VehicleStatus::RENTED)
+                        ->requiresConfirmation()
+                        ->action(function (Vehicle $record) {
+                            $record->update(['status' => VehicleStatus::INACTIVE]);
+                            Notification::make()->title('Veiculo inativado!')->success()->send();
+                        }),
+                ])->label('Acoes Rapidas')->icon('heroicon-m-bolt')->color('primary'),
+                
                 Actions\ViewAction::make()->label('Dashboard'),
                 Actions\EditAction::make(),
                 Actions\DeleteAction::make(),
