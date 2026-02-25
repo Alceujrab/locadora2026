@@ -252,32 +252,29 @@
         </table>
     </div>
 
-    {{-- TOTAL EM DESTAQUE --}}
-    <div class="total-box">
-        <div class="label">Total a Pagar</div>
-        <div class="amount">R$ {{ number_format($invoice->total, 2, ',', '.') }}</div>
-        <div class="due">Vencimento: {{ $invoice->due_date?->format('d/m/Y') }}</div>
-    </div>
-
-    {{-- INFORMAÇÕES DE PAGAMENTO --}}
-    <div class="payment-box">
-        <div class="title">Dados para Pagamento</div>
-        <table class="info-table">
-            <tr>
-                <td class="info-label">PIX ({{ \App\Models\Setting::get('pix_type', 'CNPJ') }}):</td>
-                <td class="info-value"><strong>{{ \App\Models\Setting::get('pix_key', '00.000.000/0001-00') }}</strong></td>
-            </tr>
-            <tr>
-                <td class="info-label">Titular:</td>
-                <td class="info-value">{{ \App\Models\Setting::get('pix_holder', 'Elite Locadora de Veiculos LTDA') }}</td>
-            </tr>
-            <tr>
-                <td class="info-label">Banco:</td>
-                <td class="info-value">{{ \App\Models\Setting::get('bank_name', 'Banco do Brasil') }} - Ag {{ \App\Models\Setting::get('bank_agency', '0001') }} / CC {{ \App\Models\Setting::get('bank_account', '12345-6') }}</td>
-            </tr>
-        </table>
-        <p style="font-size: 9px; color: #6b7280; margin-top: 8px;">{{ \App\Models\Setting::get('invoice_terms', 'Apos o pagamento, envie o comprovante pelo WhatsApp ou email.') }}</p>
-    </div>
+    {{-- TOTAL + PAGAMENTO LADO A LADO --}}
+    <table style="width:100%; border:none; margin: 10px 0;">
+        <tr>
+            <td style="width:40%; vertical-align:top; border:none; padding:0 6px 0 0;">
+                <div style="background:#1a1a2e; color:#fff; border-radius:6px; padding:10px; text-align:center;">
+                    <div style="font-size:9px; text-transform:uppercase; color:#9ca3af;">Total a Pagar</div>
+                    <div style="font-size:20px; font-weight:bold; color:#f59e0b; margin:3px 0;">R$ {{ number_format($invoice->total, 2, ',', '.') }}</div>
+                    <div style="font-size:9px; color:#d1d5db;">Venc: {{ $invoice->due_date?->format('d/m/Y') }}</div>
+                </div>
+            </td>
+            <td style="width:60%; vertical-align:top; border:none; padding:0 0 0 6px;">
+                <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:6px; padding:10px;">
+                    <div style="font-size:10px; font-weight:bold; color:#166534; margin-bottom:4px;">DADOS PARA PAGAMENTO</div>
+                    <table style="width:100%; border:none; font-size:10px;">
+                        <tr><td style="border:none; padding:1px 3px; font-weight:bold; color:#555; width:50px;">PIX:</td><td style="border:none; padding:1px 3px;"><strong>{{ \App\Models\Setting::get('pix_key', '00.000.000/0001-00') }}</strong> ({{ \App\Models\Setting::get('pix_type', 'CNPJ') }})</td></tr>
+                        <tr><td style="border:none; padding:1px 3px; font-weight:bold; color:#555;">Titular:</td><td style="border:none; padding:1px 3px;">{{ \App\Models\Setting::get('pix_holder', 'Elite Locadora') }}</td></tr>
+                        <tr><td style="border:none; padding:1px 3px; font-weight:bold; color:#555;">Banco:</td><td style="border:none; padding:1px 3px;">{{ \App\Models\Setting::get('bank_name', 'BB') }} Ag {{ \App\Models\Setting::get('bank_agency', '0001') }} CC {{ \App\Models\Setting::get('bank_account', '12345-6') }}</td></tr>
+                    </table>
+                    <p style="font-size:8px; color:#6b7280; margin:4px 0 0 0;">{{ \App\Models\Setting::get('invoice_terms', 'Envie o comprovante pelo WhatsApp ou email.') }}</p>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     @if($invoice->notes)
     <div class="section">
