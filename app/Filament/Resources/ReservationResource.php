@@ -297,24 +297,50 @@ class ReservationResource extends Resource
                     ->modalDescription(fn (Reservation $record) => "Criar fatura de R$ " . number_format((float) $record->total, 2, ',', '.') . " para {$record->customer?->name}?")
                     ->visible(fn (Reservation $record) => ! Invoice::where('notes', 'LIKE', "%Reserva #{$record->id}%")->exists())
                     ->action(function (Reservation $record) {
-                        $record->load(['customer', 'branch']);
+                        $record->load(['customer', 'branch', 'vehicle', 'extras.rentalExtra']);
 
                         $invoiceNumber = 'FAT-' . date('Y') . '-' . str_pad(Invoice::whereYear('created_at', date('Y'))->count() + 1, 5, '0', STR_PAD_LEFT);
+
+                        $notes = "Reserva #{$record->id}\n"
+                            . "Veiculo: {$record->vehicle?->plate} - {$record->vehicle?->brand} {$record->vehicle?->model}\n"
+                            . "Periodo: {$record->pickup_date?->format('d/m/Y H:i')} a {$record->return_date?->format('d/m/Y H:i')}\n"
+                            . "Dias: {$record->total_days} | Diaria: R$ " . number_format((float) $record->daily_rate, 2, ',', '.');
 
                         $invoice = Invoice::create([
                             'branch_id' => $record->branch_id,
                             'customer_id' => $record->customer_id,
                             'invoice_number' => $invoiceNumber,
                             'due_date' => now()->addDays(3),
-                            'amount' => $record->total,
+                            'amount' => $record->subtotal,
+                            'discount' => $record->discount ?? 0,
                             'total' => $record->total,
-                            'status' =>\App\Enums\InvoiceStatus::OPEN,
-                            'notes' => "Reserva #{$record->id} - {$record->vehicle?->plate}",
+                            'status' => \App\Enums\InvoiceStatus::OPEN,
+                            'notes' => $notes,
                         ]);
+
+                        // Item: Diárias
+                        \App\Models\InvoiceItem::create([
+                            'invoice_id' => $invoice->id,
+                            'description' => "Locacao {$record->vehicle?->plate} - {$record->vehicle?->brand} {$record->vehicle?->model} ({$record->pickup_date?->format('d/m')} a {$record->return_date?->format('d/m')})",
+                            'quantity' => $record->total_days,
+                            'unit_price' => $record->daily_rate,
+                            'total' => $record->subtotal,
+                        ]);
+
+                        // Itens: Extras
+                        foreach ($record->extras as $extra) {
+                            \App\Models\InvoiceItem::create([
+                                'invoice_id' => $invoice->id,
+                                'description' => $extra->rentalExtra?->name ?? 'Extra',
+                                'quantity' => $extra->quantity,
+                                'unit_price' => $extra->unit_price,
+                                'total' => $extra->total,
+                            ]);
+                        }
 
                         \Filament\Notifications\Notification::make()
                             ->title('Fatura gerada!')
-                            ->body("Fatura {$invoiceNumber} - R$ " . number_format((float) $record->total, 2, ',', '.'))
+                            ->body("Fatura {$invoiceNumber} com " . (1 + $record->extras->count()) . " itens")
                             ->success()
                             ->send();
                     }),
