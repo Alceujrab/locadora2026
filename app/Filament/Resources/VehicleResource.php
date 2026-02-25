@@ -19,7 +19,7 @@ class VehicleResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-truck';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Cadastros';
+    protected static string|\UnitEnum|null $navigationGroup = 'Gestao de Frota';
 
     protected static ?string $modelLabel = 'Veiculo';
 
@@ -110,6 +110,7 @@ class VehicleResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_featured')->label('Destaque'),
             ])
             ->actions([
+                Actions\ViewAction::make()->label('Dashboard'),
                 Actions\EditAction::make(),
                 Actions\DeleteAction::make(),
             ])
@@ -133,6 +134,7 @@ class VehicleResource extends Resource
         return [
             'index' => Pages\ListVehicles::route('/'),
             'create' => Pages\CreateVehicle::route('/create'),
+            'view' => Pages\ViewVehicle::route('/{record}'),
             'edit' => Pages\EditVehicle::route('/{record}/edit'),
         ];
     }
