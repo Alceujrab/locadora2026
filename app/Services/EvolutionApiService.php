@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -15,22 +16,38 @@ class EvolutionApiService
 
     public function __construct()
     {
-        $this->baseUrl = rtrim(env('EVOLUTION_API_URL', ''), '/');
-        $this->instanceName = env('EVOLUTION_INSTANCE_NAME', '');
-        $this->apiKey = env('EVOLUTION_API_KEY', '');
+        // Prioriza configurações do banco, fallback para .env
+        $this->baseUrl = rtrim(
+            Setting::get('evolution_api_url') ?? env('EVOLUTION_API_URL', ''),
+            '/'
+        );
+        $this->instanceName = Setting::get('evolution_instance_name') ?? env('EVOLUTION_INSTANCE_NAME', '');
+        $this->apiKey = Setting::get('evolution_api_key') ?? env('EVOLUTION_API_KEY', '');
+    }
+
+    /**
+     * Verifica se o WhatsApp está habilitado no sistema
+     */
+    public function isEnabled(): bool
+    {
+        return (bool) Setting::get('whatsapp_enabled', false);
+    }
+
+    /**
+     * Verifica se notificações de um módulo específico estão habilitadas
+     */
+    public function isModuleEnabled(string $module): bool
+    {
+        return $this->isEnabled() && (bool) Setting::get("whatsapp_notify_{$module}", true);
     }
 
     /**
      * Envia uma mensagem de texto via Evolution API
-     *
-     * @param  string  $number  Telefone com código do país (ex: 5511999999999)
-     * @param  string  $text  Conteúdo da mensagem
      */
     public function sendText(string $number, string $text): ?array
     {
         if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
-            Log::warning('Configurações da Evolution API incompletas no .env.');
-
+            Log::warning('Configurações da Evolution API incompletas.');
             return null;
         }
 
@@ -49,7 +66,6 @@ class EvolutionApiService
 
             if ($response->successful()) {
                 Log::info("WhatsApp disparado p/ {$number}");
-
                 return $response->json();
             }
 
@@ -61,7 +77,6 @@ class EvolutionApiService
             return null;
         } catch (\Exception $e) {
             Log::error('Exceção disparando WhatsApp: '.$e->getMessage());
-
             return null;
         }
     }
@@ -90,7 +105,7 @@ class EvolutionApiService
     public function sendDocument(string $number, string $mediaUrl, string $fileName, ?string $caption = null): ?array
     {
         if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
-            Log::warning('Configurações da Evolution API incompletas no .env.');
+            Log::warning('Configurações da Evolution API incompletas.');
             return null;
         }
 
