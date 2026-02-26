@@ -163,14 +163,15 @@
                         'paga'      => ['bg' => 'rgba(34,197,94,0.12)',  'color' => '#4ade80'],
                         'cancelada' => ['bg' => 'rgba(107,114,128,0.12)','color' => '#9ca3af'],
                     ];
-                    $s = $sc[$invoice->status] ?? $sc['cancelada'];
+                    $statusVal = $invoice->status instanceof \BackedEnum ? $invoice->status->value : $invoice->status;
+                    $s = $sc[$statusVal] ?? $sc['cancelada'];
                 @endphp
                 <tr>
                     <td style="color:#e5e7eb; font-weight:600;">{{ $invoice->invoice_number }}</td>
                     <td style="color:#e5e7eb;">{{ $invoice->customer->name ?? 'N/A' }}</td>
                     <td style="color:#9ca3af;">{{ $invoice->contract->number ?? 'N/A' }}</td>
                     <td style="color:#e5e7eb;">{{ $invoice->due_date->format('d/m/Y') }}</td>
-                    <td><span class="rpt-badge" style="background:{{ $s['bg'] }}; color:{{ $s['color'] }};">{{ ucfirst($invoice->status) }}</span></td>
+                    <td><span class="rpt-badge" style="background:{{ $s['bg'] }}; color:{{ $s['color'] }};">{{ ucfirst($statusVal) }}</span></td>
                     <td class="rpt-text-right" style="color:#e5e7eb; font-weight:600;">R$ {{ number_format($invoice->total, 2, ',', '.') }}</td>
                 </tr>
             @empty
