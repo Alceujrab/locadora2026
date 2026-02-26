@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     <style>
         /* ===== TABS ===== */
-        .vd-tabs {
+        .rpt-tabs {
             display: flex;
             gap: 0;
             border-bottom: 2px solid rgba(255,255,255,0.06);
@@ -9,7 +9,7 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
-        .vd-tab {
+        .rpt-tab {
             padding: 0.75rem 1.25rem;
             font-size: 0.85rem;
             font-weight: 600;
@@ -25,14 +25,14 @@
             align-items: center;
             gap: 0.5rem;
         }
-        .vd-tab:hover { color: #d1d5db; }
-        .vd-tab-active {
+        .rpt-tab:hover { color: #d1d5db; }
+        .rpt-tab-active {
             color: #f59e0b !important;
             border-bottom-color: #f59e0b !important;
         }
 
         /* ===== HEADER ===== */
-        .vd-header {
+        .rpt-header {
             background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
             border-radius: 0.75rem;
             padding: 1.5rem;
@@ -42,7 +42,7 @@
             gap: 1.5rem;
             border: 1px solid rgba(255,255,255,0.06);
         }
-        .vd-header-photo {
+        .rpt-header-photo {
             width: 9rem;
             height: 6.5rem;
             object-fit: cover;
@@ -50,7 +50,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             flex-shrink: 0;
         }
-        .vd-header-placeholder {
+        .rpt-header-placeholder {
             width: 9rem;
             height: 6.5rem;
             background: #374151;
@@ -60,14 +60,14 @@
             justify-content: center;
             flex-shrink: 0;
         }
-        .vd-header-info { flex: 1; min-width: 0; }
-        .vd-header-title {
+        .rpt-header-info { flex: 1; min-width: 0; }
+        .rpt-header-title {
             font-size: 1.5rem;
             font-weight: 800;
             margin: 0;
             line-height: 1.2;
         }
-        .vd-header-meta {
+        .rpt-header-meta {
             display: flex;
             gap: 0.75rem;
             flex-wrap: wrap;
@@ -75,7 +75,7 @@
             font-size: 0.825rem;
             color: #d1d5db;
         }
-        .vd-plate {
+        .rpt-plate {
             background: #f59e0b;
             color: #000;
             font-weight: 700;
@@ -83,7 +83,7 @@
             border-radius: 0.25rem;
             font-size: 0.825rem;
         }
-        .vd-header-details {
+        .rpt-header-details {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
@@ -91,14 +91,14 @@
             font-size: 0.75rem;
             color: #9ca3af;
         }
-        .vd-status-area { text-align: right; flex-shrink: 0; }
-        .vd-status-label {
+        .rpt-status-area { text-align: right; flex-shrink: 0; }
+        .rpt-status-label {
             font-size: 0.7rem;
             color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .vd-status-badge {
+        .rpt-status-badge {
             display: inline-block;
             padding: 0.25rem 0.85rem;
             border-radius: 9999px;
@@ -108,68 +108,68 @@
         }
 
         /* ===== CARDS ===== */
-        .vd-grid { display: grid; gap: 1rem; }
-        .vd-grid-4 { grid-template-columns: repeat(4, 1fr); }
-        .vd-grid-5 { grid-template-columns: repeat(5, 1fr); }
-        .vd-grid-3 { grid-template-columns: repeat(3, 1fr); }
-        .vd-grid-2 { grid-template-columns: 1fr 1fr; }
-        .vd-card {
+        .rpt-grid { display: grid; gap: 1rem; }
+        .rpt-grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .rpt-grid-5 { grid-template-columns: repeat(5, 1fr); }
+        .rpt-grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
+        .rpt-card {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 0.75rem;
             padding: 1.25rem;
         }
-        .vd-card-label {
+        .rpt-card-label {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6b7280;
             font-weight: 600;
         }
-        .vd-card-value {
+        .rpt-card-value {
             font-size: 1.5rem;
             font-weight: 800;
             margin-top: 0.25rem;
             line-height: 1.2;
         }
-        .vd-card-sub {
+        .rpt-card-sub {
             font-size: 0.75rem;
             color: #6b7280;
             margin-top: 0.25rem;
         }
 
         /* ===== COUNTERS ===== */
-        .vd-counter {
+        .rpt-counter {
             border-radius: 0.5rem;
             padding: 0.75rem;
             text-align: center;
         }
-        .vd-counter-value {
+        .rpt-counter-value {
             font-size: 1.75rem;
             font-weight: 800;
             line-height: 1.2;
         }
-        .vd-counter-label {
+        .rpt-counter-label {
             font-size: 0.7rem;
             color: #6b7280;
             margin-top: 0.125rem;
         }
 
         /* ===== SECTION ===== */
-        .vd-section {
+        .rpt-section {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 0.75rem;
             overflow: hidden;
         }
-        .vd-section-header {
+        .rpt-section-header {
             padding: 1rem 1.25rem;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .vd-section-header h3 {
+        .rpt-section-header h3 {
             font-weight: 700;
             font-size: 0.95rem;
             margin: 0;
@@ -177,47 +177,47 @@
         }
 
         /* ===== TABLE ===== */
-        .vd-table {
+        .rpt-table {
             width: 100%;
             font-size: 0.875rem;
             border-collapse: collapse;
         }
-        .vd-table thead tr {
+        .rpt-table thead tr {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6b7280;
         }
-        .vd-table th, .vd-table td {
+        .rpt-table th, .rpt-table td {
             padding: 0.625rem 1.25rem;
             text-align: left;
         }
-        .vd-table tbody tr {
+        .rpt-table tbody tr {
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .vd-table tbody tr:hover {
+        .rpt-table tbody tr:hover {
             background: rgba(255,255,255,0.02);
         }
-        .vd-badge {
+        .rpt-badge {
             display: inline-block;
             padding: 0.125rem 0.6rem;
             border-radius: 9999px;
             font-size: 0.7rem;
             font-weight: 600;
         }
-        .vd-empty {
+        .rpt-empty {
             padding: 2.5rem;
             text-align: center;
             color: #6b7280;
             font-size: 0.875rem;
         }
-        .vd-gallery {
+        .rpt-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
             gap: 0.75rem;
             padding: 1rem;
         }
-        .vd-gallery img {
+        .rpt-gallery img {
             width: 100%;
             height: 9rem;
             object-fit: cover;
@@ -225,41 +225,41 @@
             cursor: pointer;
             transition: transform 0.15s;
         }
-        .vd-gallery img:hover { transform: scale(1.03); }
+        .rpt-gallery img:hover { transform: scale(1.03); }
 
         @media (max-width: 1024px) {
-            .vd-grid-4 { grid-template-columns: repeat(2, 1fr); }
-            .vd-grid-5 { grid-template-columns: repeat(3, 1fr); }
-            .vd-grid-2 { grid-template-columns: 1fr; }
-            .vd-header { flex-direction: column; align-items: flex-start; }
-            .vd-status-area { text-align: left; }
+            .rpt-grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .rpt-grid-5 { grid-template-columns: repeat(3, 1fr); }
+            .rpt-grid-2 { grid-template-columns: 1fr; }
+            .rpt-header { flex-direction: column; align-items: flex-start; }
+            .rpt-status-area { text-align: left; }
         }
         @media (max-width: 640px) {
-            .vd-grid-4, .vd-grid-5, .vd-grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .rpt-grid-4, .rpt-grid-5, .rpt-grid-3 { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 
     <div x-data="{ activeTab: 'resumo' }">
 
         {{-- ========== HEADER DO VEICULO ========== --}}
-        <div class="vd-header">
+        <div class="rpt-header">
             @if($vehicle->cover_photo)
-                <img src="{{ Storage::url($vehicle->cover_photo) }}" class="vd-header-photo" alt="{{ $vehicle->brand }} {{ $vehicle->model }}" />
+                <img src="{{ Storage::url($vehicle->cover_photo) }}" class="rpt-header-photo" alt="{{ $vehicle->brand }} {{ $vehicle->model }}" />
             @else
-                <div class="vd-header-placeholder">
+                <div class="rpt-header-placeholder">
                     <x-heroicon-o-truck style="width: 3rem; height: 3rem; color: #6b7280;" />
                 </div>
             @endif
-            <div class="vd-header-info">
-                <h2 class="vd-header-title">{{ $vehicle->brand }} {{ $vehicle->model }}</h2>
-                <div class="vd-header-meta">
-                    <span class="vd-plate">{{ $vehicle->plate }}</span>
+            <div class="rpt-header-info">
+                <h2 class="rpt-header-title">{{ $vehicle->brand }} {{ $vehicle->model }}</h2>
+                <div class="rpt-header-meta">
+                    <span class="rpt-plate">{{ $vehicle->plate }}</span>
                     <span>{{ $vehicle->year_manufacture }}/{{ $vehicle->year_model }}</span>
                     @if($vehicle->color)<span>{{ $vehicle->color }}</span>@endif
                     @if($vehicle->category)<span>{{ $vehicle->category->name }}</span>@endif
                     @if($vehicle->branch)<span>{{ $vehicle->branch->name }}</span>@endif
                 </div>
-                <div class="vd-header-details">
+                <div class="rpt-header-details">
                     <span>{{ number_format((float)$vehicle->mileage, 0, ',', '.') }} km</span>
                     @if($vehicle->fuel)<span>{{ $vehicle->fuel }}</span>@endif
                     @if($vehicle->transmission)<span>{{ $vehicle->transmission }}</span>@endif
@@ -271,8 +271,8 @@
                     @endif
                 </div>
             </div>
-            <div class="vd-status-area">
-                <div class="vd-status-label">Status</div>
+            <div class="rpt-status-area">
+                <div class="rpt-status-label">Status</div>
                 @php
                     $statusColors = match($vehicle->status->value) {
                         'disponivel' => 'background: rgba(34,197,94,0.2); color: #4ade80;',
@@ -283,28 +283,28 @@
                         default => 'background: rgba(107,114,128,0.2); color: #9ca3af;',
                     };
                 @endphp
-                <span class="vd-status-badge" style="{{ $statusColors }}">
+                <span class="rpt-status-badge" style="{{ $statusColors }}">
                     {{ $vehicle->status->label() }}
                 </span>
             </div>
         </div>
 
         {{-- ========== NAVEGACAO POR ABAS ========== --}}
-        <div class="vd-tabs">
-            <button class="vd-tab" :class="activeTab === 'resumo' && 'vd-tab-active'" @click="activeTab = 'resumo'">
+        <div class="rpt-tabs">
+            <button class="rpt-tab" :class="activeTab === 'resumo' && 'rpt-tab-active'" @click="activeTab = 'resumo'">
                 📊 Resumo
             </button>
-            <button class="vd-tab" :class="activeTab === 'locacoes' && 'vd-tab-active'" @click="activeTab = 'locacoes'">
+            <button class="rpt-tab" :class="activeTab === 'locacoes' && 'rpt-tab-active'" @click="activeTab = 'locacoes'">
                 📋 Locacoes <span style="background: rgba(59,130,246,0.15); color: #60a5fa; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; margin-left: 0.25rem;">{{ $totalContracts }}</span>
             </button>
-            <button class="vd-tab" :class="activeTab === 'servicos' && 'vd-tab-active'" @click="activeTab = 'servicos'">
+            <button class="rpt-tab" :class="activeTab === 'servicos' && 'rpt-tab-active'" @click="activeTab = 'servicos'">
                 🔧 Servicos <span style="background: rgba(234,88,12,0.15); color: #fb923c; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; margin-left: 0.25rem;">{{ $totalServiceOrders }}</span>
             </button>
-            <button class="vd-tab" :class="activeTab === 'financeiro' && 'vd-tab-active'" @click="activeTab = 'financeiro'">
+            <button class="rpt-tab" :class="activeTab === 'financeiro' && 'rpt-tab-active'" @click="activeTab = 'financeiro'">
                 💰 Financeiro
             </button>
             @if($vehicle->photos->count() > 0)
-                <button class="vd-tab" :class="activeTab === 'fotos' && 'vd-tab-active'" @click="activeTab = 'fotos'">
+                <button class="rpt-tab" :class="activeTab === 'fotos' && 'rpt-tab-active'" @click="activeTab = 'fotos'">
                     📸 Fotos <span style="background: rgba(167,139,250,0.15); color: #a78bfa; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; margin-left: 0.25rem;">{{ $vehicle->photos->count() }}</span>
                 </button>
             @endif
@@ -314,31 +314,31 @@
         <div x-show="activeTab === 'resumo'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
 
             {{-- KPIs --}}
-            <div class="vd-grid vd-grid-4">
-                <div class="vd-card">
-                    <div class="vd-card-label">Receita Total</div>
-                    <div class="vd-card-value" style="color: #4ade80;">R$ {{ number_format($totalRevenue, 2, ',', '.') }}</div>
-                    <div class="vd-card-sub">Contratos: R$ {{ number_format($revenueContracts, 2, ',', '.') }}</div>
+            <div class="rpt-grid rpt-grid-4">
+                <div class="rpt-card">
+                    <div class="rpt-card-label">Receita Total</div>
+                    <div class="rpt-card-value" style="color: #4ade80;">R$ {{ number_format($totalRevenue, 2, ',', '.') }}</div>
+                    <div class="rpt-card-sub">Contratos: R$ {{ number_format($revenueContracts, 2, ',', '.') }}</div>
                 </div>
-                <div class="vd-card">
-                    <div class="vd-card-label">Despesas Total</div>
-                    <div class="vd-card-value" style="color: #f87171;">R$ {{ number_format($totalExpenses, 2, ',', '.') }}</div>
-                    <div class="vd-card-sub">OS: R$ {{ number_format($expensesOS, 2, ',', '.') }} | Multas: R$ {{ number_format($expensesFines, 2, ',', '.') }}</div>
+                <div class="rpt-card">
+                    <div class="rpt-card-label">Despesas Total</div>
+                    <div class="rpt-card-value" style="color: #f87171;">R$ {{ number_format($totalExpenses, 2, ',', '.') }}</div>
+                    <div class="rpt-card-sub">OS: R$ {{ number_format($expensesOS, 2, ',', '.') }} | Multas: R$ {{ number_format($expensesFines, 2, ',', '.') }}</div>
                 </div>
-                <div class="vd-card">
-                    <div class="vd-card-label">Lucro Liquido</div>
-                    <div class="vd-card-value" style="color: {{ $profit >= 0 ? '#4ade80' : '#f87171' }};">R$ {{ number_format($profit, 2, ',', '.') }}</div>
-                    <div class="vd-card-sub">ROI: {{ number_format($roi, 1, ',', '.') }}%</div>
+                <div class="rpt-card">
+                    <div class="rpt-card-label">Lucro Liquido</div>
+                    <div class="rpt-card-value" style="color: {{ $profit >= 0 ? '#4ade80' : '#f87171' }};">R$ {{ number_format($profit, 2, ',', '.') }}</div>
+                    <div class="rpt-card-sub">ROI: {{ number_format($roi, 1, ',', '.') }}%</div>
                 </div>
-                <div class="vd-card">
-                    <div class="vd-card-label">Diaria Media</div>
-                    <div class="vd-card-value" style="color: #60a5fa;">R$ {{ number_format($avgDailyRate, 2, ',', '.') }}</div>
-                    <div class="vd-card-sub">{{ $totalDaysRented }} dias locados</div>
+                <div class="rpt-card">
+                    <div class="rpt-card-label">Diaria Media</div>
+                    <div class="rpt-card-value" style="color: #60a5fa;">R$ {{ number_format($avgDailyRate, 2, ',', '.') }}</div>
+                    <div class="rpt-card-sub">{{ $totalDaysRented }} dias locados</div>
                 </div>
             </div>
 
             {{-- CONTADORES --}}
-            <div class="vd-grid vd-grid-5">
+            <div class="rpt-grid rpt-grid-5">
                 @php
                     $counters = [
                         ['value' => $totalContracts, 'label' => 'Contratos', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)'],
@@ -349,17 +349,17 @@
                     ];
                 @endphp
                 @foreach($counters as $c)
-                    <div class="vd-counter" style="background: {{ $c['bg'] }}; border: 1px solid {{ $c['border'] }};">
-                        <div class="vd-counter-value" style="color: {{ $c['color'] }};">{{ $c['value'] }}</div>
-                        <div class="vd-counter-label">{{ $c['label'] }}</div>
+                    <div class="rpt-counter" style="background: {{ $c['bg'] }}; border: 1px solid {{ $c['border'] }};">
+                        <div class="rpt-counter-value" style="color: {{ $c['color'] }};">{{ $c['value'] }}</div>
+                        <div class="rpt-counter-label">{{ $c['label'] }}</div>
                     </div>
                 @endforeach
             </div>
 
             {{-- CONTRATO ATIVO + MANUTENCAO --}}
-            <div class="vd-grid vd-grid-2">
+            <div class="rpt-grid rpt-grid-2">
                 @if($activeContract)
-                    <div class="vd-card" style="border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.04);">
+                    <div class="rpt-card" style="border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.04);">
                         <h3 style="font-weight: 700; color: #60a5fa; margin: 0 0 0.75rem 0; font-size: 0.95rem;">📋 Contrato Ativo</h3>
                         <div style="font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.375rem;">
                             <div><span style="color: #6b7280;">Cliente:</span> <strong>{{ $activeContract->customer?->name ?? '-' }}</strong></div>
@@ -368,14 +368,14 @@
                         </div>
                     </div>
                 @else
-                    <div class="vd-card">
+                    <div class="rpt-card">
                         <h3 style="font-weight: 700; color: #6b7280; margin: 0 0 0.5rem 0; font-size: 0.95rem;">📋 Contrato Ativo</h3>
                         <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">Nenhum contrato ativo no momento.</p>
                     </div>
                 @endif
 
                 @if($nextMaintenance)
-                    <div class="vd-card" style="border-color: rgba(234,179,8,0.25); background: rgba(234,179,8,0.04);">
+                    <div class="rpt-card" style="border-color: rgba(234,179,8,0.25); background: rgba(234,179,8,0.04);">
                         <h3 style="font-weight: 700; color: #fbbf24; margin: 0 0 0.75rem 0; font-size: 0.95rem;">🔧 Proxima Manutencao</h3>
                         <div style="font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.375rem;">
                             <div><span style="color: #6b7280;">Tipo:</span> <strong>{{ $nextMaintenance->type ?? '-' }}</strong></div>
@@ -384,7 +384,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="vd-card">
+                    <div class="rpt-card">
                         <h3 style="font-weight: 700; color: #6b7280; margin: 0 0 0.5rem 0; font-size: 0.95rem;">🔧 Manutencao</h3>
                         <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">Nenhuma manutencao pendente.</p>
                     </div>
@@ -395,13 +395,13 @@
         {{-- ========== ABA: LOCACOES ========== --}}
         <div x-show="activeTab === 'locacoes'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
 
-            <div class="vd-section">
-                <div class="vd-section-header">
+            <div class="rpt-section">
+                <div class="rpt-section-header">
                     <h3>📊 Historico de Locacoes (Contratos)</h3>
                     <span style="font-size: 0.8rem; color: #6b7280;">{{ $totalContracts }} contrato(s)</span>
                 </div>
                 <div style="overflow-x: auto;">
-                    <table class="vd-table">
+                    <table class="rpt-table">
                         <thead>
                             <tr>
                                 <th>Cliente</th>
@@ -424,13 +424,13 @@
                                                 ? 'background: rgba(34,197,94,0.15); color: #4ade80;'
                                                 : 'background: rgba(255,255,255,0.06); color: #9ca3af;';
                                         @endphp
-                                        <span class="vd-badge" style="{{ $cColor }}">
+                                        <span class="rpt-badge" style="{{ $cColor }}">
                                             {{ $contract->status instanceof \BackedEnum ? $contract->status->label() : ($contract->status ?? '-') }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="vd-empty">Nenhum contrato registrado.</td></tr>
+                                <tr><td colspan="5" class="rpt-empty">Nenhum contrato registrado.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -439,13 +439,13 @@
 
             {{-- RESERVAS --}}
             @if($totalReservations > 0)
-                <div class="vd-section">
-                    <div class="vd-section-header">
+                <div class="rpt-section">
+                    <div class="rpt-section-header">
                         <h3>📅 Reservas</h3>
                         <span style="font-size: 0.8rem; color: #6b7280;">{{ $totalReservations }} reserva(s)</span>
                     </div>
                     <div style="overflow-x: auto;">
-                        <table class="vd-table">
+                        <table class="rpt-table">
                             <thead>
                                 <tr>
                                     <th>Cliente</th>
@@ -461,7 +461,7 @@
                                         <td style="color: #9ca3af;">{{ $res->pickup_date?->format('d/m/Y') ?? '-' }} a {{ $res->return_date?->format('d/m/Y') ?? '-' }}</td>
                                         <td style="text-align: right; font-weight: 600; color: #a78bfa;">R$ {{ number_format((float)($res->total ?? 0), 2, ',', '.') }}</td>
                                         <td style="text-align: center;">
-                                            <span class="vd-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">
+                                            <span class="rpt-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">
                                                 {{ $res->status instanceof \BackedEnum ? $res->status->label() : ($res->status ?? '-') }}
                                             </span>
                                         </td>
@@ -478,13 +478,13 @@
         <div x-show="activeTab === 'servicos'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
 
             {{-- ORDENS DE SERVICO --}}
-            <div class="vd-section">
-                <div class="vd-section-header">
+            <div class="rpt-section">
+                <div class="rpt-section-header">
                     <h3>🔧 Ordens de Servico</h3>
                     <span style="font-size: 0.8rem; color: #6b7280;">{{ $totalServiceOrders }} OS(s)</span>
                 </div>
                 <div style="overflow-x: auto;">
-                    <table class="vd-table">
+                    <table class="rpt-table">
                         <thead>
                             <tr>
                                 <th>OS #</th>
@@ -502,13 +502,13 @@
                                     <td>{{ \Illuminate\Support\Str::limit($os->description ?? $os->notes ?? '-', 60) }}</td>
                                     <td style="text-align: right; font-weight: 600; color: #f87171;">R$ {{ number_format((float)($os->total ?? 0), 2, ',', '.') }}</td>
                                     <td style="text-align: center;">
-                                        <span class="vd-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">
+                                        <span class="rpt-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">
                                             {{ $os->status instanceof \BackedEnum ? $os->status->label() : ($os->status ?? '-') }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="vd-empty">Nenhuma OS registrada.</td></tr>
+                                <tr><td colspan="5" class="rpt-empty">Nenhuma OS registrada.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -517,13 +517,13 @@
 
             {{-- MULTAS --}}
             @if($totalFines > 0)
-                <div class="vd-section">
-                    <div class="vd-section-header">
+                <div class="rpt-section">
+                    <div class="rpt-section-header">
                         <h3>⚠️ Multas de Transito</h3>
                         <span style="font-size: 0.8rem; color: #6b7280;">{{ $totalFines }} multa(s)</span>
                     </div>
                     <div style="overflow-x: auto;">
-                        <table class="vd-table">
+                        <table class="rpt-table">
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -539,7 +539,7 @@
                                         <td>{{ $fine->description ?? '-' }}</td>
                                         <td style="text-align: right; font-weight: 600; color: #f87171;">R$ {{ number_format((float)($fine->amount ?? 0), 2, ',', '.') }}</td>
                                         <td style="text-align: center;">
-                                            <span class="vd-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">{{ $fine->status ?? '-' }}</span>
+                                            <span class="rpt-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">{{ $fine->status ?? '-' }}</span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -551,13 +551,13 @@
 
             {{-- VISTORIAS --}}
             @if($totalInspections > 0)
-                <div class="vd-section">
-                    <div class="vd-section-header">
+                <div class="rpt-section">
+                    <div class="rpt-section-header">
                         <h3>🔍 Vistorias</h3>
                         <span style="font-size: 0.8rem; color: #6b7280;">{{ $totalInspections }} vistoria(s)</span>
                     </div>
                     <div style="overflow-x: auto;">
-                        <table class="vd-table">
+                        <table class="rpt-table">
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -570,7 +570,7 @@
                                     <tr>
                                         <td>{{ $insp->created_at?->format('d/m/Y') ?? '-' }}</td>
                                         <td>
-                                            <span class="vd-badge" style="background: rgba(192,132,252,0.15); color: #c084fc;">
+                                            <span class="rpt-badge" style="background: rgba(192,132,252,0.15); color: #c084fc;">
                                                 {{ $insp->type instanceof \BackedEnum ? $insp->type->label() : ($insp->type ?? '-') }}
                                             </span>
                                         </td>
@@ -588,10 +588,10 @@
         <div x-show="activeTab === 'financeiro'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
 
             {{-- RESUMO FINANCEIRO DETALHADO --}}
-            <div class="vd-grid vd-grid-2">
+            <div class="rpt-grid rpt-grid-2">
                 {{-- RECEITAS --}}
-                <div class="vd-section">
-                    <div class="vd-section-header" style="background: rgba(34,197,94,0.04);">
+                <div class="rpt-section">
+                    <div class="rpt-section-header" style="background: rgba(34,197,94,0.04);">
                         <h3 style="color: #4ade80;">📈 Receitas</h3>
                         <span style="font-size: 1.1rem; font-weight: 800; color: #4ade80;">R$ {{ number_format($totalRevenue, 2, ',', '.') }}</span>
                     </div>
@@ -608,8 +608,8 @@
                 </div>
 
                 {{-- DESPESAS --}}
-                <div class="vd-section">
-                    <div class="vd-section-header" style="background: rgba(239,68,68,0.04);">
+                <div class="rpt-section">
+                    <div class="rpt-section-header" style="background: rgba(239,68,68,0.04);">
                         <h3 style="color: #f87171;">📉 Despesas</h3>
                         <span style="font-size: 1.1rem; font-weight: 800; color: #f87171;">R$ {{ number_format($totalExpenses, 2, ',', '.') }}</span>
                     </div>
@@ -631,7 +631,7 @@
             </div>
 
             {{-- RESULTADO --}}
-            <div class="vd-card" style="border-color: {{ $profit >= 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)' }}; background: {{ $profit >= 0 ? 'rgba(34,197,94,0.04)' : 'rgba(239,68,68,0.04)' }};">
+            <div class="rpt-card" style="border-color: {{ $profit >= 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)' }}; background: {{ $profit >= 0 ? 'rgba(34,197,94,0.04)' : 'rgba(239,68,68,0.04)' }};">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div style="font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Resultado Liquido</div>
@@ -645,7 +645,7 @@
             </div>
 
             {{-- VALORES DO VEICULO --}}
-            <div class="vd-grid vd-grid-4">
+            <div class="rpt-grid rpt-grid-4">
                 @php
                     $values = [
                         ['label' => 'Valor Compra', 'value' => $vehicle->purchase_value, 'color' => '#e5e7eb'],
@@ -655,8 +655,8 @@
                     ];
                 @endphp
                 @foreach($values as $item)
-                    <div class="vd-card" style="text-align: center;">
-                        <div class="vd-card-label">{{ $item['label'] }}</div>
+                    <div class="rpt-card" style="text-align: center;">
+                        <div class="rpt-card-label">{{ $item['label'] }}</div>
                         <div style="font-size: 1.25rem; font-weight: 800; color: {{ $item['color'] }}; margin-top: 0.375rem;">R$ {{ number_format((float)($item['value'] ?? 0), 2, ',', '.') }}</div>
                     </div>
                 @endforeach
@@ -666,12 +666,12 @@
         {{-- ========== ABA: FOTOS ========== --}}
         @if($vehicle->photos->count() > 0)
             <div x-show="activeTab === 'fotos'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
-                <div class="vd-section">
-                    <div class="vd-section-header">
+                <div class="rpt-section">
+                    <div class="rpt-section-header">
                         <h3>📸 Galeria de Fotos</h3>
                         <span style="font-size: 0.8rem; color: #6b7280;">{{ $vehicle->photos->count() }} foto(s)</span>
                     </div>
-                    <div class="vd-gallery">
+                    <div class="rpt-gallery">
                         @foreach($vehicle->photos as $photo)
                             <img src="{{ Storage::url($photo->path) }}" alt="Foto #{{ $loop->iteration }}" loading="lazy" />
                         @endforeach

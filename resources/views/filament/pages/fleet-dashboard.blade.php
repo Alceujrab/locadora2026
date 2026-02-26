@@ -1,118 +1,118 @@
 <x-filament-panels::page>
     <style>
-        .fleet-grid { display: grid; gap: 1rem; }
-        .fleet-grid-6 { grid-template-columns: repeat(6, 1fr); }
-        .fleet-grid-2 { grid-template-columns: 1fr 1fr; }
-        .fleet-card {
+        .rpt-grid { display: grid; gap: 1rem; }
+        .rpt-grid-6 { grid-template-columns: repeat(6, 1fr); }
+        .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
+        .rpt-card {
             border-radius: 0.75rem;
             padding: 1.25rem;
             position: relative;
             overflow: hidden;
         }
-        .fleet-card-label {
+        .rpt-card-label {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 600;
             opacity: 0.7;
         }
-        .fleet-card-value {
+        .rpt-card-value {
             font-size: 2rem;
             font-weight: 800;
             line-height: 1.2;
             margin-top: 0.25rem;
         }
-        .fleet-card-sub {
+        .rpt-card-sub {
             font-size: 0.75rem;
             opacity: 0.5;
             margin-top: 0.25rem;
         }
-        .fleet-section {
+        .rpt-section {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 0.75rem;
             overflow: hidden;
         }
-        .fleet-section-header {
+        .rpt-section-header {
             padding: 1rem 1.25rem;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .fleet-section-header h3 {
+        .rpt-section-header h3 {
             font-weight: 700;
             font-size: 0.95rem;
             margin: 0;
             color: #e5e7eb;
         }
-        .fleet-table {
+        .rpt-table {
             width: 100%;
             font-size: 0.875rem;
             border-collapse: collapse;
         }
-        .fleet-table thead tr {
+        .rpt-table thead tr {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6b7280;
         }
-        .fleet-table th, .fleet-table td {
+        .rpt-table th, .rpt-table td {
             padding: 0.625rem 1.25rem;
             text-align: left;
         }
-        .fleet-table tbody tr {
+        .rpt-table tbody tr {
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .fleet-table tbody tr:hover {
+        .rpt-table tbody tr:hover {
             background: rgba(255,255,255,0.02);
         }
-        .fleet-link {
+        .rpt-link {
             color: #f59e0b;
             text-decoration: none;
             font-weight: 500;
         }
-        .fleet-link:hover { text-decoration: underline; }
-        .fleet-badge {
+        .rpt-link:hover { text-decoration: underline; }
+        .rpt-badge {
             display: inline-block;
             padding: 0.15rem 0.6rem;
             border-radius: 9999px;
             font-size: 0.7rem;
             font-weight: 600;
         }
-        .fleet-badge-danger { background: rgba(239,68,68,0.15); color: #f87171; }
-        .fleet-badge-warning { background: rgba(234,179,8,0.15); color: #fbbf24; }
-        .fleet-empty {
+        .rpt-badge-danger { background: rgba(239,68,68,0.15); color: #f87171; }
+        .rpt-badge-warning { background: rgba(234,179,8,0.15); color: #fbbf24; }
+        .rpt-empty {
             padding: 2rem;
             text-align: center;
             color: #6b7280;
             font-size: 0.875rem;
         }
-        .fleet-utilization-bar {
+        .rpt-utilization-bar {
             height: 0.5rem;
             border-radius: 9999px;
             background: rgba(255,255,255,0.06);
             overflow: hidden;
             margin-top: 0.75rem;
         }
-        .fleet-utilization-fill {
+        .rpt-utilization-fill {
             height: 100%;
             border-radius: 9999px;
             transition: width 0.5s ease;
         }
         @media (max-width: 1024px) {
-            .fleet-grid-6 { grid-template-columns: repeat(3, 1fr); }
-            .fleet-grid-2 { grid-template-columns: 1fr; }
+            .rpt-grid-6 { grid-template-columns: repeat(3, 1fr); }
+            .rpt-grid-2 { grid-template-columns: 1fr; }
         }
         @media (max-width: 640px) {
-            .fleet-grid-6 { grid-template-columns: repeat(2, 1fr); }
+            .rpt-grid-6 { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
         {{-- CARDS DE STATUS --}}
-        <div class="fleet-grid fleet-grid-6">
+        <div class="rpt-grid rpt-grid-6">
             @php
                 $cards = [
                     ['label' => 'Total da Frota', 'value' => $fleetCounts['total'], 'color' => '#e5e7eb', 'bg' => 'rgba(255,255,255,0.04)', 'border' => 'rgba(255,255,255,0.08)', 'sub' => 'veiculos cadastrados'],
@@ -124,16 +124,16 @@
                 ];
             @endphp
             @foreach($cards as $card)
-                <div class="fleet-card" style="background: {{ $card['bg'] }}; border: 1px solid {{ $card['border'] }};">
-                    <div class="fleet-card-label" style="color: {{ $card['color'] }};">{{ $card['label'] }}</div>
-                    <div class="fleet-card-value" style="color: {{ $card['color'] }};">{{ $card['value'] }}</div>
-                    <div class="fleet-card-sub">{{ $card['sub'] }}</div>
+                <div class="rpt-card" style="background: {{ $card['bg'] }}; border: 1px solid {{ $card['border'] }};">
+                    <div class="rpt-card-label" style="color: {{ $card['color'] }};">{{ $card['label'] }}</div>
+                    <div class="rpt-card-value" style="color: {{ $card['color'] }};">{{ $card['value'] }}</div>
+                    <div class="rpt-card-sub">{{ $card['sub'] }}</div>
                 </div>
             @endforeach
         </div>
 
         {{-- TAXA DE UTILIZACAO --}}
-        <div class="fleet-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="rpt-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <div style="font-size: 0.8rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Taxa de Utilizacao da Frota</div>
@@ -143,21 +143,21 @@
                     {{ $utilizationRate }}%
                 </div>
             </div>
-            <div class="fleet-utilization-bar">
-                <div class="fleet-utilization-fill" style="width: {{ $utilizationRate }}%; background: {{ $utilizationRate >= 70 ? '#4ade80' : ($utilizationRate >= 40 ? '#fbbf24' : '#f87171') }};"></div>
+            <div class="rpt-utilization-bar">
+                <div class="rpt-utilization-fill" style="width: {{ $utilizationRate }}%; background: {{ $utilizationRate >= 70 ? '#4ade80' : ($utilizationRate >= 40 ? '#fbbf24' : '#f87171') }};"></div>
             </div>
         </div>
 
         {{-- GRID 2 COLUNAS: MANUTENCAO + DOCUMENTOS --}}
-        <div class="fleet-grid fleet-grid-2">
+        <div class="rpt-grid rpt-grid-2">
 
             {{-- ALERTAS DE MANUTENCAO --}}
-            <div class="fleet-section">
-                <div class="fleet-section-header">
+            <div class="rpt-section">
+                <div class="rpt-section-header">
                     <h3>🔧 Alertas de Manutencao</h3>
-                    <a href="{{ url('admin/maintenance-alerts') }}" class="fleet-link" style="font-size: 0.8rem;">Ver todos →</a>
+                    <a href="{{ url('admin/maintenance-alerts') }}" class="rpt-link" style="font-size: 0.8rem;">Ver todos →</a>
                 </div>
-                <table class="fleet-table">
+                <table class="rpt-table">
                     <thead>
                         <tr>
                             <th>Veiculo</th>
@@ -172,33 +172,33 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $alert->vehicle_id]) }}" class="fleet-link">
+                                    <a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $alert->vehicle_id]) }}" class="rpt-link">
                                         {{ $alert->vehicle?->plate ?? '-' }}
                                     </a>
                                     <div style="font-size: 0.7rem; color: #6b7280;">{{ $alert->vehicle?->brand }} {{ $alert->vehicle?->model }}</div>
                                 </td>
                                 <td>{{ $alert->type ?? '-' }}</td>
                                 <td>
-                                    <span class="fleet-badge {{ $isLate ? 'fleet-badge-danger' : 'fleet-badge-warning' }}">
+                                    <span class="rpt-badge {{ $isLate ? 'rpt-badge-danger' : 'rpt-badge-warning' }}">
                                         @if($alert->due_date) {{ $alert->due_date->format('d/m/Y') }} @endif
                                         @if($alert->due_mileage) {{ number_format($alert->due_mileage, 0, ',', '.') }}km @endif
                                     </span>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="fleet-empty">Nenhuma manutencao pendente ✓</td></tr>
+                            <tr><td colspan="3" class="rpt-empty">Nenhuma manutencao pendente ✓</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
             {{-- DOCUMENTOS VENCENDO --}}
-            <div class="fleet-section">
-                <div class="fleet-section-header">
+            <div class="rpt-section">
+                <div class="rpt-section-header">
                     <h3>📋 Documentos Vencendo (30 dias)</h3>
-                    <a href="{{ url('admin/vehicles') }}" class="fleet-link" style="font-size: 0.8rem;">Ir para Veiculos →</a>
+                    <a href="{{ url('admin/vehicles') }}" class="rpt-link" style="font-size: 0.8rem;">Ir para Veiculos →</a>
                 </div>
-                <table class="fleet-table">
+                <table class="rpt-table">
                     <thead>
                         <tr>
                             <th>Veiculo</th>
@@ -212,30 +212,30 @@
                             @if($veh->ipva_due_date && $veh->ipva_due_date <= now()->addDays(30))
                                 @php $hasExpiring = true; @endphp
                                 <tr>
-                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="fleet-link">{{ $veh->plate }}</a></td>
+                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="rpt-link">{{ $veh->plate }}</a></td>
                                     <td>IPVA</td>
-                                    <td><span class="fleet-badge {{ $veh->ipva_due_date->isPast() ? 'fleet-badge-danger' : 'fleet-badge-warning' }}">{{ $veh->ipva_due_date->format('d/m/Y') }}</span></td>
+                                    <td><span class="rpt-badge {{ $veh->ipva_due_date->isPast() ? 'rpt-badge-danger' : 'rpt-badge-warning' }}">{{ $veh->ipva_due_date->format('d/m/Y') }}</span></td>
                                 </tr>
                             @endif
                             @if($veh->licensing_due_date && $veh->licensing_due_date <= now()->addDays(30))
                                 @php $hasExpiring = true; @endphp
                                 <tr>
-                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="fleet-link">{{ $veh->plate }}</a></td>
+                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="rpt-link">{{ $veh->plate }}</a></td>
                                     <td>Licenciamento</td>
-                                    <td><span class="fleet-badge {{ $veh->licensing_due_date->isPast() ? 'fleet-badge-danger' : 'fleet-badge-warning' }}">{{ $veh->licensing_due_date->format('d/m/Y') }}</span></td>
+                                    <td><span class="rpt-badge {{ $veh->licensing_due_date->isPast() ? 'rpt-badge-danger' : 'rpt-badge-warning' }}">{{ $veh->licensing_due_date->format('d/m/Y') }}</span></td>
                                 </tr>
                             @endif
                             @if($veh->insurance_expiry_date && $veh->insurance_expiry_date <= now()->addDays(30))
                                 @php $hasExpiring = true; @endphp
                                 <tr>
-                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="fleet-link">{{ $veh->plate }}</a></td>
+                                    <td><a href="{{ \App\Filament\Resources\VehicleResource::getUrl('view', ['record' => $veh->id]) }}" class="rpt-link">{{ $veh->plate }}</a></td>
                                     <td>Seguro</td>
-                                    <td><span class="fleet-badge {{ $veh->insurance_expiry_date->isPast() ? 'fleet-badge-danger' : 'fleet-badge-warning' }}">{{ $veh->insurance_expiry_date->format('d/m/Y') }}</span></td>
+                                    <td><span class="rpt-badge {{ $veh->insurance_expiry_date->isPast() ? 'rpt-badge-danger' : 'rpt-badge-warning' }}">{{ $veh->insurance_expiry_date->format('d/m/Y') }}</span></td>
                                 </tr>
                             @endif
                         @endforeach
                         @if(!$hasExpiring)
-                            <tr><td colspan="3" class="fleet-empty">Documentacao em dia ✓</td></tr>
+                            <tr><td colspan="3" class="rpt-empty">Documentacao em dia ✓</td></tr>
                         @endif
                     </tbody>
                 </table>
