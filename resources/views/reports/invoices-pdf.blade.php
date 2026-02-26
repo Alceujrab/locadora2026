@@ -171,9 +171,10 @@
                     <td>{{ $invoice->customer->name ?? 'N/A' }}</td>
                     <td>{{ $invoice->contract->number ?? 'N/A' }}</td>
                     <td>{{ $invoice->due_date->format('d/m/Y') }}</td>
+                    @php $statusStr = $invoice->status instanceof \BackedEnum ? $invoice->status->value : $invoice->status; @endphp
                     <td>
-                        <span class="status-{{ strtolower($invoice->status) }}">
-                            {{ ucfirst($invoice->status) }}
+                        <span class="status-{{ strtolower($statusStr) }}">
+                            {{ ucfirst($statusStr) }}
                         </span>
                     </td>
                     <td class="text-right">{{ number_format($invoice->total, 2, ',', '.') }}</td>

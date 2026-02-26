@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\AccountPayable;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Writer\XLSX\Writer;
+use OpenSpout\Writer\XLSX\Options;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\Color;
+use OpenSpout\Common\Entity\Style\Style;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -13,7 +17,6 @@ class AccountsPayableReportExportController extends Controller
     public function exportPdf(Request $request)
     {
         try {
-            // Get filters from request
             $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from')) : now()->subDays(90);
             $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to')) : now()->addDays(30);
             $status = $request->input('status');
@@ -21,27 +24,14 @@ class AccountsPayableReportExportController extends Controller
             $branchId = $request->input('branch_id');
             $category = $request->input('category');
 
-            // Build query
             $query = AccountPayable::whereBetween('due_date', [$dateFrom, $dateTo]);
+            if ($status) $query->where('status', $status);
+            if ($supplierId) $query->where('supplier_id', $supplierId);
+            if ($branchId) $query->where('branch_id', $branchId);
+            if ($category) $query->where('category', $category);
 
-            if ($status) {
-                $query->where('status', $status);
-            }
-            if ($supplierId) {
-                $query->where('supplier_id', $supplierId);
-            }
-            if ($branchId) {
-                $query->where('branch_id', $branchId);
-            }
-            if ($category) {
-                $query->where('category', $category);
-            }
+            $records = $query->with(['supplier', 'branch', 'vehicle'])->orderBy('due_date', 'desc')->get();
 
-            $records = $query->with(['supplier', 'branch', 'vehicle'])
-                ->orderBy('due_date', 'desc')
-                ->get();
-
-            // Calculate totals
             $totals = [
                 'total' => $records->sum('amount'),
                 'pending' => $records->where('status', 'pendente')->sum('amount'),
@@ -52,7 +42,6 @@ class AccountsPayableReportExportController extends Controller
                     ->sum('amount'),
             ];
 
-            // Category breakdown
             $byCategory = [];
             foreach (['oficina', 'seguro', 'ipva', 'financiamento', 'aluguel', 'outros'] as $cat) {
                 $amount = $records->where('category', $cat)->sum('amount');
@@ -87,7 +76,6 @@ class AccountsPayableReportExportController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            // Get filters from request
             $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from')) : now()->subDays(90);
             $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to')) : now()->addDays(30);
             $status = $request->input('status');
@@ -95,29 +83,44 @@ class AccountsPayableReportExportController extends Controller
             $branchId = $request->input('branch_id');
             $category = $request->input('category');
 
-            // Build query
             $query = AccountPayable::whereBetween('due_date', [$dateFrom, $dateTo]);
+            if ($status) $query->where('status', $status);
+            if ($supplierId) $query->where('supplier_id', $supplierId);
+            if ($branchId) $query->where('branch_id', $branchId);
+            if ($category) $query->where('category', $category);
 
-            if ($status) {
-                $query->where('status', $status);
-            }
-            if ($supplierId) {
-                $query->where('supplier_id', $supplierId);
-            }
-            if ($branchId) {
-                $query->where('branch_id', $branchId);
-            }
-            if ($category) {
-                $query->where('category', $category);
-            }
-
-            $records = $query->with(['supplier', 'branch', 'vehicle'])
-                ->orderBy('due_date', 'desc')
-                ->get();
+            $records = $query->with(['supplier', 'branch', 'vehicle'])->orderBy('due_date', 'desc')->get();
 
             $fileName = 'Relatório-Contas-Pagar-' . now()->format('d-m-Y') . '.xlsx';
+            $filePath = storage_path('app/' . $fileName);
 
-            return Excel::download(new \App\Exports\AccountsPayableExport($records), $fileName);
+            $options = new Options();
+            $writer = new Writer($options);
+            $writer->openToFile($filePath);
+
+            $headerStyle = (new Style())->setFontBold()->setFontColor(Color::WHITE)->setBackgroundColor('EF4444');
+            $writer->addRow(Row::fromValues([
+                'Descrição', 'Fornecedor', 'Data de Vencimento', 'Categoria',
+                'Valor', 'Status', 'Método de Pagamento', 'Veículo', 'Data de Pagamento',
+            ], $headerStyle));
+
+            foreach ($records as $record) {
+                $writer->addRow(Row::fromValues([
+                    $record->description,
+                    $record->supplier->name ?? 'N/A',
+                    $record->due_date->format('d/m/Y'),
+                    ucfirst($record->category),
+                    number_format($record->amount, 2, ',', '.'),
+                    ucfirst($record->status),
+                    $record->payment_method ?? '-',
+                    $record->vehicle->plate ?? '-',
+                    $record->paid_at ? $record->paid_at->format('d/m/Y') : '-',
+                ]));
+            }
+
+            $writer->close();
+
+            return response()->download($filePath, $fileName)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Erro ao gerar Excel: ' . $e->getMessage()], 500);
         }
