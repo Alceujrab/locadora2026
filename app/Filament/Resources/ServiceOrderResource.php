@@ -267,6 +267,9 @@ class ServiceOrderResource extends Resource
                 // ===== GERAR FATURA =====
                 static::buildGenerateInvoiceAction(),
 
+                // ===== GERAR CONTA A RECEBER =====
+                static::buildGenerateAccountReceivableAction(),
+
                 Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -332,17 +335,6 @@ class ServiceOrderResource extends Resource
                     ]);
                 }
 
-                // Criar Conta a Receber
-                \App\Models\AccountReceivable::create([
-                    'branch_id' => $record->branch_id,
-                    'customer_id' => $record->customer_id,
-                    'invoice_id' => $invoice->id,
-                    'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
-                    'amount' => $invoiceAmount,
-                    'due_date' => now()->addDays(7),
-                    'status' => 'pendente',
-                ]);
-
                 $record->update([
                     'invoice_id' => $invoice->id,
                     'status' => ServiceOrderStatus::INVOICED,
@@ -381,6 +373,60 @@ class ServiceOrderResource extends Resource
                 \Filament\Notifications\Notification::make()
                     ->title('Fatura gerada e enviada!')
                     ->body("Fatura {$invoice->invoice_number} de R$ " . number_format($invoiceAmount, 2, ',', '.') . " criada + PDF + WhatsApp")
+                    ->success()
+                    ->send();
+            });
+    }
+
+    /**
+     * Acao reutilizavel: Gerar Conta a Receber a partir de OS faturada
+     * Visivel apos faturamento, se ainda nao existe AR para a fatura
+     */
+    public static function buildGenerateAccountReceivableAction(): Actions\Action
+    {
+        return Actions\Action::make('generate_account_receivable')
+            ->label('Gerar Conta a Receber')
+            ->icon('heroicon-o-currency-dollar')
+            ->color('success')
+            ->requiresConfirmation()
+            ->modalHeading('Gerar Conta a Receber')
+            ->modalDescription(fn (ServiceOrder $record) => "Sera gerada uma conta a receber de R$ "
+                . number_format((float) ($record->invoice?->total ?? $record->customer_charge ?? $record->total), 2, ',', '.')
+                . " com vencimento em " . now()->addDays(7)->format('d/m/Y') . ".")
+            ->visible(function (ServiceOrder $record) {
+                if (! $record->isInvoiced() || ! $record->invoice_id) {
+                    return false;
+                }
+                return ! \App\Models\AccountReceivable::where('invoice_id', $record->invoice_id)->exists();
+            })
+            ->action(function (ServiceOrder $record) {
+                $record->load(['customer', 'vehicle', 'branch', 'invoice']);
+
+                $invoice = $record->invoice;
+                if (! $invoice) {
+                    \Filament\Notifications\Notification::make()
+                        ->title('Erro')
+                        ->body('Fatura nao encontrada para esta OS.')
+                        ->danger()
+                        ->send();
+                    return;
+                }
+
+                $amount = (float) $invoice->total;
+
+                \App\Models\AccountReceivable::create([
+                    'branch_id' => $record->branch_id,
+                    'customer_id' => $record->customer_id,
+                    'invoice_id' => $invoice->id,
+                    'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
+                    'amount' => $amount,
+                    'due_date' => now()->addDays(7),
+                    'status' => 'pendente',
+                ]);
+
+                \Filament\Notifications\Notification::make()
+                    ->title('Conta a Receber gerada!')
+                    ->body("Conta de R$ " . number_format($amount, 2, ',', '.') . " criada com vencimento em " . now()->addDays(7)->format('d/m/Y'))
                     ->success()
                     ->send();
             });

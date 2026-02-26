@@ -14,6 +14,7 @@ class EditServiceOrder extends EditRecord
     {
         return [
             ServiceOrderResource::buildGenerateInvoiceAction(),
+            ServiceOrderResource::buildGenerateAccountReceivableAction(),
             Actions\DeleteAction::make(),
         ];
     }
