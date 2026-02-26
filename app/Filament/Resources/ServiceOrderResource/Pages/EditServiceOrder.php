@@ -13,6 +13,7 @@ class EditServiceOrder extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            ServiceOrderResource::buildGenerateInvoiceAction(),
             Actions\DeleteAction::make(),
         ];
     }

@@ -202,10 +202,10 @@ class ServiceOrderResource extends Resource
                         $phone = $record->customer->phone;
                         $plate = $record->vehicle->plate ?? 'N/A';
 
-                        $message = "🔧 *AUTORIZACAO DE ABERTURA - OS #{$record->id}*\n\n"
+                        $message = "\xF0\x9F\x94\xA7 *AUTORIZACAO DE ABERTURA - OS #{$record->id}*\n\n"
                             . "Veiculo: {$plate}\n"
                             . "Problema: {$record->description}\n\n"
-                            . "📋 Para AUTORIZAR a abertura da OS, acesse:\n{$signatureUrl}\n\n"
+                            . "\xF0\x9F\x93\x8B Para AUTORIZAR a abertura da OS, acesse:\n{$signatureUrl}\n\n"
                             . "Apos sua autorizacao, os servicos serao iniciados.\n\n"
                             . "Elite Locadora";
 
@@ -238,11 +238,11 @@ class ServiceOrderResource extends Resource
                         $plate = $record->vehicle->plate ?? 'N/A';
                         $charge = $record->customer_charge > 0 ? 'R$ ' . number_format($record->customer_charge, 2, ',', '.') : 'Sem cobranca';
 
-                        $message = "✅ *SERVICO CONCLUIDO - OS #{$record->id}*\n\n"
+                        $message = "\xE2\x9C\x85 *SERVICO CONCLUIDO - OS #{$record->id}*\n\n"
                             . "Veiculo: {$plate}\n"
                             . "Total OS: R$ " . number_format($record->total, 2, ',', '.') . "\n"
                             . "Valor a cobrar: {$charge}\n\n"
-                            . "📋 Para APROVAR a conclusao, acesse:\n{$signatureUrl}\n\n"
+                            . "\xF0\x9F\x93\x8B Para APROVAR a conclusao, acesse:\n{$signatureUrl}\n\n"
                             . "Apos sua aprovacao, a fatura sera gerada.\n\n"
                             . "Elite Locadora";
 
@@ -265,81 +265,7 @@ class ServiceOrderResource extends Resource
                     }),
 
                 // ===== GERAR FATURA =====
-                Actions\Action::make('generate_invoice')
-                    ->label('Gerar Fatura')
-                    ->icon('heroicon-o-banknotes')
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->modalHeading('Gerar Fatura do Cliente')
-                    ->modalDescription(fn (ServiceOrder $record) => "Sera gerada uma fatura de R$ " . number_format((float) $record->customer_charge, 2, ',', '.') . " para o cliente.")
-                    ->visible(fn (ServiceOrder $record) => $record->isApproved() && $record->customer_charge > 0 && ! $record->isInvoiced())
-                    ->action(function (ServiceOrder $record) {
-                        $record->load(['customer', 'vehicle', 'branch']);
-
-                        // Criar Invoice
-                        $invoice = \App\Models\Invoice::create([
-                            'branch_id' => $record->branch_id,
-                            'customer_id' => $record->customer_id,
-                            'invoice_number' => 'OS-' . str_pad($record->id, 5, '0', STR_PAD_LEFT),
-                            'due_date' => now()->addDays(7),
-                            'amount' => $record->customer_charge,
-                            'total' => $record->customer_charge,
-                            'status' => \App\Enums\InvoiceStatus::OPEN,
-                            'notes' => "Fatura ref. OS #{$record->id} - Veiculo {$record->vehicle?->plate}",
-                        ]);
-
-                        // Criar Conta a Receber
-                        \App\Models\AccountReceivable::create([
-                            'branch_id' => $record->branch_id,
-                            'customer_id' => $record->customer_id,
-                            'invoice_id' => $invoice->id,
-                            'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
-                            'amount' => $record->customer_charge,
-                            'due_date' => now()->addDays(7),
-                            'status' => 'pendente',
-                        ]);
-
-                        $record->update([
-                            'invoice_id' => $invoice->id,
-                            'status' => ServiceOrderStatus::INVOICED,
-                        ]);
-
-                        // Gerar PDF da fatura
-                        \App\Http\Controllers\InvoiceConfirmationController::generatePdf($invoice);
-                        $invoice->refresh();
-
-                        // Enviar fatura por WhatsApp
-                        if ($record->customer?->phone) {
-                            $phone = $record->customer->phone;
-                            $charge = 'R$ ' . number_format($record->customer_charge, 2, ',', '.');
-                            $confirmUrl = url("/fatura/{$invoice->id}");
-
-                            $message = "💰 *FATURA {$invoice->invoice_number}*\n\n"
-                                . "Ref: OS #{$record->id} - {$record->vehicle?->plate}\n"
-                                . "Valor: {$charge}\n"
-                                . "Vencimento: " . now()->addDays(7)->format('d/m/Y') . "\n\n"
-                                . "📋 Acesse o link para ver detalhes e confirmar o recebimento:\n{$confirmUrl}\n\n"
-                                . "O PDF da fatura esta em anexo.\n\n"
-                                . "Elite Locadora";
-
-                            $evolution = app(EvolutionApiService::class);
-                            $evolution->sendText($phone, $message);
-
-                            // Enviar PDF
-                            if ($invoice->pdf_path) {
-                                $pdfUrl = asset('storage/' . $invoice->pdf_path);
-                                $evolution->sendDocument($phone, $pdfUrl, 'Fatura-' . $invoice->invoice_number . '.pdf');
-                            }
-
-                            $invoice->update(['sent_at' => now()]);
-                        }
-
-                        \Filament\Notifications\Notification::make()
-                            ->title('Fatura gerada e enviada!')
-                            ->body("Fatura {$invoice->invoice_number} de R$ " . number_format($record->customer_charge, 2, ',', '.') . " criada + PDF + WhatsApp")
-                            ->success()
-                            ->send();
-                    }),
+                static::buildGenerateInvoiceAction(),
 
                 Actions\DeleteAction::make(),
             ])
@@ -349,6 +275,115 @@ class ServiceOrderResource extends Resource
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    /**
+     * Acao reutilizavel: Gerar Fatura a partir de OS
+     * Usada na listagem (table action) e na edicao (header action)
+     */
+    public static function buildGenerateInvoiceAction(): Actions\Action
+    {
+        return Actions\Action::make('generate_invoice')
+            ->label('Gerar Fatura')
+            ->icon('heroicon-o-banknotes')
+            ->color('danger')
+            ->requiresConfirmation()
+            ->modalHeading('Gerar Fatura do Cliente')
+            ->modalDescription(fn (ServiceOrder $record) => "Sera gerada uma fatura de R$ " . number_format((float) ($record->customer_charge > 0 ? $record->customer_charge : $record->total), 2, ',', '.') . " para o cliente.")
+            ->visible(fn (ServiceOrder $record) => $record->status !== ServiceOrderStatus::CANCELLED && ! $record->isInvoiced())
+            ->action(function (ServiceOrder $record) {
+                $record->load(['customer', 'vehicle', 'branch', 'items']);
+
+                // Determinar valor da fatura
+                $invoiceAmount = $record->customer_charge > 0 ? (float) $record->customer_charge : (float) $record->total;
+
+                // Criar Invoice
+                $invoice = \App\Models\Invoice::create([
+                    'branch_id' => $record->branch_id,
+                    'customer_id' => $record->customer_id,
+                    'invoice_number' => 'OS-' . str_pad($record->id, 5, '0', STR_PAD_LEFT),
+                    'due_date' => now()->addDays(7),
+                    'amount' => $invoiceAmount,
+                    'total' => $invoiceAmount,
+                    'status' => \App\Enums\InvoiceStatus::OPEN,
+                    'notes' => "Fatura ref. OS #{$record->id} - Veiculo {$record->vehicle?->plate}",
+                ]);
+
+                // Copiar itens da OS como InvoiceItems
+                if ($record->items->isNotEmpty()) {
+                    foreach ($record->items as $item) {
+                        $typeLabel = $item->type === 'peca' ? 'Peca' : 'Mao de Obra';
+                        \App\Models\InvoiceItem::create([
+                            'invoice_id' => $invoice->id,
+                            'description' => "[{$typeLabel}] {$item->description}",
+                            'quantity' => $item->quantity,
+                            'unit_price' => $item->unit_price,
+                            'total' => $item->total,
+                        ]);
+                    }
+                } else {
+                    // Sem itens detalhados - criar item generico
+                    \App\Models\InvoiceItem::create([
+                        'invoice_id' => $invoice->id,
+                        'description' => "Servico ref. OS #{$record->id} - {$record->vehicle?->plate}",
+                        'quantity' => 1,
+                        'unit_price' => $invoiceAmount,
+                        'total' => $invoiceAmount,
+                    ]);
+                }
+
+                // Criar Conta a Receber
+                \App\Models\AccountReceivable::create([
+                    'branch_id' => $record->branch_id,
+                    'customer_id' => $record->customer_id,
+                    'invoice_id' => $invoice->id,
+                    'description' => "OS #{$record->id} - {$record->vehicle?->plate} - {$record->description}",
+                    'amount' => $invoiceAmount,
+                    'due_date' => now()->addDays(7),
+                    'status' => 'pendente',
+                ]);
+
+                $record->update([
+                    'invoice_id' => $invoice->id,
+                    'status' => ServiceOrderStatus::INVOICED,
+                ]);
+
+                // Gerar PDF da fatura
+                \App\Http\Controllers\InvoiceConfirmationController::generatePdf($invoice);
+                $invoice->refresh();
+
+                // Enviar fatura por WhatsApp
+                if ($record->customer?->phone) {
+                    $phone = $record->customer->phone;
+                    $charge = 'R$ ' . number_format($invoiceAmount, 2, ',', '.');
+                    $confirmUrl = url("/fatura/{$invoice->id}");
+
+                    $message = "\xF0\x9F\x92\xB0 *FATURA {$invoice->invoice_number}*\n\n"
+                        . "Ref: OS #{$record->id} - {$record->vehicle?->plate}\n"
+                        . "Valor: {$charge}\n"
+                        . "Vencimento: " . now()->addDays(7)->format('d/m/Y') . "\n\n"
+                        . "\xF0\x9F\x93\x8B Acesse o link para ver detalhes e confirmar o recebimento:\n{$confirmUrl}\n\n"
+                        . "O PDF da fatura esta em anexo.\n\n"
+                        . "Elite Locadora";
+
+                    $evolution = app(EvolutionApiService::class);
+                    $evolution->sendText($phone, $message);
+
+                    // Enviar PDF
+                    if ($invoice->pdf_path) {
+                        $pdfUrl = asset('storage/' . $invoice->pdf_path);
+                        $evolution->sendDocument($phone, $pdfUrl, 'Fatura-' . $invoice->invoice_number . '.pdf');
+                    }
+
+                    $invoice->update(['sent_at' => now()]);
+                }
+
+                \Filament\Notifications\Notification::make()
+                    ->title('Fatura gerada e enviada!')
+                    ->body("Fatura {$invoice->invoice_number} de R$ " . number_format($invoiceAmount, 2, ',', '.') . " criada + PDF + WhatsApp")
+                    ->success()
+                    ->send();
+            });
     }
 
     public static function getRelations(): array
