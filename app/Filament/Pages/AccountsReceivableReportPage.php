@@ -48,7 +48,7 @@ class AccountsReceivableReportPage extends Page
             $records = $baseQuery()
                 ->with(['customer', 'invoice', 'branch'])
                 ->orderBy('due_date', 'desc')
-                ->paginate(50);
+                ->get();
 
             // Clone for aggregate calculations
             $query = $baseQuery();

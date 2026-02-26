@@ -1,232 +1,212 @@
-@php use App\Models\AccountReceivable; @endphp
-
 <x-filament-panels::page>
-    @if(isset($error))
-        <div style="background-color: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-            {{ $error }}
-        </div>
-    @endif
+<style>
+    .rpt-grid { display: grid; gap: 1rem; }
+    .rpt-grid-6 { grid-template-columns: repeat(6, 1fr); }
+    .rpt-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
+    .rpt-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; padding: 1.25rem; }
+    .rpt-card-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.5rem; }
+    .rpt-card-value { font-size: 1.75rem; font-weight: 800; }
+    .rpt-card-sub { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; }
+    .rpt-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; overflow: hidden; }
+    .rpt-section-header { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .rpt-section-header h3 { font-weight: 700; font-size: 0.95rem; color: #e5e7eb; margin: 0; }
+    .rpt-table { width: 100%; font-size: 0.875rem; border-collapse: collapse; }
+    .rpt-table thead tr { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
+    .rpt-table th, .rpt-table td { padding: 0.625rem 1.25rem; text-align: left; }
+    .rpt-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .rpt-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .rpt-badge { padding: 0.2rem 0.5rem; border-radius: 0.375rem; font-size: 0.7rem; font-weight: 600; }
+    .rpt-filter-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; }
+    .rpt-filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; align-items: end; }
+    .rpt-filter-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: #9ca3af; margin-bottom: 0.35rem; display: block; }
+    .rpt-filter-input, .rpt-filter-select { width: 100%; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.5rem; color: #e5e7eb; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    .rpt-filter-input:focus, .rpt-filter-select:focus { border-color: #f59e0b; }
+    .rpt-filter-select option { background: #1f2937; color: #e5e7eb; }
+    .rpt-btn { padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .rpt-btn:hover { opacity: 0.85; }
+    .rpt-btn-primary { background: #f59e0b; color: #000; }
+    .rpt-btn-secondary { background: rgba(255,255,255,0.06); color: #9ca3af; }
+    .rpt-btn-pdf { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .rpt-btn-excel { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .rpt-empty { padding: 2rem; text-align: center; color: #6b7280; font-size: 0.875rem; }
+    .rpt-text-right { text-align: right; }
+    .rpt-chart-container { padding: 1.25rem; }
+    .rpt-error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #f87171; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
+    @media (max-width: 1024px) { .rpt-grid-6 { grid-template-columns: repeat(3, 1fr); } .rpt-grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .rpt-grid-6 { grid-template-columns: repeat(2, 1fr); } .rpt-grid-3 { grid-template-columns: 1fr; } }
+</style>
 
-    <!-- Filters Section -->
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-        <h3 style="margin-top: 0; color: #1e293b;">Filtros</h3>
-        <form action="{{ request()->url() }}" method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+@if(isset($error))
+    <div class="rpt-error">{{ $error }}</div>
+@endif
+
+{{-- Filtros --}}
+<div class="rpt-filter-section">
+    <form action="{{ request()->url() }}" method="GET">
+        <div class="rpt-filter-grid">
             <div>
-                <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 5px; font-size: 14px;">Data Inicial</label>
-                <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;">
+                <label class="rpt-filter-label">📅 Data Inicial</label>
+                <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}" class="rpt-filter-input">
             </div>
             <div>
-                <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 5px; font-size: 14px;">Data Final</label>
-                <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;">
+                <label class="rpt-filter-label">📅 Data Final</label>
+                <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}" class="rpt-filter-input">
             </div>
             <div>
-                <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 5px; font-size: 14px;">Status</label>
-                <select name="status" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;">
-                    <option value="">-- Todos --</option>
-                    @foreach(['pendente' => 'Pendente', 'parcial' => 'Parcial', 'recebido' => 'Recebido', 'inadimplente' => 'Inadimplente', 'cancelado' => 'Cancelado'] as $value => $label)
-                        <option value="{{ $value }}" {{ $filters['status'] === $value ? 'selected' : '' }}>{{ $label }}</option>
+                <label class="rpt-filter-label">Status</label>
+                <select name="status" class="rpt-filter-select">
+                    <option value="">Todos</option>
+                    @foreach(['pendente' => 'Pendente', 'parcial' => 'Parcial', 'recebido' => 'Recebido', 'inadimplente' => 'Inadimplente', 'cancelado' => 'Cancelado'] as $val => $lbl)
+                        <option value="{{ $val }}" {{ ($filters['status'] ?? '') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 5px; font-size: 14px;">Cliente</label>
-                <select name="customer_id" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;">
-                    <option value="">-- Todos --</option>
-                    @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" {{ $filters['customer_id'] == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                <label class="rpt-filter-label">Cliente</label>
+                <select name="customer_id" class="rpt-filter-select">
+                    <option value="">Todos</option>
+                    @foreach($customers as $c)
+                        <option value="{{ $c->id }}" {{ ($filters['customer_id'] ?? '') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 5px; font-size: 14px;">Filial</label>
-                <select name="branch_id" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;">
-                    <option value="">-- Todas --</option>
-                    @foreach($branches as $branch)
-                        <option value="{{ $branch->id }}" {{ $filters['branch_id'] == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                <label class="rpt-filter-label">Filial</label>
+                <select name="branch_id" class="rpt-filter-select">
+                    <option value="">Todas</option>
+                    @foreach($branches as $b)
+                        <option value="{{ $b->id }}" {{ ($filters['branch_id'] ?? '') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div style="display: flex; gap: 10px; align-items: flex-end;">
-                <button type="submit" style="flex: 1; background-color: #3b82f6; color: white; font-weight: 600; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Filtrar</button>
-                <a href="{{ request()->url() }}" style="flex: 1; background-color: #6b7280; color: white; font-weight: 600; padding: 8px; border-radius: 4px; cursor: pointer; text-align: center; text-decoration: none; font-size: 14px;">Limpar</a>
+            <div style="display:flex; gap:0.5rem; align-items:flex-end;">
+                <button type="submit" class="rpt-btn rpt-btn-primary">🔍 Filtrar</button>
+                <a href="{{ request()->url() }}" class="rpt-btn rpt-btn-secondary">Limpar</a>
             </div>
-        </form>
+        </div>
+    </form>
+</div>
+
+{{-- KPI Cards --}}
+<div class="rpt-grid rpt-grid-6" style="margin-bottom:1rem;">
+    <div class="rpt-card" style="background:rgba(59,130,246,0.06); border-color:rgba(59,130,246,0.2);">
+        <div class="rpt-card-label" style="color:#60a5fa;">📋 Total</div>
+        <div class="rpt-card-value" style="color:#60a5fa;">{{ $totalCount }}</div>
+        <div class="rpt-card-sub">R$ {{ number_format($totalAmount, 2, ',', '.') }}</div>
     </div>
+    <div class="rpt-card" style="background:rgba(34,197,94,0.06); border-color:rgba(34,197,94,0.2);">
+        <div class="rpt-card-label" style="color:#4ade80;">✅ Recebido</div>
+        <div class="rpt-card-value" style="color:#4ade80;">R$ {{ number_format($totalPaidAmount, 2, ',', '.') }}</div>
+        <div class="rpt-card-sub">{{ $totalAmount > 0 ? number_format(($totalPaidAmount / $totalAmount) * 100, 1) : 0 }}% do total</div>
+    </div>
+    <div class="rpt-card" style="background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.2);">
+        <div class="rpt-card-label" style="color:#f87171;">💰 Saldo a Receber</div>
+        <div class="rpt-card-value" style="color:#f87171;">R$ {{ number_format($totalRemaining, 2, ',', '.') }}</div>
+        <div class="rpt-card-sub">Pendente</div>
+    </div>
+    <div class="rpt-card" style="background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2);">
+        <div class="rpt-card-label" style="color:#fbbf24;">⏳ Pendentes</div>
+        <div class="rpt-card-value" style="color:#fbbf24;">{{ $pendingCount }}</div>
+        <div class="rpt-card-sub">R$ {{ number_format($pendingAmount, 2, ',', '.') }}</div>
+    </div>
+    <div class="rpt-card" style="background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">
+        <div class="rpt-card-label" style="color:#a78bfa;">📊 Parciais</div>
+        <div class="rpt-card-value" style="color:#a78bfa;">{{ $partialCount }}</div>
+        <div class="rpt-card-sub">R$ {{ number_format($partialRemaining, 2, ',', '.') }} restante</div>
+    </div>
+    <div class="rpt-card" style="background:rgba(34,211,238,0.06); border-color:rgba(34,211,238,0.2);">
+        <div class="rpt-card-label" style="color:#22d3ee;">📥 Recebidas</div>
+        <div class="rpt-card-value" style="color:#22d3ee;">{{ $receivedCount }}</div>
+        <div class="rpt-card-sub">R$ {{ number_format($receivedAmount, 2, ',', '.') }}</div>
+    </div>
+</div>
 
-    <!-- KPI Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
-        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Total de Contas a Receber</div>
-            <div style="font-size: 28px; font-weight: bold;">{{ $totalCount }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">R$ {{ number_format($totalAmount, 2, ',', '.') }}</div>
-        </div>
+{{-- Gráficos --}}
+<div class="rpt-grid rpt-grid-2" style="margin-bottom:1rem;">
+    <div class="rpt-section">
+        <div class="rpt-section-header"><h3>📊 Distribuição por Status</h3></div>
+        <div class="rpt-chart-container"><canvas id="statusChart" style="max-height:280px;"></canvas></div>
+    </div>
+    <div class="rpt-section">
+        <div class="rpt-section-header"><h3>📈 Tendência Mensal</h3></div>
+        <div class="rpt-chart-container"><canvas id="monthlyChart" style="max-height:280px;"></canvas></div>
+    </div>
+</div>
 
-        <div style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Total Recebido</div>
-            <div style="font-size: 28px; font-weight: bold;">R$ {{ number_format($totalPaidAmount, 2, ',', '.') }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">{{ $totalAmount > 0 ? number_format(($totalPaidAmount / $totalAmount) * 100, 1) : 0 }}% do total</div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Saldo a Receber</div>
-            <div style="font-size: 28px; font-weight: bold;">R$ {{ number_format($totalRemaining, 2, ',', '.') }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Pendente</div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Contas Pendentes</div>
-            <div style="font-size: 28px; font-weight: bold;">{{ $pendingCount }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">R$ {{ number_format($pendingAmount, 2, ',', '.') }}</div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Contas Parciais</div>
-            <div style="font-size: 28px; font-weight: bold;">{{ $partialCount }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">R$ {{ number_format($partialRemaining, 2, ',', '.') }} restante</div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Contas Recebidas</div>
-            <div style="font-size: 28px; font-weight: bold;">{{ $receivedCount }}</div>
-            <div style="font-size: 14px; opacity: 0.9; margin-top: 5px;">R$ {{ number_format($receivedAmount, 2, ',', '.') }}</div>
+{{-- Tabela de Dados --}}
+<div class="rpt-section">
+    <div class="rpt-section-header">
+        <h3>📋 Contas a Receber Detalhadas</h3>
+        <div style="display:flex; gap:0.5rem;">
+            <button onclick="exportPdf()" class="rpt-btn rpt-btn-pdf">📥 PDF</button>
+            <button onclick="exportExcel()" class="rpt-btn rpt-btn-excel">📊 Excel</button>
         </div>
     </div>
-
-    <!-- Charts Section -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px; margin-bottom: 25px;">
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
-            <h3 style="margin-top: 0; color: #1e293b;">Distribuição por Status</h3>
-            <canvas id="statusChart" style="max-height: 300px;"></canvas>
-        </div>
-
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
-            <h3 style="margin-top: 0; color: #1e293b;">Tendência Mensal</h3>
-            <canvas id="monthlyChart" style="max-height: 300px;"></canvas>
-        </div>
-    </div>
-
-    <!-- Export Buttons -->
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button onclick="exportPdf()" style="background-color: #dc2626; color: white; font-weight: 600; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">📥 Exportar PDF</button>
-        <button onclick="exportExcel()" style="background-color: #16a34a; color: white; font-weight: 600; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">📊 Exportar Excel</button>
-    </div>
-
-    <!-- Data Table -->
-    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-            <thead style="background-color: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
+    <table class="rpt-table">
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Cliente</th>
+                <th>Vencimento</th>
+                <th class="rpt-text-right">Valor Total</th>
+                <th class="rpt-text-right">Recebido</th>
+                <th class="rpt-text-right">Saldo</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($records as $record)
+                @php
+                    $sc = [
+                        'pendente'     => ['bg' => 'rgba(245,158,11,0.12)',  'color' => '#fbbf24'],
+                        'parcial'      => ['bg' => 'rgba(167,139,250,0.12)', 'color' => '#a78bfa'],
+                        'recebido'     => ['bg' => 'rgba(34,197,94,0.12)',   'color' => '#4ade80'],
+                        'inadimplente' => ['bg' => 'rgba(239,68,68,0.12)',   'color' => '#f87171'],
+                        'cancelado'    => ['bg' => 'rgba(107,114,128,0.12)', 'color' => '#9ca3af'],
+                    ];
+                    $s = $sc[$record->status] ?? $sc['cancelado'];
+                @endphp
                 <tr>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; color: #334155;">Descrição</th>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; color: #334155;">Cliente</th>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; color: #334155;">Vencimento</th>
-                    <th style="padding: 12px; text-align: right; font-weight: 600; color: #334155;">Valor Total</th>
-                    <th style="padding: 12px; text-align: right; font-weight: 600; color: #334155;">Recebido</th>
-                    <th style="padding: 12px; text-align: right; font-weight: 600; color: #334155;">Saldo</th>
-                    <th style="padding: 12px; text-align: left; font-weight: 600; color: #334155;">Status</th>
+                    <td style="color:#e5e7eb; font-weight:600;">{{ $record->description }}</td>
+                    <td style="color:#e5e7eb;">{{ $record->customer->name ?? 'N/A' }}</td>
+                    <td style="color:#e5e7eb;">{{ $record->due_date->format('d/m/Y') }}</td>
+                    <td class="rpt-text-right" style="color:#e5e7eb;">R$ {{ number_format($record->amount, 2, ',', '.') }}</td>
+                    <td class="rpt-text-right" style="color:#4ade80;">R$ {{ number_format($record->paid_amount, 2, ',', '.') }}</td>
+                    <td class="rpt-text-right" style="color:#fbbf24; font-weight:600;">R$ {{ number_format($record->amount - $record->paid_amount, 2, ',', '.') }}</td>
+                    <td><span class="rpt-badge" style="background:{{ $s['bg'] }}; color:{{ $s['color'] }};">{{ ucfirst($record->status) }}</span></td>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse($records as $record)
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px; color: #1e293b;">{{ $record->description }}</td>
-                        <td style="padding: 12px; color: #1e293b;">{{ $record->customer->name ?? 'N/A' }}</td>
-                        <td style="padding: 12px; color: #1e293b;">{{ $record->due_date->format('d/m/Y') }}</td>
-                        <td style="padding: 12px; text-align: right; color: #1e293b;">R$ {{ number_format($record->amount, 2, ',', '.') }}</td>
-                        <td style="padding: 12px; text-align: right; color: #1e293b;">R$ {{ number_format($record->paid_amount, 2, ',', '.') }}</td>
-                        <td style="padding: 12px; text-align: right; color: #1e293b; font-weight: 600;">R$ {{ number_format($record->amount - $record->paid_amount, 2, ',', '.') }}</td>
-                        <td style="padding: 12px;">
-                            @php
-                                $statusColors = [
-                                    'pendente' => '#f59e0b',
-                                    'parcial' => '#8b5cf6',
-                                    'recebido' => '#10b981',
-                                    'inadimplente' => '#ef4444',
-                                    'cancelado' => '#6b7280',
-                                ];
-                                $color = $statusColors[$record->status] ?? '#6b7280';
-                            @endphp
-                            <span style="background-color: {{ $color }}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{{ ucfirst($record->status) }}</span>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" style="padding: 20px; text-align: center; color: #64748b;">Nenhuma conta a receber encontrada</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+            @empty
+                <tr><td colspan="7" class="rpt-empty">Nenhuma conta a receber encontrada no período selecionado</td></tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 
-        @if($records->hasPages())
-            <div style="padding: 15px; border-top: 1px solid #e2e8f0; display: flex; justify-content: center;">
-                {{ $records->links() }}
-            </div>
-        @endif
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const darkOpts = { color: '#9ca3af', font: { size: 11 } };
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Status Chart
-        const statusCtx = document.getElementById('statusChart').getContext('2d');
-        new Chart(statusCtx, {
-            type: 'doughnut',
-            data: {
-                labels: {!! json_encode($statusData['labels']) !!},
-                datasets: [{
-                    data: {!! json_encode($statusData['data']) !!},
-                    backgroundColor: {!! json_encode($statusData['colors']) !!},
-                    borderColor: 'white',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($statusData['labels']) !!},
+            datasets: [{ data: {!! json_encode($statusData['data']) !!}, backgroundColor: ['rgba(245,158,11,0.7)','rgba(167,139,250,0.7)','rgba(34,197,94,0.7)','rgba(239,68,68,0.7)','rgba(107,114,128,0.7)'], borderColor: 'rgba(255,255,255,0.05)', borderWidth: 1 }]
+        },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: darkOpts } } }
+    });
 
-        // Monthly Chart
-        const monthlyData = {!! json_encode($monthlyData) !!};
-        const monthlyLabels = monthlyData.map(d => d.month);
-        const monthlyCounts = monthlyData.map(d => d.count);
+    const md = {!! json_encode($monthlyData) !!};
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'line',
+        data: {
+            labels: md.map(d => d.month),
+            datasets: [{ label: 'Contas', data: md.map(d => d.count), borderColor: '#4ade80', backgroundColor: 'rgba(34,197,94,0.08)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#4ade80' }]
+        },
+        options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: darkOpts } }, scales: { y: { beginAtZero: true, ticks: darkOpts, grid: { color: 'rgba(255,255,255,0.04)' } }, x: { ticks: darkOpts, grid: { color: 'rgba(255,255,255,0.04)' } } } }
+    });
 
-        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-        new Chart(monthlyCtx, {
-            type: 'line',
-            data: {
-                labels: monthlyLabels,
-                datasets: [{
-                    label: 'Contas',
-                    data: monthlyCounts,
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: true }
-                },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-        function exportPdf() {
-            const params = new URLSearchParams(window.location.search);
-            window.location.href = '/export/accounts-receivable/pdf?' + params.toString();
-        }
-
-        function exportExcel() {
-            const params = new URLSearchParams(window.location.search);
-            window.location.href = '/export/accounts-receivable/excel?' + params.toString();
-        }
-    </script>
+    function exportPdf() { window.location.href = '/export/accounts-receivable/pdf?' + new URLSearchParams(window.location.search).toString(); }
+    function exportExcel() { window.location.href = '/export/accounts-receivable/excel?' + new URLSearchParams(window.location.search).toString(); }
+</script>
 </x-filament-panels::page>

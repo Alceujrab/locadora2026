@@ -52,7 +52,7 @@ class AccountsPayableReportPage extends Page
             $records = $baseQuery()
                 ->with(['supplier', 'branch', 'vehicle'])
                 ->orderBy('due_date', 'desc')
-                ->paginate(50);
+                ->get();
 
             // Clone for aggregate calculations
             $query = $baseQuery();

@@ -49,7 +49,7 @@ class InvoicesReportPage extends Page
             $invoices = $baseQuery()
                 ->with(['customer', 'contract', 'branch'])
                 ->orderBy('due_date', 'desc')
-                ->paginate(50);
+                ->get();
 
             // Clone for aggregate calculations
             $query = $baseQuery();
