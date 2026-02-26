@@ -7,10 +7,6 @@ use App\Models\Vehicle;
 use App\Models\MaintenanceAlert;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Widgets;
-use App\Filament\Widgets\FleetStatsWidget;
-use App\Filament\Widgets\ExpiringDocumentsWidget;
-use App\Filament\Widgets\PendingMaintenanceWidget;
 
 class FleetDashboard extends Page
 {

@@ -37,12 +37,16 @@ class FilamentPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
             ])
             ->navigationGroups([
+                NavigationGroup::make('Gestao de Frota')
+                    ->icon('heroicon-o-truck'),
                 NavigationGroup::make('Cadastros')
                     ->icon('heroicon-o-rectangle-stack'),
                 NavigationGroup::make('Operacional')
                     ->icon('heroicon-o-truck'),
                 NavigationGroup::make('Financeiro')
                     ->icon('heroicon-o-currency-dollar'),
+                NavigationGroup::make('Relatorios')
+                    ->icon('heroicon-o-chart-bar'),
                 NavigationGroup::make('Serviços')
                     ->icon('heroicon-o-wrench-screwdriver'),
                 NavigationGroup::make('Site / CMS')
