@@ -2,61 +2,151 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\InvoiceStatus;
 use App\Models\AccountPayable;
 use App\Models\AccountReceivable;
-use App\Models\Invoice;
+use Barryvdh\DomPDF\Facade\Pdf;
+use OpenSpout\Writer\XLSX\Writer;
+use OpenSpout\Writer\XLSX\Options;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\Color;
+use OpenSpout\Common\Entity\Style\Style;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CashFlowExportController extends Controller
 {
-    public function exportCsv()
+    private function getData(Request $request): array
     {
-        $currentMonth = now()->month;
-        $currentYear = now()->year;
+        $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from')) : now()->startOfMonth();
+        $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to')) : now()->endOfMonth();
+        $branchId = $request->input('branch_id');
+        $type = $request->input('type');
 
-        $invoices = Invoice::where('status', InvoiceStatus::PAID)
-            ->whereMonth('paid_at', $currentMonth)
-            ->whereYear('paid_at', $currentYear)
-            ->get();
+        $inQuery = AccountReceivable::query()
+            ->whereNotNull('received_at')
+            ->whereIn('status', ['recebido', 'parcial'])
+            ->whereBetween('received_at', [$dateFrom, $dateTo]);
+        if ($branchId) $inQuery->where('branch_id', $branchId);
+        $receivables = $inQuery->with(['customer', 'invoice'])->get();
 
-        $receivables = AccountReceivable::where('status', 'pago')
-            ->whereMonth('received_at', $currentMonth)
-            ->whereYear('received_at', $currentYear)
-            ->get();
+        $outQuery = AccountPayable::query()
+            ->whereNotNull('paid_at')
+            ->where('status', 'pago')
+            ->whereBetween('paid_at', [$dateFrom, $dateTo]);
+        if ($branchId) $outQuery->where('branch_id', $branchId);
+        $payables = $outQuery->with(['supplier', 'vehicle'])->get();
 
-        $payables = AccountPayable::where('status', 'pago')
-            ->whereMonth('paid_at', $currentMonth)
-            ->whereYear('paid_at', $currentYear)
-            ->get();
+        $transactions = collect();
 
-        $filename = "fluxo_caixa_{$currentMonth}_{$currentYear}.csv";
-        $headers = [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$filename",
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
+        if (!$type || $type === 'entrada') {
+            foreach ($receivables as $r) {
+                $transactions->push([
+                    'date' => $r->received_at,
+                    'type' => 'entrada',
+                    'description' => $r->description ?: ('Fatura ' . ($r->invoice->invoice_number ?? 'N/A')),
+                    'entity' => $r->customer->name ?? 'N/A',
+                    'amount' => (float) ($r->paid_amount ?: $r->amount),
+                ]);
+            }
+        }
+
+        if (!$type || $type === 'saida') {
+            foreach ($payables as $p) {
+                $transactions->push([
+                    'date' => $p->paid_at,
+                    'type' => 'saida',
+                    'description' => $p->description ?: ($p->category ?? 'Despesa'),
+                    'entity' => $p->supplier->name ?? ($p->vehicle->plate ?? 'N/A'),
+                    'amount' => (float) $p->amount,
+                ]);
+            }
+        }
+
+        $transactions = $transactions->sortBy('date')->values();
+
+        $balance = 0;
+        $transactionsWithBalance = [];
+        foreach ($transactions as $t) {
+            $balance += ($t['type'] === 'entrada') ? $t['amount'] : -$t['amount'];
+            $t['balance'] = $balance;
+            $transactionsWithBalance[] = $t;
+        }
+
+        $totalIn = $transactions->where('type', 'entrada')->sum('amount');
+        $totalOut = $transactions->where('type', 'saida')->sum('amount');
+        $netFlow = $totalIn - $totalOut;
+
+        return [
+            'transactions' => $transactionsWithBalance,
+            'totalIn' => $totalIn,
+            'totalOut' => $totalOut,
+            'netFlow' => $netFlow,
+            'transactionCount' => $transactions->count(),
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
         ];
+    }
 
-        $columns = ['Tipo', 'Descricao', 'Valor (R$)', 'Data'];
+    public function exportPdf(Request $request)
+    {
+        try {
+            $data = $this->getData($request);
 
-        $callback = function () use ($invoices, $receivables, $payables, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns, ';');
+            $pdf = Pdf::loadView('reports.cash-flow-pdf', $data)
+                ->setPaper('a4', 'landscape')
+                ->setOption('isPhpEnabled', true)
+                ->setOption('isHtml5ParserEnabled', true);
 
-            foreach ($invoices as $item) {
-                fputcsv($file, ['Entrada (Fatura)', "Fatura #{$item->invoice_number}", $item->total, $item->paid_at->format('d/m/Y')], ';');
+            return $pdf->download('Fluxo-de-Caixa-' . now()->format('d-m-Y') . '.pdf');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao gerar PDF: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $data = $this->getData($request);
+
+            $fileName = 'Fluxo-de-Caixa-' . now()->format('d-m-Y') . '.xlsx';
+            $filePath = storage_path('app/' . $fileName);
+
+            $options = new Options();
+            $writer = new Writer($options);
+            $writer->openToFile($filePath);
+
+            $headerStyle = (new Style())->setFontBold()->setFontColor(Color::WHITE)->setBackgroundColor('3B82F6');
+            $writer->addRow(Row::fromValues([
+                'Data', 'Tipo', 'Descricao', 'Entidade', 'Valor (R$)', 'Saldo (R$)',
+            ], $headerStyle));
+
+            foreach ($data['transactions'] as $t) {
+                $writer->addRow(Row::fromValues([
+                    $t['date']->format('d/m/Y'),
+                    $t['type'] === 'entrada' ? 'Entrada' : 'Saida',
+                    $t['description'],
+                    $t['entity'],
+                    ($t['type'] === 'entrada' ? '+' : '-') . number_format($t['amount'], 2, ',', '.'),
+                    number_format($t['balance'], 2, ',', '.'),
+                ]));
             }
-            foreach ($receivables as $item) {
-                fputcsv($file, ['Entrada (Recebível)', $item->description, $item->amount, $item->received_at->format('d/m/Y')], ';');
-            }
-            foreach ($payables as $item) {
-                fputcsv($file, ['Saida (A Pagar)', $item->description, $item->amount, $item->paid_at->format('d/m/Y')], ';');
-            }
 
-            fclose($file);
-        };
+            $totalStyle = (new Style())->setFontBold();
+            $writer->addRow(Row::fromValues([
+                '', '', '', 'TOTAL ENTRADAS', number_format($data['totalIn'], 2, ',', '.'), '',
+            ], $totalStyle));
+            $writer->addRow(Row::fromValues([
+                '', '', '', 'TOTAL SAIDAS', number_format($data['totalOut'], 2, ',', '.'), '',
+            ], $totalStyle));
+            $writer->addRow(Row::fromValues([
+                '', '', '', 'SALDO', number_format($data['netFlow'], 2, ',', '.'), '',
+            ], $totalStyle));
 
-        return response()->stream($callback, 200, $headers);
+            $writer->close();
+
+            return response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao gerar Excel: ' . $e->getMessage()], 500);
+        }
     }
 }

@@ -23,13 +23,23 @@ Route::post('/reserva/finalizar', [App\Http\Controllers\CheckoutController::clas
 
 Route::post('/webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle']);
 
-Route::get('/export/cashflow', [App\Http\Controllers\CashFlowExportController::class, 'exportCsv'])
-    ->name('export.cashflow')
-    ->middleware(['web']);
-
 // ==========================================
 // FINANCIAL REPORTS EXPORT ROUTES
 // ==========================================
+Route::get('/export/fleet-profitability/pdf', [App\Http\Controllers\FleetProfitabilityExportController::class, 'exportPdf'])
+    ->name('export.fleet-profitability.pdf')
+    ->middleware(['web']);
+Route::get('/export/fleet-profitability/excel', [App\Http\Controllers\FleetProfitabilityExportController::class, 'exportExcel'])
+    ->name('export.fleet-profitability.excel')
+    ->middleware(['web']);
+
+Route::get('/export/cashflow/pdf', [App\Http\Controllers\CashFlowExportController::class, 'exportPdf'])
+    ->name('export.cashflow.pdf')
+    ->middleware(['web']);
+Route::get('/export/cashflow/excel', [App\Http\Controllers\CashFlowExportController::class, 'exportExcel'])
+    ->name('export.cashflow.excel')
+    ->middleware(['web']);
+
 Route::get('/export/invoices/pdf', [App\Http\Controllers\InvoicesReportExportController::class, 'exportPdf'])
     ->name('export.invoices.pdf')
     ->middleware(['web']);
