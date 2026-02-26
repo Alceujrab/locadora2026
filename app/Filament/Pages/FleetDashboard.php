@@ -27,33 +27,61 @@ class FleetDashboard extends Page
 
     protected function getViewData(): array
     {
-        $fleetCounts = [
-            'total' => Vehicle::count(),
-            'available' => Vehicle::where('status', VehicleStatus::AVAILABLE)->count(),
-            'rented' => Vehicle::where('status', VehicleStatus::RENTED)->count(),
-            'maintenance' => Vehicle::where('status', VehicleStatus::MAINTENANCE)->count(),
-            'inactive' => Vehicle::where('status', VehicleStatus::INACTIVE)->count(),
-        ];
+        try {
+            $fleetCounts = [
+                'total' => Vehicle::count(),
+                'available' => Vehicle::where('status', VehicleStatus::AVAILABLE)->count(),
+                'rented' => Vehicle::where('status', VehicleStatus::RENTED)->count(),
+                'maintenance' => Vehicle::where('status', VehicleStatus::MAINTENANCE)->count(),
+                'reserved' => Vehicle::where('status', VehicleStatus::RESERVED)->count(),
+                'inactive' => Vehicle::where('status', VehicleStatus::INACTIVE)->count(),
+            ];
+        } catch (\Throwable $e) {
+            $fleetCounts = ['total' => 0, 'available' => 0, 'rented' => 0, 'maintenance' => 0, 'reserved' => 0, 'inactive' => 0];
+        }
 
-        // Veículos com IPVA, Licenciamento ou Seguro vencendo nos próximos 30 dias
-        $alertDate = now()->addDays(30);
-        $expiringDocs = Vehicle::where(function($q) use ($alertDate) {
-            $q->whereBetween('ipva_due_date', [now(), $alertDate])
-              ->orWhereBetween('licensing_due_date', [now(), $alertDate])
-              ->orWhereBetween('insurance_expiry_date', [now(), $alertDate]);
-        })->get();
+        try {
+            $alertDate = now()->addDays(30);
+            $expiringDocs = Vehicle::where(function($q) use ($alertDate) {
+                $q->whereBetween('ipva_due_date', [now(), $alertDate])
+                  ->orWhereBetween('licensing_due_date', [now(), $alertDate])
+                  ->orWhereBetween('insurance_expiry_date', [now(), $alertDate]);
+            })->get();
+        } catch (\Throwable $e) {
+            $expiringDocs = collect();
+        }
 
-        // Alertas de Manutenção pendentes
-        $pendingMaintenances = MaintenanceAlert::with('vehicle')
-            ->whereNull('resolved_at')
-            ->orderBy('due_date', 'asc')
-            ->limit(10)
-            ->get();
+        try {
+            $pendingMaintenances = MaintenanceAlert::with('vehicle')
+                ->whereNull('resolved_at')
+                ->orderBy('due_date', 'asc')
+                ->limit(10)
+                ->get();
+        } catch (\Throwable $e) {
+            $pendingMaintenances = collect();
+        }
+
+        // Dados adicionais para o dashboard
+        try {
+            $recentVehicles = Vehicle::with(['category', 'branch'])
+                ->latest()
+                ->limit(5)
+                ->get();
+        } catch (\Throwable $e) {
+            $recentVehicles = collect();
+        }
+
+        $utilizationRate = $fleetCounts['total'] > 0
+            ? round(($fleetCounts['rented'] / $fleetCounts['total']) * 100, 1)
+            : 0;
 
         return [
             'fleetCounts' => $fleetCounts,
             'expiringDocs' => $expiringDocs,
             'pendingMaintenances' => $pendingMaintenances,
+            'recentVehicles' => $recentVehicles,
+            'utilizationRate' => $utilizationRate,
+            'error' => null,
         ];
     }
 }
