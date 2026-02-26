@@ -28,6 +28,30 @@ Route::get('/export/cashflow', [App\Http\Controllers\CashFlowExportController::c
     ->middleware(['web']);
 
 // ==========================================
+// FINANCIAL REPORTS EXPORT ROUTES
+// ==========================================
+Route::get('/export/invoices/pdf', [App\Http\Controllers\InvoicesReportExportController::class, 'exportPdf'])
+    ->name('export.invoices.pdf')
+    ->middleware(['web']);
+Route::get('/export/invoices/excel', [App\Http\Controllers\InvoicesReportExportController::class, 'exportExcel'])
+    ->name('export.invoices.excel')
+    ->middleware(['web']);
+
+Route::get('/export/accounts-receivable/pdf', [App\Http\Controllers\AccountsReceivableReportExportController::class, 'exportPdf'])
+    ->name('export.accounts-receivable.pdf')
+    ->middleware(['web']);
+Route::get('/export/accounts-receivable/excel', [App\Http\Controllers\AccountsReceivableReportExportController::class, 'exportExcel'])
+    ->name('export.accounts-receivable.excel')
+    ->middleware(['web']);
+
+Route::get('/export/accounts-payable/pdf', [App\Http\Controllers\AccountsPayableReportExportController::class, 'exportPdf'])
+    ->name('export.accounts-payable.pdf')
+    ->middleware(['web']);
+Route::get('/export/accounts-payable/excel', [App\Http\Controllers\AccountsPayableReportExportController::class, 'exportExcel'])
+    ->name('export.accounts-payable.excel')
+    ->middleware(['web']);
+
+// ==========================================
 // ADMIN: SALVAR CONFIGURAÇÕES DO SISTEMA
 // ==========================================
 Route::post('/admin/settings/save', [App\Http\Controllers\SystemSettingsController::class, 'save'])
