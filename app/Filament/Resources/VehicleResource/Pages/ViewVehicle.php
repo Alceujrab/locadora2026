@@ -12,6 +12,21 @@ class ViewVehicle extends ViewRecord
 
     protected string $view = 'filament.pages.vehicle-view-dashboard';
 
+    public function getTitle(): string
+    {
+        return $this->record->brand . ' ' . $this->record->model . ' — ' . $this->record->plate;
+    }
+
+    public function getHeading(): string
+    {
+        return $this->record->brand . ' ' . $this->record->model;
+    }
+
+    public function getSubHeading(): ?string
+    {
+        return $this->record->plate . ' · ' . ($this->record->status?->label() ?? 'N/A');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
