@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\VehicleStatus;
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
+use App\Filament\Resources\VehicleResource\Widgets;
 use App\Models\Vehicle;
 use Filament\Actions;
 use Filament\Forms\Components;
@@ -94,14 +95,16 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('plate')->label('Placa')->searchable()->sortable()->weight('bold'),
-                Tables\Columns\TextColumn::make('brand')->label('Marca')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('model')->label('Modelo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('plate')->label('Placa')->searchable()->sortable()->weight('bold')
+                    ->description(fn (Vehicle $record) => "{$record->brand} {$record->model}"),
+                Tables\Columns\TextColumn::make('brand')->label('Marca')->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('model')->label('Modelo')->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('year_model')->label('Ano')->sortable(),
-                Tables\Columns\TextColumn::make('color')->label('Cor'),
+                Tables\Columns\TextColumn::make('color')->label('Cor')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('category.name')->label('Categoria')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('mileage')->label('KM')->formatStateUsing(fn ($state) => number_format((float) $state, 0, ',', '.'))->sortable(),
+                Tables\Columns\TextColumn::make('daily_rate')->label('Diaria')->money('BRL')->sortable(),
                 Tables\Columns\TextColumn::make('branch.name')->label('Filial')->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -165,6 +168,13 @@ class VehicleResource extends Resource
                 ]),
             ])
             ->defaultSort('plate');
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            Widgets\VehicleStatsOverview::class,
+        ];
     }
 
     public static function getRelations(): array
