@@ -40,7 +40,7 @@ class SignatureController extends Controller
      */
     public function sign(Request $request, $id)
     {
-        $contract = Contract::findOrFail($id);
+        $contract = Contract::with(['customer', 'vehicle', 'branch', 'template'])->findOrFail($id);
 
         if ($contract->isSigned()) {
             return redirect()->route('contract.signature.show', $id)
@@ -118,10 +118,17 @@ class SignatureController extends Controller
     private function regeneratePdfWithSignature(Contract $contract): void
     {
         try {
+            // Refresh para garantir dados atualizados (signed_at, signature_image, etc.)
+            $contract->refresh();
+            $contract->loadMissing(['template', 'customer', 'vehicle', 'branch']);
+
             $service = app(\App\Services\ContractService::class);
             $service->generatePdf($contract);
         } catch (\Exception $e) {
-            // Não falhar se o PDF não puder ser regenerado
+            \Illuminate\Support\Facades\Log::error('Erro ao regenerar PDF com assinatura: ' . $e->getMessage(), [
+                'contract_id' => $contract->id,
+                'exception' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

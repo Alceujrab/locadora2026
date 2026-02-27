@@ -14,6 +14,9 @@ class ContractService
      */
     public function generatePdf(Contract $contract): string|bool
     {
+        // Garantir que os relacionamentos estejam carregados
+        $contract->loadMissing(['template', 'customer', 'vehicle', 'branch']);
+
         $template = $contract->template;
 
         if (! $template || ! $template->content) {
@@ -70,31 +73,77 @@ class ContractService
 
     /**
      * Mescla as variáveis do contrato no HTML do template.
+     * Formato das variáveis: {{contrato_numero}}, {{cliente_nome}}, {{veiculo_placa}}, etc.
      */
     protected function replaceVariables(string $html, Contract $contract): string
     {
+        $contract->loadMissing(['customer', 'vehicle', 'branch']);
+
         $customer = $contract->customer;
         $vehicle = $contract->vehicle;
+        $branch = $contract->branch;
+
+        $setting = fn (string $key, string $default = '') => \App\Models\Setting::get($key, $default);
 
         $variables = [
-            '{{ customer.name }}' => $customer?->name ?? '',
-            '{{ customer.document }}' => $customer?->document ?? '',
-            '{{ customer.email }}' => $customer?->email ?? '',
-            '{{ customer.phone }}' => $customer?->phone ?? '',
-            '{{ customer.address }}' => $customer ? "{$customer->address_street}, {$customer->address_number}, {$customer->address_city}-{$customer->address_state}" : '',
+            // ── Contrato ─────────────────────────────────────────────
+            '{{contrato_numero}}'          => $contract->contract_number ?? '',
+            '{{contrato_inicio}}'          => $contract->pickup_date?->format('d/m/Y') ?? '',
+            '{{contrato_fim}}'             => $contract->return_date?->format('d/m/Y') ?? '',
+            '{{contrato_valor_mensal}}'    => 'R$ ' . number_format((float) $contract->daily_rate, 2, ',', '.'),
+            '{{contrato_valor_total}}'     => 'R$ ' . number_format((float) $contract->total, 2, ',', '.'),
+            '{{contrato_caucao}}'          => 'R$ ' . number_format((float) $contract->caution_amount, 2, ',', '.'),
+            '{{contrato_km_livre}}'        => '',
+            '{{contrato_km_excedente}}'    => '',
+            '{{contrato_data_assinatura}}' => $contract->signed_at?->format('d/m/Y') ?? now()->format('d/m/Y'),
 
-            '{{ vehicle.brand }}' => $vehicle?->brand ?? '',
-            '{{ vehicle.model }}' => $vehicle?->model ?? '',
-            '{{ vehicle.plate }}' => $vehicle?->plate ?? '',
-            '{{ vehicle.renavam }}' => $vehicle?->renavam ?? '',
-            '{{ vehicle.year }}' => $vehicle?->year_model ?? '',
+            // ── Cliente ──────────────────────────────────────────────
+            '{{cliente_nome}}'     => $customer?->name ?? '',
+            '{{cliente_cpf}}'      => $customer?->cpf_cnpj ?? '',
+            '{{cliente_cnpj}}'     => $customer?->cpf_cnpj ?? '',
+            '{{cliente_rg}}'       => $customer?->rg ?? '',
+            '{{cliente_email}}'    => $customer?->email ?? '',
+            '{{cliente_telefone}}' => $customer?->phone ?? '',
+            '{{cliente_endereco}}' => $customer
+                ? trim(implode(', ', array_filter([
+                    $customer->address_street,
+                    $customer->address_number,
+                    $customer->address_complement,
+                    $customer->address_neighborhood,
+                ])))
+                : '',
+            '{{cliente_cidade}}'   => $customer?->address_city ?? '',
+            '{{cliente_estado}}'   => $customer?->address_state ?? '',
+            '{{cliente_cep}}'      => $customer?->address_zip ?? '',
+            '{{cliente_cnh}}'      => $customer?->cnh_number ?? '',
 
-            '{{ contract.number }}' => $contract->contract_number,
-            '{{ contract.pickup_date }}' => $contract->pickup_date?->format('d/m/Y H:i') ?? '',
-            '{{ contract.return_date }}' => $contract->return_date?->format('d/m/Y H:i') ?? '',
-            '{{ contract.daily_rate }}' => number_format((float) $contract->daily_rate, 2, ',', '.'),
-            '{{ contract.total_days }}' => $contract->total_days,
-            '{{ contract.total }}' => number_format((float) $contract->total, 2, ',', '.'),
+            // ── Veículo ──────────────────────────────────────────────
+            '{{veiculo_placa}}'       => $vehicle?->plate ?? '',
+            '{{veiculo_marca}}'       => $vehicle?->brand ?? '',
+            '{{veiculo_modelo}}'      => $vehicle?->model ?? '',
+            '{{veiculo_ano}}'         => $vehicle ? "{$vehicle->year_manufacture}/{$vehicle->year_model}" : '',
+            '{{veiculo_cor}}'         => $vehicle?->color ?? '',
+            '{{veiculo_chassi}}'      => $vehicle?->chassis ?? '',
+            '{{veiculo_renavam}}'     => $vehicle?->renavam ?? '',
+            '{{veiculo_km}}'          => $vehicle?->mileage ? number_format((int) $vehicle->mileage, 0, ',', '.') . ' km' : '',
+            '{{veiculo_combustivel}}' => $vehicle?->fuel ?? '',
+
+            // ── Empresa (Settings) ───────────────────────────────────
+            '{{empresa_nome}}'     => $setting('company_name', 'Elite Locadora de Veículos'),
+            '{{empresa_cnpj}}'     => $setting('company_cnpj', ''),
+            '{{empresa_telefone}}' => $setting('company_phone', ''),
+            '{{empresa_email}}'    => $setting('company_email', ''),
+            '{{empresa_endereco}}' => $setting('company_address', ''),
+            '{{empresa_cidade}}'   => $setting('company_city', ''),
+            '{{empresa_estado}}'   => $setting('company_state', ''),
+
+            // ── Datas e Outros ───────────────────────────────────────
+            '{{data_atual}}'            => now()->format('d/m/Y'),
+            '{{data_extenso}}'          => now()->translatedFormat('d \\d\\e F \\d\\e Y'),
+            '{{filial_nome}}'           => $branch?->name ?? '',
+            '{{filial_endereco}}'       => $branch?->full_address ?? '',
+            '{{assinatura_locador}}'    => '___________________________________',
+            '{{assinatura_locatario}}'  => '___________________________________',
         ];
 
         return str_replace(array_keys($variables), array_values($variables), $html);

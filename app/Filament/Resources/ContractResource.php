@@ -121,12 +121,12 @@ class ContractResource extends Resource
     {
         return [
             Actions\Action::make('checkout')
-                ->label('Check-out')
+                ->label('Retirada')
                 ->icon('heroicon-o-arrow-right-on-rectangle')
                 ->color('success')
                 ->requiresConfirmation()
-                ->modalHeading('Confirmar Check-out')
-                ->modalDescription('Deseja ativar este contrato e entregar o veiculo ao cliente? Isto criara a vistoria de saida.')
+                ->modalHeading('Confirmar Retirada do Veículo')
+                ->modalDescription('Deseja ativar este contrato e entregar o veículo ao cliente? Isto criará a vistoria de saída.')
                 ->visible(fn (Contract $record) => in_array($record->status, [ContractStatus::DRAFT, ContractStatus::AWAITING_SIGNATURE]))
                 ->action(function (Contract $record) {
                     $inspection = \App\Models\VehicleInspection::firstOrCreate([
@@ -148,16 +148,16 @@ class ContractResource extends Resource
                     }
                     $record->vehicle->update(['status' => VehicleStatus::RENTED]);
 
-                    Notification::make()->title('Check-out realizado com sucesso!')->success()->send();
+                    Notification::make()->title('Retirada realizada com sucesso!')->success()->send();
                 }),
 
             Actions\Action::make('checkin')
-                ->label('Check-in')
+                ->label('Devolução')
                 ->icon('heroicon-o-arrow-left-on-rectangle')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->modalHeading('Confirmar Check-in')
-                ->modalDescription('Deseja finalizar o contrato e receber o veiculo? Isto criara a vistoria de retorno.')
+                ->modalHeading('Confirmar Devolução do Veículo')
+                ->modalDescription('Deseja finalizar o contrato e receber o veículo de volta? Isto criará a vistoria de retorno.')
                 ->visible(fn (Contract $record) => $record->status === ContractStatus::ACTIVE)
                 ->action(function (Contract $record) {
                     $inspection = \App\Models\VehicleInspection::firstOrCreate([
@@ -182,7 +182,7 @@ class ContractResource extends Resource
                     }
                     $record->vehicle->update(['status' => VehicleStatus::AVAILABLE]);
 
-                    Notification::make()->title('Check-in realizado com sucesso!')->success()->send();
+                    Notification::make()->title('Devolução realizada com sucesso!')->success()->send();
                 }),
 
             Actions\Action::make('generateInvoices')
