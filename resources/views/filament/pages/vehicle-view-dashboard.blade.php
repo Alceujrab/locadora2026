@@ -4,8 +4,9 @@
         .rpt-tabs {
             display: flex;
             gap: 0;
-            border-bottom: 2px solid rgba(255,255,255,0.06);
-            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255,255,255,0.08);
+            margin-bottom: 1.75rem;
+            padding-bottom: 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -35,12 +36,13 @@
         .rpt-header {
             background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 1.5rem 2rem;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.06);
+            gap: 2rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 0.5rem;
         }
         .rpt-header-photo {
             width: 9rem;
@@ -108,16 +110,16 @@
         }
 
         /* ===== CARDS ===== */
-        .rpt-grid { display: grid; gap: 1rem; }
+        .rpt-grid { display: grid; gap: 1.5rem; }
         .rpt-grid-4 { grid-template-columns: repeat(4, 1fr); }
         .rpt-grid-5 { grid-template-columns: repeat(5, 1fr); }
         .rpt-grid-3 { grid-template-columns: repeat(3, 1fr); }
         .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
         .rpt-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 0.75rem;
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
         .rpt-card-label {
             font-size: 0.7rem;
@@ -140,8 +142,8 @@
 
         /* ===== COUNTERS ===== */
         .rpt-counter {
-            border-radius: 0.5rem;
-            padding: 0.75rem;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1rem;
             text-align: center;
         }
         .rpt-counter-value {
@@ -150,20 +152,20 @@
             line-height: 1.2;
         }
         .rpt-counter-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #6b7280;
-            margin-top: 0.125rem;
+            margin-top: 0.375rem;
         }
 
         /* ===== SECTION ===== */
         .rpt-section {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 0.75rem;
             overflow: hidden;
         }
         .rpt-section-header {
-            padding: 1rem 1.25rem;
+            padding: 1.25rem 1.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
@@ -311,7 +313,7 @@
         </div>
 
         {{-- ========== ABA: RESUMO ========== --}}
-        <div x-show="activeTab === 'resumo'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div x-show="activeTab === 'resumo'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
             {{-- KPIs --}}
             <div class="rpt-grid rpt-grid-4">
@@ -393,7 +395,7 @@
         </div>
 
         {{-- ========== ABA: LOCACOES ========== --}}
-        <div x-show="activeTab === 'locacoes'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div x-show="activeTab === 'locacoes'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
             <div class="rpt-section">
                 <div class="rpt-section-header">
@@ -475,7 +477,7 @@
         </div>
 
         {{-- ========== ABA: SERVICOS ========== --}}
-        <div x-show="activeTab === 'servicos'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div x-show="activeTab === 'servicos'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
             {{-- ORDENS DE SERVICO --}}
             <div class="rpt-section">
@@ -585,7 +587,7 @@
         </div>
 
         {{-- ========== ABA: FINANCEIRO ========== --}}
-        <div x-show="activeTab === 'financeiro'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div x-show="activeTab === 'financeiro'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
             {{-- RESUMO FINANCEIRO DETALHADO --}}
             <div class="rpt-grid rpt-grid-2">

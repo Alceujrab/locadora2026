@@ -1,11 +1,11 @@
 <x-filament-panels::page>
     <style>
-        .rpt-grid { display: grid; gap: 1rem; }
+        .rpt-grid { display: grid; gap: 1.5rem; }
         .rpt-grid-6 { grid-template-columns: repeat(6, 1fr); }
         .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
         .rpt-card {
             border-radius: 0.75rem;
-            padding: 1.25rem;
+            padding: 1.5rem;
             position: relative;
             overflow: hidden;
         }
@@ -28,13 +28,13 @@
             margin-top: 0.25rem;
         }
         .rpt-section {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 0.75rem;
             overflow: hidden;
         }
         .rpt-section-header {
-            padding: 1rem 1.25rem;
+            padding: 1.25rem 1.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
