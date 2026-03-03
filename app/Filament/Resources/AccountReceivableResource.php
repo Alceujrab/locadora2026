@@ -215,6 +215,15 @@ class AccountReceivableResource extends Resource
                     }),
 
                 Actions\DeleteAction::make(),
+
+                // GERAR RECIBO DE PAGAMENTO (PDF)
+                Actions\Action::make('recibo_pagamento')
+                    ->label('Recibo PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('info')
+                    ->url(fn (AccountReceivable $record) => route('admin.accounts-receivable.receipt', $record->id))
+                    ->openUrlInNewTab()
+                    ->visible(fn (AccountReceivable $record) => in_array($record->status, ['parcial', 'recebido']) && (float) $record->paid_amount > 0),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

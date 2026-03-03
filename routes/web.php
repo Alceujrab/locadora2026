@@ -61,6 +61,10 @@ Route::get('/export/accounts-payable/excel', [App\Http\Controllers\AccountsPayab
     ->name('export.accounts-payable.excel')
     ->middleware(['web']);
 
+Route::get('/admin/accounts-receivable/{id}/recibo', [App\Http\Controllers\PaymentReceiptController::class, 'download'])
+    ->name('admin.accounts-receivable.receipt')
+    ->middleware(['web']);
+
 // ==========================================
 // ADMIN: SALVAR CONFIGURAÇÕES DO SISTEMA
 // ==========================================
