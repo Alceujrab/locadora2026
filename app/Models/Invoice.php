@@ -108,4 +108,26 @@ class Invoice extends Model
     {
         return $this->amount + $this->penalty_amount + $this->interest_amount - $this->discount;
     }
+
+    /**
+     * Retorna a placa do veículo associado à fatura.
+     * Busca via Contract -> Vehicle, ou extrai das notes caso a fatura venha de uma Reserva.
+     */
+    public function getVehiclePlateAttribute(): ?string
+    {
+        // Via contrato
+        if ($this->contract_id) {
+            $plate = $this->contract?->vehicle?->plate;
+            if ($plate) {
+                return $plate;
+            }
+        }
+
+        // Via notes (faturas geradas de reserva: "Veiculo: ABC1D23 - ...")
+        if ($this->notes && preg_match('/Veiculo:\s*([A-Z0-9]{7})/i', $this->notes, $m)) {
+            return strtoupper($m[1]);
+        }
+
+        return null;
+    }
 }

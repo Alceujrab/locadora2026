@@ -80,6 +80,7 @@ class InvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('invoice_number')->label('Fatura')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('contract.contract_number')->label('Contrato')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle_plate')->label('Veículo')->getStateUsing(fn (Invoice $record) => $record->vehicle_plate)->searchable(false)->badge()->color('gray'),
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
