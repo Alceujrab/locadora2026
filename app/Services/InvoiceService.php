@@ -67,15 +67,26 @@ class InvoiceService
     }
 
     /**
-     * Helper para gerar número único sequencial da fatura
+     * Helper para gerar número único sequencial da fatura — à prova de duplicatas
      */
     private function generateInvoiceNumber(?string $branchId = null): string
     {
-        $prefix = 'INV'.date('ym');
-        $count = Invoice::whereYear('created_at', date('Y'))
-            ->whereMonth('created_at', date('m'))
-            ->count() + 1;
+        $year   = date('Y');
+        $prefix = 'FAT-' . $year . '-';
 
-        return sprintf('%s%04d', $prefix, $count);
+        // Pega o maior número já existente no padrão FAT-ANO-XXXXX
+        $last = Invoice::where('invoice_number', 'LIKE', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(invoice_number, ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+            ->value('invoice_number');
+
+        $nextSeq = $last ? ((int) substr($last, strlen($prefix)) + 1) : 1;
+
+        // Loop de segurança contra race conditions
+        do {
+            $number = $prefix . str_pad($nextSeq, 5, '0', STR_PAD_LEFT);
+            $nextSeq++;
+        } while (Invoice::where('invoice_number', $number)->exists());
+
+        return $number;
     }
 }

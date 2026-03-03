@@ -299,7 +299,18 @@ class ReservationResource extends Resource
                     ->action(function (Reservation $record) {
                         $record->load(['customer', 'branch', 'vehicle', 'extras.rentalExtra']);
 
-                        $invoiceNumber = 'FAT-' . date('Y') . '-' . str_pad(Invoice::whereYear('created_at', date('Y'))->count() + 1, 5, '0', STR_PAD_LEFT);
+                        // Gera número de fatura seguro: busca o maior sequencial existente e incrementa
+                        $year = date('Y');
+                        $prefix = 'FAT-' . $year . '-';
+                        $last = Invoice::where('invoice_number', 'LIKE', $prefix . '%')
+                            ->orderByRaw('CAST(SUBSTRING(invoice_number, ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+                            ->value('invoice_number');
+                        $nextSeq = $last ? ((int) substr($last, strlen($prefix)) + 1) : 1;
+                        // Garante unicidade em caso de race condition
+                        do {
+                            $invoiceNumber = $prefix . str_pad($nextSeq, 5, '0', STR_PAD_LEFT);
+                            $nextSeq++;
+                        } while (Invoice::where('invoice_number', $invoiceNumber)->exists());
 
                         $notes = "Reserva #{$record->id}\n"
                             . "Veiculo: {$record->vehicle?->plate} - {$record->vehicle?->brand} {$record->vehicle?->model}\n"
