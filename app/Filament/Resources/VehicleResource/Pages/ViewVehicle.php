@@ -66,10 +66,13 @@ class ViewVehicle extends ViewRecord
         $totalDaysRented = $vehicle->contracts->sum('total_days') + $vehicle->reservations->sum('total_days');
         $avgDailyRate = $totalDaysRented > 0 ? $totalRevenue / $totalDaysRented : 0;
 
+        $totalLocations = $totalContracts + $totalReservations;
+
         return [
             'vehicle' => $vehicle,
             'totalContracts' => $totalContracts,
             'totalReservations' => $totalReservations,
+            'totalLocations' => $totalLocations,
             'totalServiceOrders' => $totalServiceOrders,
             'totalFines' => $totalFines,
             'totalInspections' => $totalInspections,

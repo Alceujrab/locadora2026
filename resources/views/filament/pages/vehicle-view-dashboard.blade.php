@@ -183,6 +183,16 @@
                 <span class="vd-status-badge" style="{{ $statusColors }}">
                     {{ $vehicle->status->label() }}
                 </span>
+                <div style="margin-top: 0.5rem;">
+                    <a href="{{ route('admin.vehicle.report.pdf', $vehicle->id) }}"
+                       style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.4rem 0.85rem;
+                              background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);
+                              border-radius:0.4rem;font-size:0.75rem;font-weight:600;text-decoration:none;
+                              transition:opacity 0.15s;"
+                       onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                        📥 Relatório PDF
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -192,7 +202,7 @@
                 Resumo
             </button>
             <button class="vd-tab" :class="activeTab === 'locacoes' && 'vd-tab-active'" @click="activeTab = 'locacoes'">
-                Locações <span class="vd-tab-badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;">{{ $totalContracts }}</span>
+                Locações <span class="vd-tab-badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;">{{ $totalLocations }}</span>
             </button>
             <button class="vd-tab" :class="activeTab === 'servicos' && 'vd-tab-active'" @click="activeTab = 'servicos'">
                 Serviços <span class="vd-tab-badge" style="background: rgba(234,88,12,0.15); color: #fb923c;">{{ $totalServiceOrders }}</span>
@@ -270,10 +280,11 @@
             </div>
 
             {{-- CONTADORES — mesmo estilo fi-wi-stats-overview-stat para consistência --}}
-            <div class="vd-grid vd-g5">
+            <div class="vd-grid vd-g3">
                 @php
                     $counters = [
-                        ['value' => $totalContracts, 'label' => 'Contratos', 'color' => '#60a5fa'],
+                        ['value' => $totalLocations, 'label' => 'Locações', 'color' => '#60a5fa'],
+                        ['value' => $totalContracts, 'label' => 'Contratos', 'color' => '#38bdf8'],
                         ['value' => $totalReservations, 'label' => 'Reservas', 'color' => '#a78bfa'],
                         ['value' => $totalServiceOrders, 'label' => 'Ordens de Serviço', 'color' => '#fb923c'],
                         ['value' => $totalFines, 'label' => 'Multas', 'color' => '#f87171'],

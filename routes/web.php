@@ -130,4 +130,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Exportar ficha do cliente em PDF
     Route::get('/admin/customer/{id}/pdf', \App\Http\Controllers\CustomerPdfController::class)
         ->name('admin.customer.pdf');
+
+    // Exportar relatório do veículo em PDF
+    Route::get('/admin/vehicle/{id}/pdf', [App\Http\Controllers\VehicleReportController::class, 'download'])
+        ->name('admin.vehicle.report.pdf');
 });
