@@ -28,7 +28,7 @@ class AccountsReceivableReportExportController extends Controller
             if ($customerId) $query->where('customer_id', $customerId);
             if ($branchId) $query->where('branch_id', $branchId);
 
-            $records = $query->with(['customer', 'invoice', 'branch'])->orderBy('due_date', 'desc')->get();
+            $records = $query->with(['customer', 'invoice.contract.vehicle', 'branch'])->orderBy('due_date', 'desc')->get();
 
             $totals = [
                 'total_amount' => $records->sum('amount'),
@@ -40,11 +40,32 @@ class AccountsReceivableReportExportController extends Controller
                 'delinquent' => $records->where('status', 'inadimplente')->sum('amount'),
             ];
 
+            // Logo em base64
+            $logoBase64 = null;
+            $logoPath = public_path('images/logo-elite.png');
+            if (file_exists($logoPath)) {
+                $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+            }
+
+            // Dados da empresa
+            $company = [
+                'name'    => \App\Models\Setting::get('company_name',    'Elite Locadora de Veiculos'),
+                'cnpj'    => \App\Models\Setting::get('company_cnpj',    ''),
+                'phone'   => \App\Models\Setting::get('company_phone',   ''),
+                'email'   => \App\Models\Setting::get('company_email',   ''),
+                'address' => \App\Models\Setting::get('company_address', ''),
+                'city'    => \App\Models\Setting::get('company_city',    ''),
+                'state'   => \App\Models\Setting::get('company_state',   ''),
+                'footer'  => \App\Models\Setting::get('invoice_footer',  'Este documento não possui validade fiscal.'),
+            ];
+
             $pdf = Pdf::loadView('reports.accounts-receivable-pdf', [
                 'records' => $records,
                 'totals' => $totals,
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
+                'logoBase64' => $logoBase64,
+                'company' => $company,
                 'filters' => [
                     'status' => $status,
                     'customer_id' => $customerId,

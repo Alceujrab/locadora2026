@@ -26,9 +26,10 @@ class AccountsReceivableReportPage extends Page
             $status = request('status');
             $customerId = request('customer_id');
             $branchId = request('branch_id');
+            $vehiclePlate = request('vehicle_plate');
 
             // Base query with date range
-            $baseQuery = function() use ($dateFrom, $dateTo, $status, $customerId, $branchId) {
+            $baseQuery = function() use ($dateFrom, $dateTo, $status, $customerId, $branchId, $vehiclePlate) {
                 $query = AccountReceivable::whereBetween('due_date', [$dateFrom, $dateTo]);
 
                 if ($status) {
@@ -40,13 +41,29 @@ class AccountsReceivableReportPage extends Page
                 if ($branchId) {
                     $query->where('branch_id', $branchId);
                 }
+                // Filtro por placa: busca nas notes da invoice vinculada
+                if ($vehiclePlate) {
+                    $plate = strtoupper(trim($vehiclePlate));
+                    $query->whereHas('invoice', function ($q) use ($plate) {
+                        $q->where(function ($q2) use ($plate) {
+                            // Via notes (faturas de reserva)
+                            $q2->where('notes', 'LIKE', '%' . $plate . '%')
+                                // Via contrato -> veículo
+                                ->orWhereHas('contract', function ($q3) use ($plate) {
+                                    $q3->whereHas('vehicle', function ($q4) use ($plate) {
+                                        $q4->where('plate', 'LIKE', '%' . $plate . '%');
+                                    });
+                                });
+                        });
+                    });
+                }
 
                 return $query;
             };
 
             // Get records with relationships
             $records = $baseQuery()
-                ->with(['customer', 'invoice', 'branch'])
+                ->with(['customer', 'invoice.contract.vehicle', 'branch'])
                 ->orderBy('due_date', 'desc')
                 ->get();
 
@@ -128,6 +145,7 @@ class AccountsReceivableReportPage extends Page
                     'status' => $status,
                     'customer_id' => $customerId,
                     'branch_id' => $branchId,
+                    'vehicle_plate' => $vehiclePlate,
                 ]
             ];
         } catch (\Exception $e) {
