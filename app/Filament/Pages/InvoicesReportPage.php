@@ -27,9 +27,10 @@ class InvoicesReportPage extends Page
             $status = request('status');
             $customerId = request('customer_id');
             $branchId = request('branch_id');
+            $vehiclePlate = request('vehicle_plate');
 
             // Base query with date range
-            $baseQuery = function() use ($dateFrom, $dateTo, $status, $customerId, $branchId) {
+            $baseQuery = function() use ($dateFrom, $dateTo, $status, $customerId, $branchId, $vehiclePlate) {
                 $query = Invoice::whereBetween('due_date', [$dateFrom, $dateTo]);
 
                 if ($status) {
@@ -41,13 +42,25 @@ class InvoicesReportPage extends Page
                 if ($branchId) {
                     $query->where('branch_id', $branchId);
                 }
+                // Filtro por placa: busca nas notes ou via contract->vehicle
+                if ($vehiclePlate) {
+                    $plate = strtoupper(trim($vehiclePlate));
+                    $query->where(function ($q) use ($plate) {
+                        $q->where('notes', 'LIKE', '%' . $plate . '%')
+                            ->orWhereHas('contract', function ($q2) use ($plate) {
+                                $q2->whereHas('vehicle', function ($q3) use ($plate) {
+                                    $q3->where('plate', 'LIKE', '%' . $plate . '%');
+                                });
+                            });
+                    });
+                }
 
                 return $query;
             };
 
             // Get invoices with relationships
             $invoices = $baseQuery()
-                ->with(['customer', 'contract', 'branch'])
+                ->with(['customer', 'contract.vehicle', 'branch'])
                 ->orderBy('due_date', 'desc')
                 ->get();
 
@@ -123,6 +136,7 @@ class InvoicesReportPage extends Page
                     'status' => $status,
                     'customer_id' => $customerId,
                     'branch_id' => $branchId,
+                    'vehicle_plate' => $vehiclePlate,
                 ]
             ];
         } catch (\Exception $e) {

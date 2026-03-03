@@ -9,7 +9,7 @@
     .rpt-card-value { font-size: 1.75rem; font-weight: 800; }
     .rpt-card-sub { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; }
     .rpt-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; overflow: hidden; }
-    .rpt-section-header { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .rpt-section-header { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
     .rpt-section-header h3 { font-weight: 700; font-size: 0.95rem; color: #e5e7eb; margin: 0; }
     .rpt-table { width: 100%; font-size: 0.875rem; border-collapse: collapse; }
     .rpt-table thead tr { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
@@ -17,8 +17,9 @@
     .rpt-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
     .rpt-table tbody tr:hover { background: rgba(255,255,255,0.02); }
     .rpt-badge { padding: 0.2rem 0.5rem; border-radius: 0.375rem; font-size: 0.7rem; font-weight: 600; }
+    .rpt-badge-plate { padding: 0.15rem 0.45rem; border-radius: 0.25rem; font-size: 0.7rem; font-weight: 700; background: rgba(107,114,128,0.15); color: #9ca3af; font-family: monospace; letter-spacing: 0.05em; }
     .rpt-filter-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; }
-    .rpt-filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; align-items: end; }
+    .rpt-filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; align-items: end; }
     .rpt-filter-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: #9ca3af; margin-bottom: 0.35rem; display: block; }
     .rpt-filter-input, .rpt-filter-select { width: 100%; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.5rem; color: #e5e7eb; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
     .rpt-filter-input:focus, .rpt-filter-select:focus { border-color: #f59e0b; }
@@ -33,6 +34,13 @@
     .rpt-text-right { text-align: right; }
     .rpt-chart-container { padding: 1.25rem; }
     .rpt-error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #f87171; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
+    /* Toggle de colunas */
+    .rpt-toggle-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .rpt-toggle { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; color: #9ca3af; cursor: pointer; user-select: none; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: 1px solid rgba(255,255,255,0.08); transition: all 0.15s; }
+    .rpt-toggle:hover { border-color: rgba(245,158,11,0.3); color: #fbbf24; }
+    .rpt-toggle input { display: none; }
+    .rpt-toggle.active { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: #fbbf24; }
+    .col-hidden { display: none !important; }
     @media (max-width: 1024px) { .rpt-grid-6 { grid-template-columns: repeat(3, 1fr); } .rpt-grid-2 { grid-template-columns: 1fr; } }
     @media (max-width: 640px) { .rpt-grid-6 { grid-template-columns: repeat(2, 1fr); } .rpt-grid-3 { grid-template-columns: 1fr; } }
 </style>
@@ -79,6 +87,10 @@
                         <option value="{{ $b->id }}" {{ ($filters['branch_id'] ?? '') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
                     @endforeach
                 </select>
+            </div>
+            <div>
+                <label class="rpt-filter-label">🚗 Placa Veículo</label>
+                <input type="text" name="vehicle_plate" value="{{ $filters['vehicle_plate'] ?? '' }}" class="rpt-filter-input" placeholder="Ex: ABC1D23" maxlength="7" style="text-transform:uppercase;">
             </div>
             <div style="display:flex; gap:0.5rem; align-items:flex-end;">
                 <button type="submit" class="rpt-btn rpt-btn-primary">🔍 Filtrar</button>
@@ -134,21 +146,31 @@
     </div>
 </div>
 
-{{-- Botões de Exportação + Tabela de Dados --}}
+{{-- Tabela de Dados --}}
 <div class="rpt-section">
     <div class="rpt-section-header">
         <h3>📋 Faturas Detalhadas</h3>
-        <div style="display:flex; gap:0.5rem;">
+        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+            {{-- Toggles de colunas --}}
+            <div class="rpt-toggle-bar">
+                <span style="font-size:0.7rem; color:#6b7280; margin-right:0.25rem;">Colunas:</span>
+                <label class="rpt-toggle active" data-col="col-vehicle"><input type="checkbox" checked onchange="toggleCol('col-vehicle', this)"> 🚗 Veículo</label>
+                <label class="rpt-toggle" data-col="col-period"><input type="checkbox" onchange="toggleCol('col-period', this)"> 📅 Período</label>
+                <label class="rpt-toggle active" data-col="col-contract"><input type="checkbox" checked onchange="toggleCol('col-contract', this)"> 📄 Contrato</label>
+            </div>
             <button onclick="exportPdf()" class="rpt-btn rpt-btn-pdf">📥 PDF</button>
             <button onclick="exportExcel()" class="rpt-btn rpt-btn-excel">📊 Excel</button>
         </div>
     </div>
+    <div style="overflow-x:auto;">
     <table class="rpt-table">
         <thead>
             <tr>
                 <th>Número</th>
                 <th>Cliente</th>
-                <th>Contrato</th>
+                <th class="col-vehicle">Veículo</th>
+                <th class="col-period col-hidden">Período Reserva</th>
+                <th class="col-contract">Contrato</th>
                 <th>Vencimento</th>
                 <th>Status</th>
                 <th class="rpt-text-right">Valor</th>
@@ -165,20 +187,41 @@
                     ];
                     $statusVal = $invoice->status instanceof \BackedEnum ? $invoice->status->value : $invoice->status;
                     $s = $sc[$statusVal] ?? $sc['cancelada'];
+
+                    // Placa do veículo
+                    $plate = $invoice->contract?->vehicle?->plate;
+                    if (!$plate && $invoice->notes && preg_match('/Veiculo:\s*([A-Z0-9]{7})/i', $invoice->notes, $m)) {
+                        $plate = strtoupper($m[1]);
+                    }
+
+                    // Período da reserva
+                    $period = null;
+                    if ($invoice->notes && preg_match('/Periodo:\s*(.+?)(?:\n|$)/i', $invoice->notes, $mp)) {
+                        $period = trim($mp[1]);
+                    }
                 @endphp
                 <tr>
                     <td style="color:#e5e7eb; font-weight:600;">{{ $invoice->invoice_number }}</td>
                     <td style="color:#e5e7eb;">{{ $invoice->customer->name ?? 'N/A' }}</td>
-                    <td style="color:#9ca3af;">{{ $invoice->contract->number ?? 'N/A' }}</td>
+                    <td class="col-vehicle">
+                        @if($plate)
+                            <span class="rpt-badge-plate">{{ $plate }}</span>
+                        @else
+                            <span style="color:#4b5563;">—</span>
+                        @endif
+                    </td>
+                    <td class="col-period col-hidden" style="color:#e5e7eb; font-size:0.8rem;">{{ $period ?? '—' }}</td>
+                    <td class="col-contract" style="color:#9ca3af;">{{ $invoice->contract->contract_number ?? '—' }}</td>
                     <td style="color:#e5e7eb;">{{ $invoice->due_date->format('d/m/Y') }}</td>
                     <td><span class="rpt-badge" style="background:{{ $s['bg'] }}; color:{{ $s['color'] }};">{{ ucfirst($statusVal) }}</span></td>
                     <td class="rpt-text-right" style="color:#e5e7eb; font-weight:600;">R$ {{ number_format($invoice->total, 2, ',', '.') }}</td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="rpt-empty">Nenhuma fatura encontrada no período selecionado</td></tr>
+                <tr><td colspan="8" class="rpt-empty">Nenhuma fatura encontrada no período selecionado</td></tr>
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -203,6 +246,19 @@
         },
         options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: darkOpts } }, scales: { y: { beginAtZero: true, ticks: darkOpts, grid: { color: 'rgba(255,255,255,0.04)' } }, x: { ticks: darkOpts, grid: { color: 'rgba(255,255,255,0.04)' } } } }
     });
+
+    // Toggle de colunas
+    function toggleCol(className, checkbox) {
+        const cells = document.querySelectorAll('.' + className);
+        const label = checkbox.closest('.rpt-toggle');
+        if (checkbox.checked) {
+            cells.forEach(c => c.classList.remove('col-hidden'));
+            label.classList.add('active');
+        } else {
+            cells.forEach(c => c.classList.add('col-hidden'));
+            label.classList.remove('active');
+        }
+    }
 
     function exportPdf() { window.location.href = '/export/invoices/pdf?' + new URLSearchParams(window.location.search).toString(); }
     function exportExcel() { window.location.href = '/export/invoices/excel?' + new URLSearchParams(window.location.search).toString(); }
