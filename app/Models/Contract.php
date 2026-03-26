@@ -14,6 +14,15 @@ class Contract extends Model
 {
     use HasUuids, SoftDeletes;
 
+    protected $attributes = [
+        'pickup_mileage' => 0,
+        'return_mileage' => null,
+        'extras_total' => 0,
+        'caution_amount' => 0,
+        'discount' => 0,
+        'additional_charges' => 0,
+    ];
+
     protected $fillable = [
         'branch_id', 'reservation_id', 'customer_id', 'vehicle_id', 'template_id',
         'contract_number', 'pickup_date', 'return_date', 'actual_return_date',

@@ -57,7 +57,7 @@ class ContractResource extends Resource
 
                 Tabs\Tab::make('Datas e KM')->icon('heroicon-o-clock')->schema([
                     Components\DateTimePicker::make('pickup_date')->label('Data/Hora Retirada')->required(),
-                    Components\TextInput::make('pickup_mileage')->label('KM Retirada')->numeric(),
+                    Components\TextInput::make('pickup_mileage')->label('KM Retirada')->numeric()->default(0)->required(),
                     Components\DateTimePicker::make('return_date')->label('Data/Hora Devolucao Prevista')->required(),
                     Components\TextInput::make('return_mileage')->label('KM Devolucao')->numeric(),
                     Components\DateTimePicker::make('actual_return_date')->label('Data/Hora Devolucao Efetiva'),
