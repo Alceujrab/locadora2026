@@ -5,6 +5,7 @@ namespace App\Filament\Resources\VehicleInspectionResource\RelationManagers;
 use Filament\Actions;
 
 use Filament\Forms;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -33,25 +34,22 @@ class ItemsRelationManager extends RelationManager
                 Forms\Components\Select::make('condition')
                     ->label('Condição')
                     ->options([
-                        'ok' => 'Ok',
-                        'sujo' => 'Sujo',
-                        'riscado' => 'Riscado',
-                        'amassado' => 'Amassado',
-                        'quebrado' => 'Quebrado',
-                        'faltando' => 'Faltando',
-                        'outro' => 'Outro',
+                        'bom' => 'Bom',
+                        'regular' => 'Regular',
+                        'ruim' => 'Ruim',
+                        'danificado' => 'Danificado',
                     ])
                     ->required()
                     ->live(),
                 Forms\Components\Textarea::make('damage_description')
                     ->label('Descrição da Avaria')
-                    ->visible(fn (Forms\Get $get) => in_array($get('condition'), ['riscado', 'amassado', 'quebrado', 'faltando', 'outro']))
+                    ->visible(fn (Get $get) => in_array($get('condition'), ['ruim', 'danificado']))
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('damage_value')
                     ->label('Custo do Dano (R$)')
                     ->numeric()
                     ->prefix('R$')
-                    ->visible(fn (Forms\Get $get) => in_array($get('condition'), ['riscado', 'amassado', 'quebrado', 'faltando', 'outro'])),
+                    ->visible(fn (Get $get) => in_array($get('condition'), ['ruim', 'danificado'])),
                 Forms\Components\FileUpload::make('photos')
                     ->label('Fotos')
                     ->image()
@@ -71,9 +69,9 @@ class ItemsRelationManager extends RelationManager
                     ->label('Condição')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'ok' => 'success',
-                        'sujo' => 'warning',
-                        'riscado', 'amassado', 'quebrado', 'faltando', 'outro' => 'danger',
+                        'bom' => 'success',
+                        'regular' => 'warning',
+                        'ruim', 'danificado' => 'danger',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('damage_value')
