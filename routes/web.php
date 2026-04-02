@@ -99,6 +99,13 @@ Route::post('/os/{id}/aprovar', [App\Http\Controllers\ServiceOrderSignatureContr
 Route::get('/os/{id}/pdf', [App\Http\Controllers\ServiceOrderSignatureController::class, 'downloadPdf'])->name('os.signature.pdf');
 
 // ==========================================
+// ASSINATURA DIGITAL VISTORIA (PÚBLICA)
+// ==========================================
+Route::get('/vistoria/{id}/assinatura', [App\Http\Controllers\VehicleInspectionSignatureController::class, 'show'])->name('inspection.signature.show');
+Route::post('/vistoria/{id}/assinatura', [App\Http\Controllers\VehicleInspectionSignatureController::class, 'sign'])->name('inspection.signature.sign');
+Route::get('/vistoria/{id}/pdf', [App\Http\Controllers\VehicleInspectionSignatureController::class, 'downloadPdf'])->name('inspection.signature.pdf');
+
+// ==========================================
 // FATURA (PÚBLICA)
 // ==========================================
 Route::get('/fatura/{id}', [App\Http\Controllers\InvoiceConfirmationController::class, 'show'])->name('invoice.show');

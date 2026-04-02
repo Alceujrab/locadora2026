@@ -18,12 +18,15 @@ class VehicleInspection extends Model
     protected $fillable = [
         'vehicle_id', 'contract_id', 'type', 'inspector_user_id',
         'mileage', 'fuel_level', 'inspection_date', 'overall_condition',
-        'notes', 'status',
+        'notes', 'status', 'pdf_path', 'signature_token', 'signed_at',
+        'signature_ip', 'signature_hash', 'signature_image', 'signature_latitude',
+        'signature_longitude', 'signature_method',
     ];
 
     protected $casts = [
         'type' => InspectionType::class,
         'inspection_date' => 'datetime',
+        'signed_at' => 'datetime',
     ];
 
     public function vehicle(): BelongsTo
@@ -54,5 +57,10 @@ class VehicleInspection extends Model
     public function getTotalDamageValueAttribute(): float
     {
         return $this->items->sum('damage_value');
+    }
+
+    public function isSigned(): bool
+    {
+        return $this->signed_at !== null;
     }
 }

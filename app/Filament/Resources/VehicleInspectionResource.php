@@ -2,19 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Actions;
-
-use App\Enums\InspectionType;
-use App\Filament\Resources\VehicleInspectionResource\Pages;
 use App\Filament\Resources\VehicleInspectionResource\RelationManagers;
 use App\Models\VehicleInspection;
+use App\Services\EvolutionApiService;
+use App\Services\VehicleInspectionPdfService;
+use Filament\Actions;
+use App\Enums\InspectionType;
+use App\Filament\Resources\VehicleInspectionResource\Pages;
 use Filament\Forms\Components;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VehicleInspectionResource extends Resource
 {
@@ -80,6 +84,9 @@ class VehicleInspectionResource extends Resource
                 Tables\Columns\TextColumn::make('contract.contract_number')->label('Contrato')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->label('Tipo')->badge(),
                 Tables\Columns\TextColumn::make('inspection_date')->label('Data')->dateTime('d/m/Y H:i')->sortable(),
+                Tables\Columns\IconColumn::make('signed_at')->label('Assinada')->boolean()
+                    ->trueIcon('heroicon-o-check-badge')->falseIcon('heroicon-o-clock')
+                    ->trueColor('success')->falseColor('gray'),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'rascunho' => 'warning',
@@ -95,7 +102,76 @@ class VehicleInspectionResource extends Resource
                 ]),
             ])
             ->actions([
+                Actions\Action::make('generate_pdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('info')
+                    ->action(function (VehicleInspection $record, VehicleInspectionPdfService $service) {
+                        $path = $service->generatePdf($record);
+
+                        return response()->streamDownload(
+                            fn () => print(Storage::disk('public')->get($path)),
+                            basename($path),
+                            ['Content-Type' => 'application/pdf']
+                        );
+                    }),
+                Actions\Action::make('download_pdf')
+                    ->label('Baixar PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('gray')
+                    ->url(fn (VehicleInspection $record) => $record->pdf_path ? route('inspection.signature.pdf', $record->id) : '#')
+                    ->openUrlInNewTab()
+                    ->visible(fn (VehicleInspection $record) => ! empty($record->pdf_path)),
+                Actions\Action::make('send_signature_whatsapp')
+                    ->label('Assinar WhatsApp')
+                    ->icon('heroicon-o-paper-airplane')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Enviar vistoria para assinatura')
+                    ->modalDescription(fn (VehicleInspection $record) => 'Enviar link de assinatura da vistoria #' . $record->id . ' para ' . ($record->contract?->customer?->name ?? 'cliente') . ' via WhatsApp?')
+                    ->visible(fn (VehicleInspection $record) => $record->contract?->customer?->phone && ! $record->isSigned())
+                    ->action(function (VehicleInspection $record, VehicleInspectionPdfService $pdfService) {
+                        $record->load(['vehicle', 'contract.customer', 'contract.branch', 'items']);
+
+                        if (! $record->pdf_path || ! Storage::disk('public')->exists($record->pdf_path)) {
+                            $pdfService->generatePdf($record);
+                            $record->refresh();
+                        }
+
+                        if (! $record->signature_token) {
+                            $record->update(['signature_token' => Str::random(64)]);
+                            $record->refresh();
+                        }
+
+                        $phone = $record->contract->customer->phone;
+                        $signUrl = route('inspection.signature.show', $record->id);
+                        $message = "📋 *VISTORIA DO VEICULO*\n\n"
+                            . 'Vistoria: #' . $record->id . "\n"
+                            . 'Contrato: ' . ($record->contract?->contract_number ?? '-') . "\n"
+                            . 'Veiculo: ' . ($record->vehicle?->plate ?? '-') . ' - ' . ($record->vehicle?->brand ?? '') . ' ' . ($record->vehicle?->model ?? '') . "\n"
+                            . 'Tipo: ' . $record->type->label() . "\n"
+                            . 'Data: ' . ($record->inspection_date?->format('d/m/Y H:i') ?? '-') . "\n"
+                            . 'KM: ' . number_format((int) $record->mileage, 0, ',', '.') . " km\n\n"
+                            . "✍️ *Clique no link abaixo para assinar digitalmente a vistoria:*\n{$signUrl}\n\n"
+                            . 'O PDF da vistoria segue em anexo.\n\n'
+                            . 'Elite Locadora';
+
+                        $evolution = app(EvolutionApiService::class);
+                        $evolution->sendText($phone, $message);
+
+                        if ($record->pdf_path) {
+                            $pdfUrl = asset('storage/' . $record->pdf_path);
+                            $evolution->sendDocument($phone, $pdfUrl, 'Vistoria-' . $record->id . '.pdf');
+                        }
+
+                        Notification::make()
+                            ->title('Vistoria enviada para assinatura')
+                            ->body('Link e PDF enviados para ' . $phone)
+                            ->success()
+                            ->send();
+                    }),
                 Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
