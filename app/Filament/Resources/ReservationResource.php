@@ -391,7 +391,7 @@ class ReservationResource extends Resource
                             'total' => $record->total,
                             'status' => \App\Enums\ContractStatus::DRAFT,
                             'signature_token' => \Illuminate\Support\Str::random(64),
-                            'created_by' => auth()->id(),
+                            'created_by' => \Illuminate\Support\Facades\Auth::id(),
                         ]);
 
                         // Copiar extras para o contrato

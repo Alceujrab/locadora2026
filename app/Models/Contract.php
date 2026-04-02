@@ -139,9 +139,26 @@ class Contract extends Model
     public static function generateContractNumber(): string
     {
         $prefix = 'LOC';
-        $year = date('Y');
-        $last = static::whereYear('created_at', $year)->count() + 1;
+        $year = now()->format('Y');
+        $lastNumber = static::withTrashed()
+            ->where('contract_number', 'like', sprintf('%s-%s-%%', $prefix, $year))
+            ->orderByDesc('contract_number')
+            ->value('contract_number');
 
-        return sprintf('%s-%s-%05d', $prefix, $year, $last);
+        $nextSequence = 1;
+
+        if (is_string($lastNumber) && preg_match('/^'.$prefix.'-'.$year.'-(\d{5})$/', $lastNumber, $matches)) {
+            $nextSequence = ((int) $matches[1]) + 1;
+        }
+
+        do {
+            $contractNumber = sprintf('%s-%s-%05d', $prefix, $year, $nextSequence);
+            $exists = static::withTrashed()
+                ->where('contract_number', $contractNumber)
+                ->exists();
+            $nextSequence++;
+        } while ($exists);
+
+        return $contractNumber;
     }
 }

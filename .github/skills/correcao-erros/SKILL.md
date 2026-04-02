@@ -55,6 +55,12 @@ Corrigir erros de execucao com foco em causa raiz e evitar regressao, especialme
 - Nao reformatar arquivo inteiro.
 - Se for dado critico de contrato/financeiro, incluir teste de regressao.
 
+## Regra deste projeto
+- Neste projeto, qualquer alteracao deve ser commitada e enviada somente para o GitHub do proprio repositorio atual.
+- Antes de commitar ou dar push, confirmar o remoto com `git remote get-url origin`.
+- Nao reutilizar credenciais, hosts, caminhos ou comandos de deploy de outros sistemas quando a tarefa for apenas commit/push deste projeto.
+- Separar sempre duas operacoes: `git push` para o GitHub deste repositorio e deploy em servidor, que so deve ocorrer com dados confirmados do ambiente correto.
+
 ## Exemplo pratico (caso comum)
 Problema: coluna pickup_mileage NOT NULL recebendo null no insert de contracts.
 
