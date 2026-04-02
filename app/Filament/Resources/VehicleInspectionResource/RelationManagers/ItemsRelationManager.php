@@ -54,6 +54,7 @@ class ItemsRelationManager extends RelationManager
                     ->label('Fotos')
                     ->image()
                     ->multiple()
+                    ->disk('public')
                     ->directory('inspection-items')
                     ->columnSpanFull(),
             ]);

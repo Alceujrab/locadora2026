@@ -25,15 +25,23 @@ class VehicleInspectionPdfService
         }
 
         $signatureBase64 = null;
-        if ($inspection->signature_image && Storage::disk('public')->exists($inspection->signature_image)) {
-            $signatureBase64 = 'data:image/png;base64,' . base64_encode(Storage::disk('public')->get($inspection->signature_image));
+        if ($inspection->signature_image) {
+            $signatureContent = $this->readFileFromKnownDisks($inspection->signature_image);
+            if ($signatureContent !== null) {
+                $signatureBase64 = 'data:image/png;base64,' . base64_encode($signatureContent);
+            }
         }
 
         $itemPhotos = [];
         foreach ($inspection->items as $item) {
             $itemPhotos[$item->id] = collect($item->photos ?? [])
-                ->filter(fn ($path) => is_string($path) && $path !== '' && Storage::disk('public')->exists($path))
+                ->filter(fn ($path) => is_string($path) && $path !== '')
                 ->map(function (string $path) {
+                    $content = $this->readFileFromKnownDisks($path);
+                    if ($content === null) {
+                        return null;
+                    }
+
                     $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
                     $mimeType = match ($extension) {
                         'png' => 'image/png',
@@ -44,9 +52,10 @@ class VehicleInspectionPdfService
 
                     return [
                         'path' => $path,
-                        'base64' => 'data:' . $mimeType . ';base64,' . base64_encode(Storage::disk('public')->get($path)),
+                        'base64' => 'data:' . $mimeType . ';base64,' . base64_encode($content),
                     ];
                 })
+                ->filter()
                 ->values()
                 ->all();
         }
@@ -64,5 +73,16 @@ class VehicleInspectionPdfService
         $inspection->update(['pdf_path' => $fileName]);
 
         return $fileName;
+    }
+
+    private function readFileFromKnownDisks(string $path): ?string
+    {
+        foreach (['public', 'local'] as $disk) {
+            if (Storage::disk($disk)->exists($path)) {
+                return Storage::disk($disk)->get($path);
+            }
+        }
+
+        return null;
     }
 }
