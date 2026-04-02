@@ -122,6 +122,27 @@ class VehicleInspectionResource extends Resource
                     ->url(fn (VehicleInspection $record) => $record->pdf_path ? route('inspection.signature.pdf', $record->id) : '#')
                     ->openUrlInNewTab()
                     ->visible(fn (VehicleInspection $record) => ! empty($record->pdf_path)),
+                Actions\Action::make('delete_pdf')
+                    ->label('Excluir PDF')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Excluir PDF da vistoria')
+                    ->modalDescription('O arquivo PDF atual sera removido. Depois disso, voce podera gerar um novo PDF com os dados corrigidos.')
+                    ->visible(fn (VehicleInspection $record) => ! empty($record->pdf_path))
+                    ->action(function (VehicleInspection $record) {
+                        if ($record->pdf_path && Storage::disk('public')->exists($record->pdf_path)) {
+                            Storage::disk('public')->delete($record->pdf_path);
+                        }
+
+                        $record->update(['pdf_path' => null]);
+
+                        Notification::make()
+                            ->title('PDF excluido')
+                            ->body('O PDF atual foi removido. Gere um novo PDF quando desejar.')
+                            ->success()
+                            ->send();
+                    }),
                 Actions\Action::make('send_signature_whatsapp')
                     ->label('Assinar WhatsApp')
                     ->icon('heroicon-o-paper-airplane')

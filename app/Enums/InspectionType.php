@@ -12,8 +12,8 @@ enum InspectionType: string implements HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::CHECKOUT => 'Check-out (Saida)',
-            self::RETURN => 'Check-in (Retorno)',
+            self::CHECKOUT => 'Check-out (Devolucao)',
+            self::RETURN => 'Check-in (Saida do veiculo)',
         };
     }
 
