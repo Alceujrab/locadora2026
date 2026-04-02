@@ -16,6 +16,10 @@
         table.items { border-collapse: collapse; margin-top: 5px; }
         table.items th { background: #f5f5f5; border: 1px solid #ddd; padding: 5px 8px; text-align: left; font-size: 10px; text-transform: uppercase; color: #555; }
         table.items td { border: 1px solid #ddd; padding: 5px 8px; }
+        .photo-grid { margin-top: 6px; }
+        .photo-item { display: inline-block; width: 140px; margin: 0 8px 8px 0; vertical-align: top; }
+        .photo-item img { width: 140px; height: 105px; object-fit: cover; border: 1px solid #ddd; padding: 3px; background: #fff; }
+        .photo-caption { font-size: 9px; color: #666; margin-top: 3px; text-align: center; }
         .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; color: #fff; font-weight: bold; }
         .badge-warning { background: #f59e0b; }
         .badge-success { background: #16a34a; }
@@ -116,6 +120,30 @@
             </tbody>
         </table>
     </div>
+
+    @php $hasPhotos = collect($itemPhotos ?? [])->flatten(1)->isNotEmpty(); @endphp
+    @if($hasPhotos)
+    <div class="section">
+        <div class="section-title">FOTOS DA VISTORIA</div>
+        @foreach($inspection->items as $item)
+            @if(!empty($itemPhotos[$item->id]))
+                <div style="margin-bottom: 10px;">
+                    <p style="font-size: 10px; font-weight: bold; color: #444; margin-bottom: 5px;">
+                        {{ $item->category }} - {{ $item->item_name }}
+                    </p>
+                    <div class="photo-grid">
+                        @foreach($itemPhotos[$item->id] as $photo)
+                            <div class="photo-item">
+                                <img src="{{ $photo['base64'] }}" alt="Foto do item {{ $item->item_name }}">
+                                <div class="photo-caption">{{ basename($photo['path']) }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    </div>
+    @endif
 
     <div class="section" style="margin-top: 30px;">
         <div class="section-title">ASSINATURA DO CLIENTE</div>
