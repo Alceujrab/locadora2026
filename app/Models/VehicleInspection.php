@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class VehicleInspection extends Model
 {
+    protected $attributes = [
+        'fuel_level' => 100,
+        'overall_condition' => 'bom',
+        'status' => 'rascunho',
+    ];
+
     protected $fillable = [
         'vehicle_id', 'contract_id', 'type', 'inspector_user_id',
         'mileage', 'fuel_level', 'inspection_date', 'overall_condition',

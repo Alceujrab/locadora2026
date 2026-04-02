@@ -29,12 +29,12 @@ class ContractActionController extends Controller
             'type' => InspectionType::CHECKOUT,
         ], [
             'vehicle_id' => $contract->vehicle_id,
-            'inspector_user_id' => auth()->id() ?? 1,
+            'inspector_user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
             'status' => 'rascunho',
             'inspection_date' => now(),
             'mileage' => $contract->vehicle->mileage ?? 0,
             'fuel_level' => 100,
-            'overall_condition' => 'Bom',
+            'overall_condition' => 'bom',
         ]);
 
         $contract->update(['status' => ContractStatus::ACTIVE]);
@@ -72,12 +72,12 @@ class ContractActionController extends Controller
             'type' => InspectionType::RETURN,
         ], [
             'vehicle_id' => $contract->vehicle_id,
-            'inspector_user_id' => auth()->id() ?? 1,
+            'inspector_user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
             'status' => 'rascunho',
             'inspection_date' => now(),
             'mileage' => $contract->vehicle->mileage ?? $contract->pickup_mileage ?? 0,
             'fuel_level' => 100,
-            'overall_condition' => 'Bom',
+            'overall_condition' => 'bom',
         ]);
 
         $contract->update([

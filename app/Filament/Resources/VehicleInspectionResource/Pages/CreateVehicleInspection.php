@@ -11,7 +11,7 @@ class CreateVehicleInspection extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['inspector_user_id'] = auth()->id() ?? 1;
+        $data['inspector_user_id'] = \Illuminate\Support\Facades\Auth::id() ?? 1;
 
         return $data;
     }

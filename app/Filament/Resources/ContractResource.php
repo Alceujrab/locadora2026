@@ -134,12 +134,12 @@ class ContractResource extends Resource
                         'type' => InspectionType::CHECKOUT,
                     ], [
                         'vehicle_id' => $record->vehicle_id,
-                        'inspector_user_id' => auth()->id() ?? 1,
+                        'inspector_user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
                         'status' => 'rascunho',
                         'inspection_date' => now(),
                         'mileage' => $record->vehicle->mileage ?? 0,
                         'fuel_level' => 100,
-                        'overall_condition' => 'Bom',
+                        'overall_condition' => 'bom',
                     ]);
 
                     $record->update(['status' => ContractStatus::ACTIVE]);
@@ -165,12 +165,12 @@ class ContractResource extends Resource
                         'type' => InspectionType::RETURN,
                     ], [
                         'vehicle_id' => $record->vehicle_id,
-                        'inspector_user_id' => auth()->id() ?? 1,
+                        'inspector_user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
                         'status' => 'rascunho',
                         'inspection_date' => now(),
                         'mileage' => $record->vehicle->mileage ?? $record->pickup_mileage ?? 0,
                         'fuel_level' => 100,
-                        'overall_condition' => 'Bom',
+                        'overall_condition' => 'bom',
                     ]);
 
                     $record->update([

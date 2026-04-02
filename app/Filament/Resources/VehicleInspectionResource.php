@@ -54,13 +54,18 @@ class VehicleInspectionResource extends Resource
                 Grid::make(2)->schema([
                     Components\DateTimePicker::make('inspection_date')->label('Data/Hora da Vistoria')->required()->native(false),
                     Components\TextInput::make('mileage')->label('Quilometragem Registrada')->numeric()->required(),
-                    Components\TextInput::make('fuel_level')->label('Combustivel (%)')->numeric()->maxValue(100)->minValue(0)->suffix('%'),
+                    Components\TextInput::make('fuel_level')->label('Combustivel (%)')->numeric()->default(100)->maxValue(100)->minValue(0)->suffix('%'),
                     Components\Select::make('status')->label('Status')->options([
                         'rascunho' => 'Rascunho',
                         'finalizado' => 'Finalizado',
                     ])->default('rascunho')->required(),
                 ]),
-                Components\Textarea::make('overall_condition')->label('Condicao Geral')->columnSpanFull(),
+                Components\Select::make('overall_condition')->label('Condicao Geral')->options([
+                    'excelente' => 'Excelente',
+                    'bom' => 'Bom',
+                    'regular' => 'Regular',
+                    'ruim' => 'Ruim',
+                ])->default('bom')->required()->columnSpanFull(),
                 Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
             ]),
         ]);
