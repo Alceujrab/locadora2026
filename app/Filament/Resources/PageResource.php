@@ -23,7 +23,7 @@ class PageResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CMS / Site';
 
-    protected static ?string $modelLabel = 'Pagina';
+    protected static ?string $modelLabel = 'Página';
 
     protected static ?string $pluralModelLabel = 'Paginas Internas';
 

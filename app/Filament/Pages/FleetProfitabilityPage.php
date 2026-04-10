@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class FleetProfitabilityPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar-square';
-    protected static string|\UnitEnum|null $navigationGroup = 'Relatorios';
+    protected static string|\UnitEnum|null $navigationGroup = 'Relatórios';
     protected static ?int $navigationSort = 8;
     protected string $view = 'filament.pages.fleet-profitability-page';
     protected static ?string $title = 'Lucratividade da Frota';

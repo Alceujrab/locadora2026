@@ -22,11 +22,11 @@ class UserResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Configuracao';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuração';
 
-    protected static ?string $modelLabel = 'Usuario';
+    protected static ?string $modelLabel = 'Usuário';
 
-    protected static ?string $pluralModelLabel = 'Usuarios';
+    protected static ?string $pluralModelLabel = 'Usuários';
 
     protected static ?int $navigationSort = 10;
 

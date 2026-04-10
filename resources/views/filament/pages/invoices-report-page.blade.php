@@ -64,7 +64,7 @@
         <div class="rpt-card-sub">R$ {{ number_format($totalAmount, 2, ',', '.') }}</div>
     </div>
     <div class="rpt-card" style="background:rgba(59,130,246,0.06); border-color:rgba(59,130,246,0.2);">
-        <div class="rpt-card-label" style="color:#60a5fa;">📂 Abertas</div>
+        <div class="rpt-card-label" style="color:#60a5fa;">Abertas</div>
         <div class="rpt-card-value" style="color:#60a5fa;">{{ $openCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($openAmount, 2, ',', '.') }}</div>
     </div>
@@ -79,7 +79,7 @@
         <div class="rpt-card-sub">R$ {{ number_format($paidAmount, 2, ',', '.') }}</div>
     </div>
     <div class="rpt-card" style="background:rgba(107,114,128,0.06); border-color:rgba(107,114,128,0.2);">
-        <div class="rpt-card-label" style="color:#9ca3af;">🚫 Canceladas</div>
+        <div class="rpt-card-label" style="color:#9ca3af;">Canceladas</div>
         <div class="rpt-card-value" style="color:#9ca3af;">{{ $cancelledCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($cancelledAmount, 2, ',', '.') }}</div>
     </div>

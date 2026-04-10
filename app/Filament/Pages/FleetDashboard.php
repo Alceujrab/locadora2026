@@ -12,7 +12,7 @@ class FleetDashboard extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Gestao de Frota';
+    protected static string|\UnitEnum|null $navigationGroup = 'Gestão de Frota';
 
     protected static ?string $title = 'Painel da Frota';
 

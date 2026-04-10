@@ -15,7 +15,7 @@ class LoginLogResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-finger-print';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Configuracao';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuração';
 
     protected static ?string $modelLabel = 'Log de Acesso';
 
@@ -43,9 +43,9 @@ class LoginLogResource extends Resource
                 Tables\Columns\TextColumn::make('action')->label('Acao')->badge()
                     ->colors(['success' => 'login', 'warning' => 'logout', 'danger' => 'failed'])
                     ->formatStateUsing(fn ($state) => match($state) {
-                        'login' => '✅ Login',
-                        'logout' => '🚪 Logout',
-                        'failed' => '❌ Falha',
+                        'login' => 'Login',
+                        'logout' => 'Logout',
+                        'failed' => 'Falha',
                         default => $state,
                     }),
                 Tables\Columns\TextColumn::make('ip_address')->label('IP')->searchable()->sortable()

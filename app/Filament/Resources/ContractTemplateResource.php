@@ -48,7 +48,7 @@ class ContractTemplateResource extends Resource
                     ->content(new \Illuminate\Support\HtmlString('
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 12px;">
                             <div style="background: #1e293b; color: #f8fafc; border-radius: 6px; padding: 10px;">
-                                <strong style="color: #fbbf24;">📋 Contrato</strong><br>
+                                <strong style="color: #fb923c;">Contrato</strong><br>
                                 <code>{{contrato_numero}}</code><br>
                                 <code>{{contrato_inicio}}</code><br>
                                 <code>{{contrato_fim}}</code><br>
@@ -60,7 +60,7 @@ class ContractTemplateResource extends Resource
                                 <code>{{contrato_data_assinatura}}</code>
                             </div>
                             <div style="background: #1e293b; color: #f8fafc; border-radius: 6px; padding: 10px;">
-                                <strong style="color: #34d399;">👤 Cliente</strong><br>
+                                <strong style="color: #34d399;">Cliente</strong><br>
                                 <code>{{cliente_nome}}</code><br>
                                 <code>{{cliente_cpf}}</code><br>
                                 <code>{{cliente_cnpj}}</code><br>
@@ -74,7 +74,7 @@ class ContractTemplateResource extends Resource
                                 <code>{{cliente_cnh}}</code>
                             </div>
                             <div style="background: #1e293b; color: #f8fafc; border-radius: 6px; padding: 10px;">
-                                <strong style="color: #60a5fa;">🚗 Veiculo</strong><br>
+                                <strong style="color: #60a5fa;">Veículo</strong><br>
                                 <code>{{veiculo_placa}}</code><br>
                                 <code>{{veiculo_marca}}</code><br>
                                 <code>{{veiculo_modelo}}</code><br>
@@ -88,7 +88,7 @@ class ContractTemplateResource extends Resource
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; margin-top: 6px;">
                             <div style="background: #1e293b; color: #f8fafc; border-radius: 6px; padding: 10px;">
-                                <strong style="color: #f472b6;">🏢 Empresa</strong><br>
+                                <strong style="color: #f472b6;">Empresa</strong><br>
                                 <code>{{empresa_nome}}</code><br>
                                 <code>{{empresa_cnpj}}</code><br>
                                 <code>{{empresa_telefone}}</code><br>
@@ -98,7 +98,7 @@ class ContractTemplateResource extends Resource
                                 <code>{{empresa_estado}}</code>
                             </div>
                             <div style="background: #1e293b; color: #f8fafc; border-radius: 6px; padding: 10px;">
-                                <strong style="color: #a78bfa;">📅 Datas e Outros</strong><br>
+                                <strong style="color: #fb923c;">Datas e Outros</strong><br>
                                 <code>{{data_atual}}</code><br>
                                 <code>{{data_extenso}}</code><br>
                                 <code>{{filial_nome}}</code><br>
@@ -107,7 +107,7 @@ class ContractTemplateResource extends Resource
                                 <code>{{assinatura_locatario}}</code>
                             </div>
                         </div>
-                        <p style="font-size: 11px; color: #6b7280; margin-top: 8px;">💡 Copie e cole as variaveis acima no conteudo do template. Elas serao substituidas automaticamente ao gerar o contrato.</p>
+                        <p style="font-size: 11px; color: #6b7280; margin-top: 8px;">Copie e cole as variáveis acima no conteúdo do template. Elas serão substituídas automaticamente ao gerar o contrato.</p>
                     ')),
             ])->collapsible(),
 

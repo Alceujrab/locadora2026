@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class AccountsPayableReportPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-trending-down';
-    protected static string|\UnitEnum|null $navigationGroup = 'Relatorios';
+    protected static string|\UnitEnum|null $navigationGroup = 'Relatórios';
     protected static ?int $navigationSort = 7;
     protected string $view = 'filament.pages.accounts-payable-report-page';
     protected static ?string $title = 'Relatório de Contas a Pagar';

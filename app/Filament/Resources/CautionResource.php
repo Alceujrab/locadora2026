@@ -22,9 +22,9 @@ class CautionResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Operacional';
 
-    protected static ?string $modelLabel = 'Caucao';
+    protected static ?string $modelLabel = 'Caução';
 
-    protected static ?string $pluralModelLabel = 'Caucoes';
+    protected static ?string $pluralModelLabel = 'Cauções';
 
     protected static ?int $navigationSort = 7;
 

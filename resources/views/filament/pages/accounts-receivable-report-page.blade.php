@@ -74,11 +74,11 @@
         <div class="rpt-card-sub">Pendente</div>
     </div>
     <div class="rpt-card" style="background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2);">
-        <div class="rpt-card-label" style="color:#fbbf24;">⏳ Pendentes</div>
+        <div class="rpt-card-label" style="color:#fbbf24;">Pendentes</div>
         <div class="rpt-card-value" style="color:#fbbf24;">{{ $pendingCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($pendingAmount, 2, ',', '.') }}</div>
     </div>
-    <div class="rpt-card" style="background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">
+    <div class="rpt-card" style="background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2);">
         <div class="rpt-card-label" style="color:#fb923c;">Parciais</div>
         <div class="rpt-card-value" style="color:#fb923c;">{{ $partialCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($partialRemaining, 2, ',', '.') }} restante</div>

@@ -20,7 +20,7 @@ class SupportTicketResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-lifebuoy';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Servicos';
+    protected static string|\UnitEnum|null $navigationGroup = 'Serviços';
 
     protected static ?string $modelLabel = 'Ticket de Suporte';
 

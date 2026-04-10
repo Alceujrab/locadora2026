@@ -69,7 +69,7 @@
         <div class="rpt-card-sub">R$ {{ number_format($totalAmount, 2, ',', '.') }}</div>
     </div>
     <div class="rpt-card" style="background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2);">
-        <div class="rpt-card-label" style="color:#fbbf24;">⏳ Pendentes</div>
+        <div class="rpt-card-label" style="color:#fbbf24;">Pendentes</div>
         <div class="rpt-card-value" style="color:#fbbf24;">{{ $pendingCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($pendingAmount, 2, ',', '.') }}</div>
     </div>
@@ -84,11 +84,11 @@
         <div class="rpt-card-sub">R$ {{ number_format($paidAmount, 2, ',', '.') }}</div>
     </div>
     <div class="rpt-card" style="background:rgba(107,114,128,0.06); border-color:rgba(107,114,128,0.2);">
-        <div class="rpt-card-label" style="color:#9ca3af;">🚫 Canceladas</div>
+        <div class="rpt-card-label" style="color:#9ca3af;">Canceladas</div>
         <div class="rpt-card-value" style="color:#9ca3af;">{{ $cancelledCount }}</div>
         <div class="rpt-card-sub">R$ {{ number_format($cancelledAmount, 2, ',', '.') }}</div>
     </div>
-    <div class="rpt-card" style="background:rgba(167,139,250,0.06); border-color:rgba(167,139,250,0.2);">
+    <div class="rpt-card" style="background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2);">
         <div class="rpt-card-label" style="color:#fb923c;">Pagamento</div>
         <div class="rpt-card-value" style="color:#fb923c;">{{ $totalAmount > 0 ? number_format(($paidAmount / $totalAmount) * 100, 1) : 0 }}%</div>
         <div class="rpt-card-sub">Pagas vs Total</div>

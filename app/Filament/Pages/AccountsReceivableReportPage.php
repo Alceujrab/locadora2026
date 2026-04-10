@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class AccountsReceivableReportPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-trending-up';
-    protected static string|\UnitEnum|null $navigationGroup = 'Relatorios';
+    protected static string|\UnitEnum|null $navigationGroup = 'Relatórios';
     protected static ?int $navigationSort = 6;
     protected string $view = 'filament.pages.accounts-receivable-report-page';
     protected static ?string $title = 'Relatório de Contas a Receber';

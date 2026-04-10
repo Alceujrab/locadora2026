@@ -26,11 +26,11 @@ class ServiceOrderResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Servicos';
+    protected static string|\UnitEnum|null $navigationGroup = 'Serviços';
 
-    protected static ?string $modelLabel = 'Ordem de Servico';
+    protected static ?string $modelLabel = 'Ordem de Serviço';
 
-    protected static ?string $pluralModelLabel = 'Ordens de Servico';
+    protected static ?string $pluralModelLabel = 'Ordens de Serviço';
 
     protected static ?int $navigationSort = 1;
 

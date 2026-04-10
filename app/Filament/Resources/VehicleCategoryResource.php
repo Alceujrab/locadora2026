@@ -19,9 +19,9 @@ class VehicleCategoryResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Cadastros';
 
-    protected static ?string $modelLabel = 'Categoria de Veiculo';
+    protected static ?string $modelLabel = 'Categoria de Veículo';
 
-    protected static ?string $pluralModelLabel = 'Categorias de Veiculos';
+    protected static ?string $pluralModelLabel = 'Categorias de Veículos';
 
     protected static ?int $navigationSort = 2;
 

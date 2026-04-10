@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class CashFlowPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
-    protected static string|\UnitEnum|null $navigationGroup = 'Relatorios';
+    protected static string|\UnitEnum|null $navigationGroup = 'Relatórios';
     protected static ?int $navigationSort = 9;
     protected string $view = 'filament.pages.cash-flow-page';
     protected static ?string $title = 'Fluxo de Caixa';

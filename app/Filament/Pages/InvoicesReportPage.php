@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class InvoicesReportPage extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-currency-dollar';
-    protected static string|\UnitEnum|null $navigationGroup = 'Relatorios';
+    protected static string|\UnitEnum|null $navigationGroup = 'Relatórios';
     protected static ?int $navigationSort = 5;
     protected string $view = 'filament.pages.invoices-report-page';
     protected static ?string $title = 'Relatório de Faturas a Receber';

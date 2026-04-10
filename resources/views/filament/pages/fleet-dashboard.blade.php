@@ -46,7 +46,7 @@
             {{-- ALERTAS DE MANUTENCAO --}}
             <div class="rpt-section">
                 <div class="rpt-section-header">
-                    <h3>🔧 Alertas de Manutencao</h3>
+                    <h3>Alertas de Manutenção</h3>
                     <a href="{{ url('admin/maintenance-alerts') }}" class="rpt-link" style="font-size: 0.8rem;">Ver todos →</a>
                 </div>
                 <table class="rpt-table">

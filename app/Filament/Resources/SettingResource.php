@@ -22,9 +22,9 @@ class SettingResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Sistema';
 
-    protected static ?string $modelLabel = 'Configuracao';
+    protected static ?string $modelLabel = 'Configuração';
 
-    protected static ?string $pluralModelLabel = 'Configuracoes do Sistema';
+    protected static ?string $pluralModelLabel = 'Configurações do Sistema';
 
     protected static ?int $navigationSort = 1;
 

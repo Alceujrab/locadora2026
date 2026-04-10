@@ -22,9 +22,9 @@ class FineTrafficResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Operacional';
 
-    protected static ?string $modelLabel = 'Multa de Transito';
+    protected static ?string $modelLabel = 'Multa de Trânsito';
 
-    protected static ?string $pluralModelLabel = 'Multas de Transito';
+    protected static ?string $pluralModelLabel = 'Multas de Trânsito';
 
     protected static ?int $navigationSort = 5;
 

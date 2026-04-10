@@ -21,11 +21,11 @@ class VehicleResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-truck';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Gestao de Frota';
+    protected static string|\UnitEnum|null $navigationGroup = 'Gestão de Frota';
 
-    protected static ?string $modelLabel = 'Veiculo';
+    protected static ?string $modelLabel = 'Veículo';
 
-    protected static ?string $pluralModelLabel = 'Veiculos';
+    protected static ?string $pluralModelLabel = 'Veículos';
 
     protected static ?int $navigationSort = 3;
 

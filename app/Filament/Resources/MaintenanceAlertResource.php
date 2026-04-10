@@ -20,11 +20,11 @@ class MaintenanceAlertResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bell-alert';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Servicos';
+    protected static string|\UnitEnum|null $navigationGroup = 'Serviços';
 
-    protected static ?string $modelLabel = 'Alerta de Manutencao';
+    protected static ?string $modelLabel = 'Alerta de Manutenção';
 
-    protected static ?string $pluralModelLabel = 'Alertas de Manutencao';
+    protected static ?string $pluralModelLabel = 'Alertas de Manutenção';
 
     protected static ?int $navigationSort = 2;
 
