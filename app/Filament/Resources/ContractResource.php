@@ -103,9 +103,13 @@ class ContractResource extends Resource
                 Tables\Filters\SelectFilter::make('status')->label('Status')->options(ContractStatus::class),
                 Tables\Filters\SelectFilter::make('branch_id')->label('Filial')->relationship('branch', 'name'),
             ])
-            ->actions(array_merge([
-                Actions\EditAction::make(),
-            ], self::getCustomActions()))
+            ->actions([
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
+                Actions\ActionGroup::make(self::getCustomActions())
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->tooltip('Mais Ações')
+                    ->color('gray'),
+            ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
                     Actions\DeleteBulkAction::make(),

@@ -227,11 +227,13 @@ class ReservationResource extends Resource
                 Tables\Filters\SelectFilter::make('branch_id')->label('Filial')->relationship('branch', 'name'),
             ])
             ->actions([
-                Actions\EditAction::make(),
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
 
                 // PDF DA RESERVA
                 Actions\Action::make('pdf_reserva')
                     ->label('PDF')
+                    ->iconButton()
+                    ->tooltip('Gerar PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('info')
                     ->action(function (Reservation $record) {
@@ -258,6 +260,8 @@ class ReservationResource extends Resource
                 // ENVIAR WHATSAPP
                 Actions\Action::make('send_whatsapp')
                     ->label('WhatsApp')
+                    ->iconButton()
+                    ->tooltip('Enviar WhatsApp')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('success')
                     ->requiresConfirmation()
@@ -290,6 +294,8 @@ class ReservationResource extends Resource
                 // GERAR FATURA
                 Actions\Action::make('gerar_fatura')
                     ->label('Fatura')
+                    ->iconButton()
+                    ->tooltip('Gerar Fatura')
                     ->icon('heroicon-o-document-currency-dollar')
                     ->color('warning')
                     ->requiresConfirmation()
@@ -359,6 +365,8 @@ class ReservationResource extends Resource
                 // GERAR CONTRATO
                 Actions\Action::make('gerar_contrato')
                     ->label('Contrato')
+                    ->iconButton()
+                    ->tooltip('Gerar Contrato')
                     ->icon('heroicon-o-document-check')
                     ->color('primary')
                     ->requiresConfirmation()
@@ -414,7 +422,7 @@ class ReservationResource extends Resource
                             ->send();
                     }),
 
-                Actions\DeleteAction::make(),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Excluir'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

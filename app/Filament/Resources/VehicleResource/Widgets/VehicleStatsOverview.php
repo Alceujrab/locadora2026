@@ -8,6 +8,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class VehicleStatsOverview extends BaseWidget
 {
+    protected static ?int $columns = 5;
+
     protected function getStats(): array
     {
         $total = Vehicle::count();

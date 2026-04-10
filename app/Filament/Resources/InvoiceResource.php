@@ -92,11 +92,13 @@ class InvoiceResource extends Resource
                 Tables\Filters\SelectFilter::make('branch_id')->label('Filial')->relationship('branch', 'name'),
             ])
             ->actions([
-                Actions\EditAction::make(),
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
 
                 // Gerar PDF da fatura
                 Actions\Action::make('generate_pdf')
                     ->label('PDF')
+                    ->iconButton()
+                    ->tooltip('Gerar PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('info')
                     ->action(function (Invoice $record) {
@@ -114,6 +116,8 @@ class InvoiceResource extends Resource
                 // Enviar fatura por WhatsApp
                 Actions\Action::make('send_invoice_whatsapp')
                     ->label('Enviar Fatura')
+                    ->iconButton()
+                    ->tooltip('Enviar Fatura')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('success')
                     ->requiresConfirmation()
@@ -158,6 +162,8 @@ class InvoiceResource extends Resource
                 // Enviar para Contas a Receber
                 Actions\Action::make('send_to_receivable')
                     ->label('Contas a Receber')
+                    ->iconButton()
+                    ->tooltip('Contas a Receber')
                     ->icon('heroicon-o-arrow-trending-up')
                     ->color('warning')
                     ->requiresConfirmation()
@@ -182,7 +188,7 @@ class InvoiceResource extends Resource
                             ->send();
                     }),
 
-                Actions\DeleteAction::make(),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Excluir'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

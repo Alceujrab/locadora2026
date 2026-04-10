@@ -156,11 +156,13 @@ class VehicleResource extends Resource
                 
                 Actions\Action::make('dashboard')
                     ->label('Dashboard')
+                    ->iconButton()
+                    ->tooltip('Dashboard')
                     ->icon('heroicon-o-chart-pie')
                     ->color('info')
                     ->url(fn (Vehicle $record): string => static::getUrl('view', ['record' => $record])),
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Excluir'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([

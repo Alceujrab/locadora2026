@@ -141,11 +141,13 @@ class ServiceOrderResource extends Resource
                 Tables\Filters\SelectFilter::make('supplier_id')->label('Oficina')->relationship('supplier', 'name')->searchable(),
             ])
             ->actions([
-                Actions\EditAction::make(),
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
 
                 // Gerar PDF
                 Actions\Action::make('generate_pdf')
                     ->label('PDF')
+                    ->iconButton()
+                    ->tooltip('Gerar PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('info')
                     ->action(function (ServiceOrder $record) {
@@ -189,6 +191,8 @@ class ServiceOrderResource extends Resource
                 // ===== ENVIAR AUTORIZAÇÃO (1ª assinatura) =====
                 Actions\Action::make('send_authorization')
                     ->label('Enviar Autorizacao')
+                    ->iconButton()
+                    ->tooltip('Enviar Autorizacão')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('info')
                     ->requiresConfirmation()
@@ -224,6 +228,8 @@ class ServiceOrderResource extends Resource
                 // ===== ENVIAR APROVAÇÃO (2ª assinatura) =====
                 Actions\Action::make('send_approval')
                     ->label('Enviar Aprovacao')
+                    ->iconButton()
+                    ->tooltip('Enviar Aprovação')
                     ->icon('heroicon-o-check-badge')
                     ->color('warning')
                     ->requiresConfirmation()
@@ -270,7 +276,7 @@ class ServiceOrderResource extends Resource
                 // ===== GERAR CONTA A RECEBER =====
                 static::buildGenerateAccountReceivableAction(),
 
-                Actions\DeleteAction::make(),
+                Actions\DeleteAction::make()->iconButton()->tooltip('Excluir'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
@@ -288,6 +294,8 @@ class ServiceOrderResource extends Resource
     {
         return Actions\Action::make('generate_invoice')
             ->label('Gerar Fatura')
+            ->iconButton()
+            ->tooltip('Gerar Fatura')
             ->icon('heroicon-o-banknotes')
             ->color('danger')
             ->requiresConfirmation()
@@ -386,6 +394,8 @@ class ServiceOrderResource extends Resource
     {
         return Actions\Action::make('generate_account_receivable')
             ->label('Gerar Conta a Receber')
+            ->iconButton()
+            ->tooltip('Contas a Receber')
             ->icon('heroicon-o-currency-dollar')
             ->color('success')
             ->requiresConfirmation()

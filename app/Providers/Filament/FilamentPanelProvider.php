@@ -65,23 +65,17 @@ class FilamentPanelProvider extends PanelProvider
                 ],
             ])
             ->navigationGroups([
-                NavigationGroup::make('Gestao de Frota')
-                    ->icon('heroicon-o-truck'),
-                NavigationGroup::make('Cadastros')
-                    ->icon('heroicon-o-user-group'),
-                NavigationGroup::make('Operacional')
-                    ->icon('heroicon-o-clipboard-document-list'),
-                NavigationGroup::make('Financeiro')
-                    ->icon('heroicon-o-banknotes'),
-                NavigationGroup::make('Relatorios')
-                    ->icon('heroicon-o-chart-bar-square'),
-                NavigationGroup::make('Serviços')
-                    ->icon('heroicon-o-wrench-screwdriver'),
-                NavigationGroup::make('Site / CMS')
-                    ->icon('heroicon-o-globe-americas')
+                NavigationGroup::make('Gestão de Frota'),
+                NavigationGroup::make('Cadastros'),
+                NavigationGroup::make('Operacional'),
+                NavigationGroup::make('Financeiro'),
+                NavigationGroup::make('Relatórios'),
+                NavigationGroup::make('Serviços'),
+                NavigationGroup::make('CMS / Site')
+                    ->collapsed(),
+                NavigationGroup::make('Configuração')
                     ->collapsed(),
                 NavigationGroup::make('Sistema')
-                    ->icon('heroicon-o-cog-8-tooth')
                     ->collapsed(),
             ])
             ->sidebarCollapsibleOnDesktop()

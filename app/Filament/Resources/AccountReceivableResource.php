@@ -115,11 +115,13 @@ class AccountReceivableResource extends Resource
                 Tables\Filters\SelectFilter::make('customer_id')->label('Cliente')->relationship('customer', 'name'),
             ])
             ->actions([
-                Actions\EditAction::make(),
+                Actions\EditAction::make()->iconButton()->tooltip('Editar'),
 
                 // REGISTRAR PAGAMENTO (total ou parcial)
                 Actions\Action::make('registrar_pagamento')
                     ->label('Pagar')
+                    ->iconButton()
+                    ->tooltip('Registrar Pagamento')
                     ->icon('heroicon-o-banknotes')
                     ->color('success')
                     ->visible(fn (AccountReceivable $record) => in_array($record->status, ['pendente', 'parcial', 'inadimplente']))
@@ -214,16 +216,18 @@ class AccountReceivableResource extends Resource
                             ->send();
                     }),
 
-                Actions\DeleteAction::make(),
-
                 // GERAR RECIBO DE PAGAMENTO (PDF)
                 Actions\Action::make('recibo_pagamento')
                     ->label('Recibo PDF')
+                    ->iconButton()
+                    ->tooltip('Recibo PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('info')
                     ->url(fn (AccountReceivable $record) => route('admin.accounts-receivable.receipt', $record->id))
                     ->openUrlInNewTab()
                     ->visible(fn (AccountReceivable $record) => in_array($record->status, ['parcial', 'recebido']) && (float) $record->paid_amount > 0),
+
+                Actions\DeleteAction::make()->iconButton()->tooltip('Excluir'),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
