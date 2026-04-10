@@ -39,15 +39,15 @@ class VehicleCategoryResource extends Resource
 
             \Filament\Schemas\Components\Section::make('Tarifas')->schema([
                 Components\TextInput::make('daily_rate')->label('Diaria (R$)')->numeric()->prefix('R$')->required(),
-                Components\TextInput::make('weekly_rate')->label('Semanal (R$)')->numeric()->prefix('R$'),
-                Components\TextInput::make('monthly_rate')->label('Mensal (R$)')->numeric()->prefix('R$'),
-                Components\TextInput::make('insurance_daily')->label('Seguro Diario (R$)')->numeric()->prefix('R$'),
+                Components\TextInput::make('weekly_rate')->label('Semanal (R$)')->numeric()->prefix('R$')->default(0)->required(),
+                Components\TextInput::make('monthly_rate')->label('Mensal (R$)')->numeric()->prefix('R$')->default(0)->required(),
+                Components\TextInput::make('insurance_daily')->label('Seguro Diario (R$)')->numeric()->prefix('R$')->default(0)->required(),
             ])->columns(4),
 
             \Filament\Schemas\Components\Section::make('Quilometragem')->schema([
-                Components\Select::make('km_type')->label('Tipo de KM')->options(['livre' => 'Livre', 'controlada' => 'Controlada']),
-                Components\TextInput::make('km_included')->label('KM Incluidos')->numeric(),
-                Components\TextInput::make('km_rate')->label('Valor KM Excedente (R$)')->numeric()->prefix('R$'),
+                Components\Select::make('km_type')->label('Tipo de KM')->options(['livre' => 'Livre', 'controlado' => 'Controlado'])->default('livre')->required(),
+                Components\TextInput::make('km_included')->label('KM Incluidos')->numeric()->default(0)->required(),
+                Components\TextInput::make('km_rate')->label('Valor KM Excedente (R$)')->numeric()->prefix('R$')->default(0)->required(),
             ])->columns(3),
         ]);
     }

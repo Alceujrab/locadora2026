@@ -11,6 +11,17 @@ class VehicleCategory extends Model
 {
     use SoftDeletes;
 
+    protected $attributes = [
+        'weekly_rate' => 0,
+        'monthly_rate' => 0,
+        'insurance_daily' => 0,
+        'km_type' => 'livre',
+        'km_rate' => 0,
+        'km_included' => 0,
+        'sort_order' => 0,
+        'is_active' => true,
+    ];
+
     protected $fillable = [
         'branch_id', 'name', 'description', 'daily_rate', 'weekly_rate',
         'monthly_rate', 'km_type', 'km_rate', 'km_included',
