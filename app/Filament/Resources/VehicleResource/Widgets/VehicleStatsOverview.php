@@ -8,7 +8,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class VehicleStatsOverview extends BaseWidget
 {
-    protected int | string $columns = 5;
+    protected int | array | null $columns = 5;
 
     protected function getStats(): array
     {
