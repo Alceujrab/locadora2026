@@ -30,7 +30,6 @@ class FilamentPanelProvider extends PanelProvider
             ->path('admin')
             ->login(Login::class)
             ->brandName('Elite Locadora')
-            ->locale('pt_BR')
             ->font('Inter')
             ->darkMode(true, true)
             ->maxContentWidth(Width::Full)
