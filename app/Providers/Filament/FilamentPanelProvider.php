@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -11,6 +12,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -26,38 +28,66 @@ class FilamentPanelProvider extends PanelProvider
             ->default()
             ->id('filament')
             ->path('admin')
-            ->login()
+            ->login(Login::class)
             ->brandName('Elite Locadora')
-            ->darkMode(true, true) // force dark mode
+            ->font('Inter')
+            ->darkMode(true, true)
+            ->maxContentWidth(MaxWidth::Full)
             ->colors([
-                'primary' => Color::Amber,
-                'danger' => Color::Red,
-                'info' => Color::Blue,
-                'success' => Color::Green,
-                'warning' => Color::Orange,
+                'primary' => [
+                    50  => '#eff6ff',
+                    100 => '#dbeafe',
+                    200 => '#bfdbfe',
+                    300 => '#93c5fd',
+                    400 => '#60a5fa',
+                    500 => '#3b82f6',
+                    600 => '#2563eb',
+                    700 => '#1d4ed8',
+                    800 => '#1e40af',
+                    900 => '#1e3a8a',
+                    950 => '#172554',
+                ],
+                'danger' => Color::Rose,
+                'info' => Color::Sky,
+                'success' => Color::Emerald,
+                'warning' => [
+                    50  => '#fff7ed',
+                    100 => '#ffedd5',
+                    200 => '#fed7aa',
+                    300 => '#fdba74',
+                    400 => '#fb923c',
+                    500 => '#f97316',
+                    600 => '#ea580c',
+                    700 => '#c2410c',
+                    800 => '#9a3412',
+                    900 => '#7c2d12',
+                    950 => '#431407',
+                ],
             ])
             ->navigationGroups([
                 NavigationGroup::make('Gestao de Frota')
                     ->icon('heroicon-o-truck'),
                 NavigationGroup::make('Cadastros')
-                    ->icon('heroicon-o-rectangle-stack'),
+                    ->icon('heroicon-o-user-group'),
                 NavigationGroup::make('Operacional')
-                    ->icon('heroicon-o-truck'),
+                    ->icon('heroicon-o-clipboard-document-list'),
                 NavigationGroup::make('Financeiro')
-                    ->icon('heroicon-o-currency-dollar'),
+                    ->icon('heroicon-o-banknotes'),
                 NavigationGroup::make('Relatorios')
-                    ->icon('heroicon-o-chart-bar'),
+                    ->icon('heroicon-o-chart-bar-square'),
                 NavigationGroup::make('Serviços')
                     ->icon('heroicon-o-wrench-screwdriver'),
                 NavigationGroup::make('Site / CMS')
-                    ->icon('heroicon-o-globe-alt')
+                    ->icon('heroicon-o-globe-americas')
                     ->collapsed(),
                 NavigationGroup::make('Sistema')
-                    ->icon('heroicon-o-cog-6-tooth')
+                    ->icon('heroicon-o-cog-8-tooth')
                     ->collapsed(),
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('17rem')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->renderHook('panels::head.end', fn () => view('filament.partials.custom-theme'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

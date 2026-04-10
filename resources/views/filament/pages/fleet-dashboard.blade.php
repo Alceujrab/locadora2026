@@ -1,113 +1,5 @@
 <x-filament-panels::page>
-    <style>
-        .rpt-grid { display: grid; gap: 1.5rem; }
-        .rpt-grid-6 { grid-template-columns: repeat(6, 1fr); }
-        .rpt-grid-2 { grid-template-columns: 1fr 1fr; }
-        .rpt-card {
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .rpt-card-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-            opacity: 0.7;
-        }
-        .rpt-card-value {
-            font-size: 2rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-top: 0.25rem;
-        }
-        .rpt-card-sub {
-            font-size: 0.75rem;
-            opacity: 0.5;
-            margin-top: 0.25rem;
-        }
-        .rpt-section {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 0.75rem;
-            overflow: hidden;
-        }
-        .rpt-section-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .rpt-section-header h3 {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin: 0;
-            color: #e5e7eb;
-        }
-        .rpt-table {
-            width: 100%;
-            font-size: 0.875rem;
-            border-collapse: collapse;
-        }
-        .rpt-table thead tr {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-        }
-        .rpt-table th, .rpt-table td {
-            padding: 0.625rem 1.25rem;
-            text-align: left;
-        }
-        .rpt-table tbody tr {
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-        .rpt-table tbody tr:hover {
-            background: rgba(255,255,255,0.02);
-        }
-        .rpt-link {
-            color: #f59e0b;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .rpt-link:hover { text-decoration: underline; }
-        .rpt-badge {
-            display: inline-block;
-            padding: 0.15rem 0.6rem;
-            border-radius: 9999px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .rpt-badge-danger { background: rgba(239,68,68,0.15); color: #f87171; }
-        .rpt-badge-warning { background: rgba(234,179,8,0.15); color: #fbbf24; }
-        .rpt-empty {
-            padding: 2rem;
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-        .rpt-utilization-bar {
-            height: 0.5rem;
-            border-radius: 9999px;
-            background: rgba(255,255,255,0.06);
-            overflow: hidden;
-            margin-top: 0.75rem;
-        }
-        .rpt-utilization-fill {
-            height: 100%;
-            border-radius: 9999px;
-            transition: width 0.5s ease;
-        }
-        @media (max-width: 1024px) {
-            .rpt-grid-6 { grid-template-columns: repeat(3, 1fr); }
-            .rpt-grid-2 { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 640px) {
-            .rpt-grid-6 { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
+    {{-- CSS classes loaded via custom-theme.blade.php --}}
 
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
@@ -115,12 +7,12 @@
         <div class="rpt-grid rpt-grid-6">
             @php
                 $cards = [
-                    ['label' => 'Total da Frota', 'value' => $fleetCounts['total'], 'color' => '#e5e7eb', 'bg' => 'rgba(255,255,255,0.04)', 'border' => 'rgba(255,255,255,0.08)', 'sub' => 'veiculos cadastrados'],
-                    ['label' => 'Disponiveis', 'value' => $fleetCounts['available'], 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.06)', 'border' => 'rgba(34,197,94,0.2)', 'sub' => 'prontos para locacao'],
+                    ['label' => 'Total da Frota', 'value' => $fleetCounts['total'], 'color' => '#e2e8f0', 'bg' => 'rgba(59,130,246,0.04)', 'border' => 'rgba(59,130,246,0.12)', 'sub' => 'veiculos cadastrados'],
+                    ['label' => 'Disponiveis', 'value' => $fleetCounts['available'], 'color' => '#34d399', 'bg' => 'rgba(16,185,129,0.06)', 'border' => 'rgba(16,185,129,0.2)', 'sub' => 'prontos para locacao'],
                     ['label' => 'Locados', 'value' => $fleetCounts['rented'], 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.06)', 'border' => 'rgba(59,130,246,0.2)', 'sub' => 'em posse de clientes'],
-                    ['label' => 'Reservados', 'value' => $fleetCounts['reserved'] ?? 0, 'color' => '#a78bfa', 'bg' => 'rgba(167,139,250,0.06)', 'border' => 'rgba(167,139,250,0.2)', 'sub' => 'aguardando retirada'],
+                    ['label' => 'Reservados', 'value' => $fleetCounts['reserved'] ?? 0, 'color' => '#fb923c', 'bg' => 'rgba(249,115,22,0.06)', 'border' => 'rgba(249,115,22,0.2)', 'sub' => 'aguardando retirada'],
                     ['label' => 'Manutencao', 'value' => $fleetCounts['maintenance'], 'color' => '#fbbf24', 'bg' => 'rgba(234,179,8,0.06)', 'border' => 'rgba(234,179,8,0.2)', 'sub' => 'oficina / inspecao'],
-                    ['label' => 'Inativos', 'value' => $fleetCounts['inactive'], 'color' => '#f87171', 'bg' => 'rgba(239,68,68,0.06)', 'border' => 'rgba(239,68,68,0.2)', 'sub' => 'vendidos / baixados'],
+                    ['label' => 'Inativos', 'value' => $fleetCounts['inactive'], 'color' => '#fb7185', 'bg' => 'rgba(244,63,94,0.06)', 'border' => 'rgba(244,63,94,0.2)', 'sub' => 'vendidos / baixados'],
                 ];
             @endphp
             @foreach($cards as $card)
@@ -133,18 +25,18 @@
         </div>
 
         {{-- TAXA DE UTILIZACAO --}}
-        <div class="rpt-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="rpt-card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <div style="font-size: 0.8rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Taxa de Utilizacao da Frota</div>
-                    <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Veiculos locados vs total da frota</div>
+                    <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">Taxa de Utilizacao da Frota</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Veiculos locados vs total da frota</div>
                 </div>
-                <div style="font-size: 2rem; font-weight: 800; color: {{ $utilizationRate >= 70 ? '#4ade80' : ($utilizationRate >= 40 ? '#fbbf24' : '#f87171') }};">
+                <div style="font-size: 2rem; font-weight: 800; letter-spacing: -0.025em; color: {{ $utilizationRate >= 70 ? '#34d399' : ($utilizationRate >= 40 ? '#fb923c' : '#fb7185') }};">
                     {{ $utilizationRate }}%
                 </div>
             </div>
             <div class="rpt-utilization-bar">
-                <div class="rpt-utilization-fill" style="width: {{ $utilizationRate }}%; background: {{ $utilizationRate >= 70 ? '#4ade80' : ($utilizationRate >= 40 ? '#fbbf24' : '#f87171') }};"></div>
+                <div class="rpt-utilization-fill" style="width: {{ $utilizationRate }}%; background: {{ $utilizationRate >= 70 ? '#34d399' : ($utilizationRate >= 40 ? '#fb923c' : '#fb7185') }};"></div>
             </div>
         </div>
 
@@ -195,7 +87,7 @@
             {{-- DOCUMENTOS VENCENDO --}}
             <div class="rpt-section">
                 <div class="rpt-section-header">
-                    <h3>📋 Documentos Vencendo (30 dias)</h3>
+                    <h3>Documentos Vencendo (30 dias)</h3>
                     <a href="{{ url('admin/vehicles') }}" class="rpt-link" style="font-size: 0.8rem;">Ir para Veiculos →</a>
                 </div>
                 <table class="rpt-table">

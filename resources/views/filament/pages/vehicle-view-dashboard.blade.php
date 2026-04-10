@@ -1,139 +1,5 @@
 ﻿<x-filament-panels::page>
-    <style>
-        /* === Grids === */
-        .vd-grid { display: grid; gap: 1.5rem; }
-        .vd-g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .vd-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .vd-g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        .vd-g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-
-        /* === Vehicle Header Card === */
-        .vd-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 1.25rem 1.5rem;
-            border-radius: 0.75rem;
-            background: rgba(17,24,39,0.6);
-            outline: 1px solid rgba(255,255,255,0.08);
-        }
-        .vd-header-photo {
-            width: 9rem; height: 6.5rem;
-            object-fit: cover; border-radius: 0.5rem;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .vd-header-placeholder {
-            width: 9rem; height: 6.5rem;
-            background: rgba(55,65,81,0.5); border-radius: 0.5rem;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .vd-header-title {
-            font-size: 1.25rem; font-weight: 800;
-            color: #f9fafb; margin: 0; line-height: 1.3;
-        }
-        .vd-header-meta {
-            display: flex; gap: 0.5rem; flex-wrap: wrap;
-            margin-top: 0.375rem; font-size: 0.8125rem;
-            color: #d1d5db; align-items: center;
-        }
-        .vd-plate {
-            background: #f59e0b; color: #000;
-            font-weight: 700; padding: 0.125rem 0.625rem;
-            border-radius: 0.25rem; font-size: 0.8125rem;
-        }
-        .vd-header-details {
-            display: flex; gap: 0.75rem; flex-wrap: wrap;
-            margin-top: 0.25rem; font-size: 0.75rem; color: #9ca3af;
-        }
-        .vd-status-area { text-align: right; flex-shrink: 0; }
-        .vd-status-label {
-            font-size: 0.6875rem; color: #6b7280;
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        .vd-status-badge {
-            display: inline-block; padding: 0.25rem 0.75rem;
-            border-radius: 9999px; font-size: 0.8125rem;
-            font-weight: 700; margin-top: 0.25rem;
-        }
-
-        /* === Tab Navigation === */
-        .vd-tabs {
-            display: flex; gap: 0.125rem;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
-        }
-        .vd-tab {
-            padding: 0.625rem 1rem; font-size: 0.8125rem;
-            font-weight: 600; color: rgba(255,255,255,0.4);
-            cursor: pointer; border: none; background: none;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -1px; white-space: nowrap;
-            transition: color 0.15s, border-color 0.15s;
-            display: flex; align-items: center; gap: 0.375rem;
-        }
-        .vd-tab:hover { color: rgba(255,255,255,0.7); }
-        .vd-tab-active { color: #f59e0b !important; border-bottom-color: #f59e0b !important; }
-        .vd-tab-badge {
-            padding: 0.0625rem 0.4375rem; border-radius: 9999px;
-            font-size: 0.6875rem;
-        }
-
-        /* === Data Table === */
-        .vd-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-        .vd-table thead th {
-            padding: 0.625rem 1rem; text-align: left;
-            font-size: 0.6875rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.05em;
-            color: rgba(255,255,255,0.4);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .vd-table tbody td { padding: 0.625rem 1rem; color: rgba(255,255,255,0.7); }
-        .vd-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .vd-table tbody tr:hover { background: rgba(255,255,255,0.02); }
-
-        /* === Utilities === */
-        .vd-badge {
-            display: inline-flex; align-items: center;
-            padding: 0.125rem 0.5rem; border-radius: 9999px;
-            font-size: 0.6875rem; font-weight: 600;
-        }
-        .vd-empty {
-            padding: 2rem; text-align: center;
-            color: rgba(255,255,255,0.35); font-size: 0.8125rem;
-        }
-        .vd-section-info {
-            font-size: 0.8125rem;
-            display: flex; flex-direction: column; gap: 0.5rem;
-        }
-        .vd-section-info .vd-lbl { color: #6b7280; }
-        .vd-section-info .vd-val { font-weight: 600; color: #e5e7eb; }
-        .vd-section-info .vd-val-green { font-weight: 700; color: #4ade80; }
-
-        /* === Gallery === */
-        .vd-gallery {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-            gap: 0.75rem; padding: 1rem;
-        }
-        .vd-gallery img {
-            width: 100%; height: 9rem; object-fit: cover;
-            border-radius: 0.5rem; cursor: pointer; transition: transform 0.15s;
-        }
-        .vd-gallery img:hover { transform: scale(1.03); }
-
-        /* === Responsive === */
-        @media (max-width: 1024px) {
-            .vd-g4, .vd-g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .vd-g3, .vd-g2 { grid-template-columns: 1fr; }
-            .vd-header { flex-direction: column; text-align: center; }
-            .vd-header-meta, .vd-header-details { justify-content: center; }
-            .vd-status-area { text-align: center; }
-        }
-        @media (max-width: 640px) {
-            .vd-g4, .vd-g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-    </style>
+    {{-- CSS classes loaded via custom-theme.blade.php --}}
 
     <div x-data="{ activeTab: 'resumo' }" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
@@ -190,7 +56,7 @@
                               border-radius:0.4rem;font-size:0.75rem;font-weight:600;text-decoration:none;
                               transition:opacity 0.15s;"
                        onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
-                        📥 Relatório PDF
+                        Relatório PDF
                     </a>
                 </div>
             </div>
@@ -212,7 +78,7 @@
             </button>
             @if($vehicle->photos->count() > 0)
                 <button class="vd-tab" :class="activeTab === 'fotos' && 'vd-tab-active'" @click="activeTab = 'fotos'">
-                    Fotos <span class="vd-tab-badge" style="background: rgba(167,139,250,0.15); color: #a78bfa;">{{ $vehicle->photos->count() }}</span>
+                    Fotos <span class="vd-tab-badge" style="background: rgba(251,146,60,0.15); color: #fb923c;">{{ $vehicle->photos->count() }}</span>
                 </button>
             @endif
         </div>
@@ -285,7 +151,7 @@
                     $counters = [
                         ['value' => $totalLocations, 'label' => 'Locações', 'color' => '#60a5fa'],
                         ['value' => $totalContracts, 'label' => 'Contratos', 'color' => '#38bdf8'],
-                        ['value' => $totalReservations, 'label' => 'Reservas', 'color' => '#a78bfa'],
+                        ['value' => $totalReservations, 'label' => 'Reservas', 'color' => '#fb923c'],
                         ['value' => $totalServiceOrders, 'label' => 'Ordens de Serviço', 'color' => '#fb923c'],
                         ['value' => $totalFines, 'label' => 'Multas', 'color' => '#f87171'],
                         ['value' => $totalInspections, 'label' => 'Vistorias', 'color' => '#c084fc'],
@@ -428,7 +294,7 @@
                                         <tr>
                                             <td style="font-weight: 500;">{{ $res->customer?->name ?? '-' }}</td>
                                             <td style="color: #9ca3af;">{{ $res->pickup_date?->format('d/m/Y') ?? '-' }} a {{ $res->return_date?->format('d/m/Y') ?? '-' }}</td>
-                                            <td style="text-align: right; font-weight: 600; color: #a78bfa;">R$ {{ number_format((float)($res->total ?? 0), 2, ',', '.') }}</td>
+                                            <td style="text-align: right; font-weight: 600; color: #fb923c;">R$ {{ number_format((float)($res->total ?? 0), 2, ',', '.') }}</td>
                                             <td style="text-align: center;">
                                                 <span class="vd-badge" style="background: rgba(255,255,255,0.06); color: #9ca3af;">
                                                     {{ $res->status instanceof \BackedEnum ? $res->status->label() : ($res->status ?? '-') }}
