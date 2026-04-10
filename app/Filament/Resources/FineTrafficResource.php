@@ -34,13 +34,13 @@ class FineTrafficResource extends Resource
             Section::make('Identificacao')->schema([
                 Grid::make(3)->schema([
                     Components\Select::make('vehicle_id')
-                        ->label('Veiculo')
+                        ->label('Veículo')
                         ->relationship('vehicle', 'plate')
                         ->searchable()
                         ->preload()
                         ->required(),
                     Components\Select::make('customer_id')
-                        ->label('Locatario/Cliente')
+                        ->label('Locatário/Cliente')
                         ->relationship('customer', 'name')
                         ->searchable()
                         ->preload(),
@@ -52,18 +52,18 @@ class FineTrafficResource extends Resource
                 ]),
                 Grid::make(2)->schema([
                     Components\TextInput::make('auto_infraction_number')
-                        ->label('Auto de Infracao (AIT)')
+                        ->label('Auto de Infração (AIT)')
                         ->maxLength(255),
                     Components\TextInput::make('fine_code')
-                        ->label('Codigo da Infracao')
+                        ->label('Código da Infração')
                         ->maxLength(255),
                 ]),
             ]),
 
             Section::make('Detalhes da Multa')->schema([
                 Grid::make(3)->schema([
-                    Components\DatePicker::make('fine_date')->label('Data da Infracao')->required()->native(false),
-                    Components\DatePicker::make('notification_date')->label('Data da Notificacao')->native(false),
+                    Components\DatePicker::make('fine_date')->label('Data da Infração')->required()->native(false),
+                    Components\DatePicker::make('notification_date')->label('Data da Notificação')->native(false),
                     Components\DatePicker::make('due_date')->label('Data de Vencimento')->native(false),
                 ]),
                 Grid::make(3)->schema([
@@ -80,8 +80,8 @@ class FineTrafficResource extends Resource
                         'cancelado' => 'Cancelado',
                     ])->default('pendente')->required(),
                 ]),
-                Components\Textarea::make('description')->label('Descricao da Infracao')->columnSpanFull(),
-                Components\Textarea::make('notes')->label('Observacoes Internas')->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição da Infração')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações Internas')->columnSpanFull(),
             ]),
         ]);
     }
@@ -91,7 +91,7 @@ class FineTrafficResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('auto_infraction_number')->label('AIT')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('fine_date')->label('Data Infracao')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),

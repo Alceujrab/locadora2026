@@ -44,7 +44,7 @@ class SettingResource extends Resource
                 ]),
                 Grid::make(2)->schema([
                     Components\Textarea::make('value')->label('Valor Configurado')->required(),
-                    Components\Textarea::make('description')->label('Descricao (Como e usada no sistema)'),
+                    Components\Textarea::make('description')->label('Descrição (Como é usada no sistema)'),
                 ]),
                 Components\Select::make('branch_id')->label('Filial Especifica (Opcional)')->relationship('branch', 'name')->searchable()->preload(),
             ]),

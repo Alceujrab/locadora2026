@@ -43,10 +43,10 @@ class NfseResource extends Resource
                         ->relationship('invoice', 'invoice_number')
                         ->searchable()
                         ->preload(),
-                    Components\TextInput::make('numero')->label('Numero (Gerado Auto)')->disabled()->dehydrated(false),
-                    Components\TextInput::make('serie')->label('Serie')->default('1')->maxLength(10),
-                    Components\DatePicker::make('data_emissao')->label('Data de Emissao')->required()->native(false)->default(now()),
-                    Components\TextInput::make('codigo_servico')->label('Codigo de Servico')->required()->default('11.02')->maxLength(50),
+                    Components\TextInput::make('numero')->label('Número (Gerado Auto)')->disabled()->dehydrated(false),
+                    Components\TextInput::make('serie')->label('Série')->default('1')->maxLength(10),
+                    Components\DatePicker::make('data_emissao')->label('Data de Emissão')->required()->native(false)->default(now()),
+                    Components\TextInput::make('codigo_servico')->label('Código de Serviço')->required()->default('11.02')->maxLength(50),
                     Components\Select::make('status')->label('Status')->options([
                         'novo' => 'Novo (Nao Transmitida)',
                         'processando' => 'Processando',
@@ -63,7 +63,7 @@ class NfseResource extends Resource
                     Components\TextInput::make('aliquota_iss')->label('Aliquota ISS (%)')->numeric()->suffix('%')->default(3.00),
                     Components\TextInput::make('valor_iss')->label('Valor ISS Calculado (R$)')->numeric()->prefix('R$')->helperText('Auto calculado se vazio'),
                 ]),
-                Components\Textarea::make('discriminacao')->label('Discriminacao dos Servicos')->required()->columnSpanFull(),
+                Components\Textarea::make('discriminacao')->label('Discriminação dos Serviços')->required()->columnSpanFull(),
             ]),
 
             Section::make('Dados do Tomador (Cliente)')->schema([
@@ -89,9 +89,9 @@ class NfseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('numero')->label('Numero')->searchable()->sortable()->weight('bold'),
+                Tables\Columns\TextColumn::make('numero')->label('Número')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('tomador_nome')->label('Tomador')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('data_emissao')->label('Emissao')->date('d/m/Y')->sortable(),
+                Tables\Columns\TextColumn::make('data_emissao')->label('Emissão')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('valor_servico')->label('Valor (R$)')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge()
                     ->color(fn (string $state): string => match ($state) {

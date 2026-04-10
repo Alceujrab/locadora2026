@@ -41,7 +41,7 @@ class PostResource extends Resource
                 Grid::make(3)->schema([
                     Components\Select::make('post_category_id')->label('Categoria')->relationship('postCategory', 'name')->searchable()->preload()->required(),
                     Components\TextInput::make('title')
-                        ->label('Titulo')
+                        ->label('Título')
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null)
@@ -53,7 +53,7 @@ class PostResource extends Resource
                         ->maxLength(255),
                 ]),
                 Components\RichEditor::make('content')
-                    ->label('Conteudo do Post')
+                    ->label('Conteúdo do Post')
                     ->required()
                     ->columnSpanFull(),
             ]),
@@ -63,7 +63,7 @@ class PostResource extends Resource
                     Components\FileUpload::make('image')->label('Imagem Principal (Capa)')->directory('blog-images')->image(),
                     Grid::make(1)->schema([
                         Components\Toggle::make('is_published')->label('Publicado')->default(true),
-                        Components\TextInput::make('views')->label('Visualizacoes')->numeric()->default(0)->disabled(),
+                        Components\TextInput::make('views')->label('Visualizações')->numeric()->default(0)->disabled(),
                     ]),
                 ]),
             ])->collapsed(),
@@ -75,7 +75,7 @@ class PostResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')->label('Capa')->square(),
-                Tables\Columns\TextColumn::make('title')->label('Titulo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('title')->label('Título')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('postCategory.name')->label('Categoria')->searchable()->sortable(),
                 Tables\Columns\IconColumn::make('is_published')->label('Publicado')->boolean(),
                 Tables\Columns\TextColumn::make('views')->label('Qtd Views')->sortable(),

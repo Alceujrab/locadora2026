@@ -39,28 +39,28 @@ class VehicleResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            \Filament\Schemas\Components\Tabs::make('Veiculo')->tabs([
-                \Filament\Schemas\Components\Tabs\Tab::make('Dados do Veiculo')->icon('heroicon-o-truck')->schema([
+            \Filament\Schemas\Components\Tabs::make('Veículo')->tabs([
+                \Filament\Schemas\Components\Tabs\Tab::make('Dados do Veículo')->icon('heroicon-o-truck')->schema([
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                     Components\Select::make('category_id')->label('Categoria')->relationship('category', 'name')->searchable()->preload(),
                     Components\TextInput::make('brand')->label('Marca')->required(),
                     Components\TextInput::make('model')->label('Modelo')->required(),
-                    Components\TextInput::make('year_manufacture')->label('Ano Fabricacao')->numeric(),
+                    Components\TextInput::make('year_manufacture')->label('Ano Fabricação')->numeric(),
                     Components\TextInput::make('year_model')->label('Ano Modelo')->numeric(),
                     Components\TextInput::make('color')->label('Cor'),
-                    Components\Select::make('fuel')->label('Combustivel')->options([
+                    Components\Select::make('fuel')->label('Combustível')->options([
                         'gasolina' => 'Gasolina', 'etanol' => 'Etanol', 'flex' => 'Flex',
-                        'diesel' => 'Diesel', 'eletrico' => 'Eletrico', 'hibrido' => 'Hibrido',
+                        'diesel' => 'Diesel', 'eletrico' => 'Elétrico', 'hibrido' => 'Híbrido',
                     ]),
-                    Components\Select::make('transmission')->label('Cambio')->options([
-                        'manual' => 'Manual', 'automatico' => 'Automatico', 'cvt' => 'CVT', 'automatizado' => 'Automatizado',
+                    Components\Select::make('transmission')->label('Câmbio')->options([
+                        'manual' => 'Manual', 'automatico' => 'Automático', 'cvt' => 'CVT', 'automatizado' => 'Automatizado',
                     ]),
                     Components\TextInput::make('doors')->label('Portas')->numeric(),
                     Components\TextInput::make('seats')->label('Lugares')->numeric(),
                     Components\TextInput::make('trunk_capacity')->label('Porta-malas (L)')->numeric(),
                 ])->columns(4),
 
-                \Filament\Schemas\Components\Tabs\Tab::make('Documentacao')->icon('heroicon-o-document-text')->schema([
+                \Filament\Schemas\Components\Tabs\Tab::make('Documentação')->icon('heroicon-o-document-text')->schema([
                     Components\TextInput::make('plate')->label('Placa')->required()->unique(ignoreRecord: true),
                     Components\TextInput::make('renavam')->label('RENAVAM'),
                     Components\TextInput::make('chassis')->label('Chassi'),
@@ -71,7 +71,7 @@ class VehicleResource extends Resource
                 ])->columns(3),
 
                 \Filament\Schemas\Components\Tabs\Tab::make('Valores')->icon('heroicon-o-currency-dollar')->schema([
-                    Components\TextInput::make('daily_rate_override')->label('Diaria Personalizada')->numeric()->prefix('R$')
+                    Components\TextInput::make('daily_rate_override')->label('Diária Personalizada')->numeric()->prefix('R$')
                         ->helperText('Deixe vazio para usar o valor da categoria'),
                     Components\TextInput::make('weekly_rate_override')->label('Semanal Personalizada')->numeric()->prefix('R$'),
                     Components\TextInput::make('monthly_rate_override')->label('Mensal Personalizada')->numeric()->prefix('R$'),
@@ -84,8 +84,8 @@ class VehicleResource extends Resource
                 \Filament\Schemas\Components\Tabs\Tab::make('Status & Obs')->icon('heroicon-o-cog-6-tooth')->schema([
                     Components\Select::make('status')->label('Status')->options(VehicleStatus::class)->required(),
                     Components\Toggle::make('is_featured')->label('Destaque'),
-                    Components\Textarea::make('description')->label('Descricao')->columnSpanFull(),
-                    Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                    Components\Textarea::make('description')->label('Descrição')->columnSpanFull(),
+                    Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
                 ])->columns(2),
             ])->columnSpanFull(),
         ]);
@@ -104,7 +104,7 @@ class VehicleResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')->label('Categoria')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('mileage')->label('KM')->formatStateUsing(fn ($state) => number_format((float) $state, 0, ',', '.'))->sortable(),
-                Tables\Columns\TextColumn::make('daily_rate')->label('Diaria')->money('BRL')->sortable(),
+                Tables\Columns\TextColumn::make('daily_rate')->label('Diária')->money('BRL')->sortable(),
                 Tables\Columns\TextColumn::make('branch.name')->label('Filial')->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -116,22 +116,22 @@ class VehicleResource extends Resource
             ->actions([
                 Actions\ActionGroup::make([
                     Actions\Action::make('mark_available')
-                        ->label('Marcar Disponivel')
+                        ->label('Marcar Disponível')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->visible(fn (Vehicle $record) => $record->status !== VehicleStatus::AVAILABLE && $record->status !== VehicleStatus::RENTED)
                         ->requiresConfirmation()
                         ->action(function (Vehicle $record) {
                             $record->update(['status' => VehicleStatus::AVAILABLE]);
-                            Notification::make()->title('Veiculo agora esta disponivel!')->success()->send();
+                            Notification::make()->title('Veículo agora está disponível!')->success()->send();
                         }),
                     Actions\Action::make('send_maintenance')
-                        ->label('Enviar p/ Manutencao')
+                        ->label('Enviar p/ Manutenção')
                         ->icon('heroicon-o-wrench-screwdriver')
                         ->color('warning')
                         ->visible(fn (Vehicle $record) => $record->status === VehicleStatus::AVAILABLE)
                         ->form([
-                            \Filament\Forms\Components\Textarea::make('reason')->label('Motivo da Manutencao')->required(),
+                            \Filament\Forms\Components\Textarea::make('reason')->label('Motivo da Manutenção')->required(),
                         ])
                         ->action(function (Vehicle $record, array $data) {
                             $record->update(['status' => VehicleStatus::MAINTENANCE]);
@@ -140,19 +140,19 @@ class VehicleResource extends Resource
                                 'type' => 'Corretiva',
                                 'description' => $data['reason'],
                             ]);
-                            Notification::make()->title('Enviado para manutencao!')->success()->send();
+                            Notification::make()->title('Enviado para manutenção!')->success()->send();
                         }),
                     Actions\Action::make('mark_inactive')
-                        ->label('Inativar Veiculo')
+                        ->label('Inativar Veículo')
                         ->icon('heroicon-o-no-symbol')
                         ->color('danger')
                         ->visible(fn (Vehicle $record) => $record->status !== VehicleStatus::INACTIVE && $record->status !== VehicleStatus::RENTED)
                         ->requiresConfirmation()
                         ->action(function (Vehicle $record) {
                             $record->update(['status' => VehicleStatus::INACTIVE]);
-                            Notification::make()->title('Veiculo inativado!')->success()->send();
+                            Notification::make()->title('Veículo inativado!')->success()->send();
                         }),
-                ])->label('Acoes Rapidas')->icon('heroicon-m-bolt')->color('primary'),
+                ])->label('Ações Rápidas')->icon('heroicon-m-bolt')->color('primary'),
                 
                 Actions\Action::make('dashboard')
                     ->label('Dashboard')

@@ -37,10 +37,10 @@ class LoginLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('Usuario')->searchable()->sortable()->weight('bold'),
+                Tables\Columns\TextColumn::make('user.name')->label('Usuário')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('user.email')->label('E-mail')->searchable()->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('action')->label('Acao')->badge()
+                Tables\Columns\TextColumn::make('action')->label('Ação')->badge()
                     ->colors(['success' => 'login', 'warning' => 'logout', 'danger' => 'failed'])
                     ->formatStateUsing(fn ($state) => match($state) {
                         'login' => 'Login',
@@ -57,11 +57,11 @@ class LoginLogResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Data/Hora')->dateTime('d/m/Y H:i:s')->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('user_id')->label('Usuario')
+                Tables\Filters\SelectFilter::make('user_id')->label('Usuário')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
-                Tables\Filters\SelectFilter::make('action')->label('Acao')
+                Tables\Filters\SelectFilter::make('action')->label('Ação')
                     ->options([
                         'login' => 'Login',
                         'logout' => 'Logout',

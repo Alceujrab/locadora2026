@@ -36,9 +36,9 @@ class AccountPayableResource extends Resource
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                     Components\Select::make('supplier_id')->label('Fornecedor')->relationship('supplier', 'name')->searchable()->preload()->required(),
                     Components\TextInput::make('category')->label('Categoria (Plano de Contas)')->required()->maxLength(255),
-                    Components\Select::make('vehicle_id')->label('Veiculo Vinculado (Opcional)')->relationship('vehicle', 'plate')->searchable()->preload(),
+                    Components\Select::make('vehicle_id')->label('Veículo Vinculado (Opcional)')->relationship('vehicle', 'plate')->searchable()->preload(),
                 ]),
-                Components\TextInput::make('description')->label('Descricao / Resumo da Despesa')->required()->maxLength(255)->columnSpanFull(),
+                Components\TextInput::make('description')->label('Descrição / Resumo da Despesa')->required()->maxLength(255)->columnSpanFull(),
             ]),
 
             Section::make('Valores e Prazos')->schema([
@@ -57,9 +57,9 @@ class AccountPayableResource extends Resource
                 Grid::make(3)->schema([
                     Components\DatePicker::make('paid_at')->label('Data do Pagamento')->native(false),
                     Components\TextInput::make('payment_method')->label('Meio de Pagamento')->maxLength(255),
-                    Components\TextInput::make('recurrence')->label('Recorrencia (Ex: Mensal)')->maxLength(255),
+                    Components\TextInput::make('recurrence')->label('Recorrência (Ex: Mensal)')->maxLength(255),
                 ]),
-                Components\Textarea::make('notes')->label('Observacoes Internas')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações Internas')->columnSpanFull(),
             ])->collapsed(),
         ]);
     }
@@ -68,7 +68,7 @@ class AccountPayableResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')->label('Descricao')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('description')->label('Descrição')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('supplier.name')->label('Fornecedor')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('amount')->label('Valor (R$)')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),

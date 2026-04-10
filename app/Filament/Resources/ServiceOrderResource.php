@@ -46,32 +46,32 @@ class ServiceOrderResource extends Resource
             Section::make('Dados da OS')->schema([
                 Grid::make(3)->schema([
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
-                    Components\Select::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
+                    Components\Select::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
                     Components\Select::make('supplier_id')->label('Fornecedor/Oficina')->relationship('supplier', 'name')->searchable()->preload(),
                 ]),
                 Grid::make(3)->schema([
-                    Components\Select::make('type')->label('Tipo de Servico')->options([
+                    Components\Select::make('type')->label('Tipo de Serviço')->options([
                         'preventiva' => 'Preventiva',
                         'corretiva' => 'Corretiva',
-                        'estetica' => 'Estetica',
+                        'estetica' => 'Estética',
                         'sinistro' => 'Sinistro',
                         'outro' => 'Outro',
                     ])->required()->default('corretiva'),
                     Components\DateTimePicker::make('opened_at')->label('Data de Abertura')->native(false)->required()->default(now()),
                     Components\Select::make('status')->label('Status')->options(ServiceOrderStatus::class)->default(ServiceOrderStatus::OPEN)->required(),
                 ]),
-                Components\Textarea::make('description')->label('Problema / Descricao do Servico')->required()->rows(3)->columnSpanFull(),
+                Components\Textarea::make('description')->label('Problema / Descrição do Serviço')->required()->rows(3)->columnSpanFull(),
             ])->icon('heroicon-o-document-text'),
 
             // Seção 2: Informações Operacionais
-            Section::make('Informacoes Operacionais')->schema([
+            Section::make('Informações Operacionais')->schema([
                 Grid::make(2)->schema([
                     Components\TextInput::make('requested_by')->label('Quem Solicitou o Servico')->maxLength(255)->placeholder('Nome de quem solicitou'),
-                    Components\TextInput::make('vehicle_city')->label('Cidade do Veiculo')->maxLength(255)->placeholder('Cidade onde o veiculo se encontra'),
+                    Components\TextInput::make('vehicle_city')->label('Cidade do Veículo')->maxLength(255)->placeholder('Cidade onde o veiculo se encontra'),
                 ]),
                 Grid::make(2)->schema([
                     Components\TextInput::make('driver_phone')->label('Telefone do Motorista')->tel()->maxLength(20)->placeholder('(00) 00000-0000'),
-                    Components\Select::make('customer_id')->label('Locatario Vinculado')->relationship('customer', 'name')->searchable()->preload()->helperText('Para envio de assinatura digital'),
+                    Components\Select::make('customer_id')->label('Locatário Vinculado')->relationship('customer', 'name')->searchable()->preload()->helperText('Para envio de assinatura digital'),
                 ]),
                 Grid::make(2)->schema([
                     Components\Select::make('opened_by')->label('Funcionario que Abriu')->relationship('openedByUser', 'name')->searchable()->preload()->default(fn () => Auth::id()),
@@ -81,7 +81,7 @@ class ServiceOrderResource extends Resource
             ])->icon('heroicon-o-clipboard-document-list')->collapsible(),
 
             // Seção 3: Evidências (Fotos e Vídeos)
-            Section::make('Evidencias do Problema')->schema([
+            Section::make('Evidências do Problema')->schema([
                 Components\FileUpload::make('attachments')
                     ->label('Fotos e Videos')
                     ->multiple()
@@ -98,18 +98,18 @@ class ServiceOrderResource extends Resource
             Section::make('Fechamento e Totais')->schema([
                 Grid::make(3)->schema([
                     Components\DateTimePicker::make('completed_at')->label('Data de Conclusao')->native(false),
-                    Components\TextInput::make('nf_number')->label('Numero NF/Recibo')->maxLength(255),
+                    Components\TextInput::make('nf_number')->label('Número NF/Recibo')->maxLength(255),
                     Components\FileUpload::make('nf_path')->label('Arquivo NF (PDF)')->directory('so-nfs')->acceptedFileTypes(['application/pdf']),
                 ]),
                 Grid::make(4)->schema([
-                    Components\TextInput::make('items_total')->label('Total Pecas (R$)')->numeric()->prefix('R$')->disabled()->default(0),
-                    Components\TextInput::make('labor_total')->label('Total Mao de Obra (R$)')->numeric()->prefix('R$')->disabled()->default(0),
+                    Components\TextInput::make('items_total')->label('Total Peças (R$)')->numeric()->prefix('R$')->disabled()->default(0),
+                    Components\TextInput::make('labor_total')->label('Total Mão de Obra (R$)')->numeric()->prefix('R$')->disabled()->default(0),
                     Components\TextInput::make('total')->label('Total Geral OS (R$)')->numeric()->prefix('R$')->disabled()->default(0),
                     Components\TextInput::make('customer_charge')->label('Valor Cobrado do Cliente (R$)')->numeric()->prefix('R$')->default(0)
                         ->helperText('Valor que sera faturado ao cliente (pode ser diferente do total da OS)'),
                 ]),
-                Components\Textarea::make('notes')->label('Observacoes da OS')->columnSpanFull(),
-                Components\Textarea::make('closing_notes')->label('Observacoes de Fechamento')->columnSpanFull()->helperText('Preencher ao fechar a OS'),
+                Components\Textarea::make('notes')->label('Observações da OS')->columnSpanFull(),
+                Components\Textarea::make('closing_notes')->label('Observações de Fechamento')->columnSpanFull()->helperText('Preencher ao fechar a OS'),
             ])->icon('heroicon-o-calculator')->collapsible()->collapsed(),
         ]);
     }
@@ -119,7 +119,7 @@ class ServiceOrderResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('OS #')->sortable(),
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('supplier.name')->label('Oficina')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('requested_by')->label('Solicitante')->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('type')->label('Tipo')->badge(),
@@ -133,11 +133,11 @@ class ServiceOrderResource extends Resource
                 Tables\Filters\SelectFilter::make('type')->label('Tipo')->options([
                     'preventiva' => 'Preventiva',
                     'corretiva' => 'Corretiva',
-                    'estetica' => 'Estetica',
+                    'estetica' => 'Estética',
                     'sinistro' => 'Sinistro',
                     'outro' => 'Outro',
                 ]),
-                Tables\Filters\SelectFilter::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate')->searchable(),
+                Tables\Filters\SelectFilter::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate')->searchable(),
                 Tables\Filters\SelectFilter::make('supplier_id')->label('Oficina')->relationship('supplier', 'name')->searchable(),
             ])
             ->actions([

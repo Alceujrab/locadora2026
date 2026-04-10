@@ -25,7 +25,7 @@ class PageResource extends Resource
 
     protected static ?string $modelLabel = 'Página';
 
-    protected static ?string $pluralModelLabel = 'Paginas Internas';
+    protected static ?string $pluralModelLabel = 'Páginas Internas';
 
     protected static ?int $navigationSort = 1;
 
@@ -35,7 +35,7 @@ class PageResource extends Resource
             Section::make('Conteudo da Pagina Customizada')->schema([
                 Grid::make(3)->schema([
                     Components\TextInput::make('title')
-                        ->label('Titulo')
+                        ->label('Título')
                         ->required()
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null)
@@ -48,7 +48,7 @@ class PageResource extends Resource
                     Components\Toggle::make('is_published')->label('Publicada')->default(true),
                 ]),
                 Components\RichEditor::make('content')
-                    ->label('Conteudo')
+                    ->label('Conteúdo')
                     ->required()
                     ->columnSpanFull()
                     ->toolbarButtons([
@@ -64,7 +64,7 @@ class PageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->label('Titulo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('title')->label('Título')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('slug')->label('Slug')->searchable()->sortable(),
                 Tables\Columns\IconColumn::make('is_published')->label('Publicado')->boolean(),
                 Tables\Columns\TextColumn::make('updated_at')->label('Atualizado')->dateTime('d/m/Y H:i')->sortable(),

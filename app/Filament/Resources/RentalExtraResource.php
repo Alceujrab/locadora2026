@@ -33,12 +33,12 @@ class RentalExtraResource extends Resource
             Section::make('Detalhes do Opcional')->schema([
                 Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                 Components\TextInput::make('name')->label('Nome do Servico/Item')->required()->maxLength(255),
-                Components\Select::make('type')->label('Tipo de Cobranca')->options([
-                    'diario' => 'Por Diaria',
+                Components\Select::make('type')->label('Tipo de Cobrança')->options([
+                    'diario' => 'Por Diária',
                     'fixo' => 'Valor Fixo (Unico)',
                 ])->required()->default('diario'),
                 Components\TextInput::make('daily_rate')->label('Valor (R$)')->numeric()->prefix('R$')->required(),
-                Components\Textarea::make('description')->label('Descricao')->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição')->columnSpanFull(),
                 Components\Toggle::make('is_active')->label('Ativo')->default(true),
             ])->columns(2),
         ]);

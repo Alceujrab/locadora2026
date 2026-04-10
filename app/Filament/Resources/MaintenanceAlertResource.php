@@ -31,12 +31,12 @@ class MaintenanceAlertResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Configuracao do Alerta')->schema([
+            Section::make('Configuração do Alerta')->schema([
                 Grid::make(2)->schema([
-                    Components\Select::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
+                    Components\Select::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
                     Components\TextInput::make('type')->label('Tipo de Servico (Ex: Oleo, Correia)')->required()->maxLength(255),
                 ]),
-                Components\Textarea::make('description')->label('Descricao / Recomendacao')->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição / Recomendação')->columnSpanFull(),
             ]),
 
             Section::make('Gatilhos (Triggers)')->schema([
@@ -46,7 +46,7 @@ class MaintenanceAlertResource extends Resource
                 ]),
             ]),
 
-            Section::make('Historico do Ultimo Servico')->schema([
+            Section::make('Histórico do Último Serviço')->schema([
                 Grid::make(3)->schema([
                     Components\DatePicker::make('last_service_date')->label('Data do Ultimo Servico')->native(false),
                     Components\TextInput::make('last_service_km')->label('Km no Ultimo Servico')->numeric(),
@@ -61,15 +61,15 @@ class MaintenanceAlertResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable()->weight('bold'),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('type')->label('Tipo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('trigger_km')->label('Gatilho KM')->suffix(' Km')->sortable(),
                 Tables\Columns\TextColumn::make('trigger_days')->label('Gatilho Tempo')->suffix(' Dias')->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->label('Ativo')->boolean(),
-                Tables\Columns\TextColumn::make('last_service_date')->label('Ultimo Servico')->date('d/m/Y')->sortable(),
+                Tables\Columns\TextColumn::make('last_service_date')->label('Último Serviço')->date('d/m/Y')->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate'),
+                Tables\Filters\SelectFilter::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate'),
             ])
             ->actions([
                 Actions\EditAction::make(),

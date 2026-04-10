@@ -40,7 +40,7 @@ class VehicleInspectionResource extends Resource
             Section::make('Detalhes da Vistoria')->schema([
                 Grid::make(3)->schema([
                     Components\Select::make('vehicle_id')
-                        ->label('Veiculo')
+                        ->label('Veículo')
                         ->relationship('vehicle', 'plate')
                         ->searchable()
                         ->preload()
@@ -64,13 +64,13 @@ class VehicleInspectionResource extends Resource
                         'finalizado' => 'Finalizado',
                     ])->default('rascunho')->required(),
                 ]),
-                Components\Select::make('overall_condition')->label('Condicao Geral')->options([
+                Components\Select::make('overall_condition')->label('Condição Geral')->options([
                     'excelente' => 'Excelente',
                     'bom' => 'Bom',
                     'regular' => 'Regular',
                     'ruim' => 'Ruim',
                 ])->default('bom')->required()->columnSpanFull(),
-                Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
             ]),
         ]);
     }
@@ -80,7 +80,7 @@ class VehicleInspectionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('contract.contract_number')->label('Contrato')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->label('Tipo')->badge(),
                 Tables\Columns\TextColumn::make('inspection_date')->label('Data')->dateTime('d/m/Y H:i')->sortable(),

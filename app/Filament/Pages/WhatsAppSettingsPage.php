@@ -21,7 +21,7 @@ class WhatsAppSettingsPage extends Page
 
     protected static ?string $navigationLabel = 'WhatsApp / Evolution';
 
-    protected static ?string $title = 'Configuracoes do WhatsApp';
+    protected static ?string $title = 'Configurações do WhatsApp';
 
     protected static ?int $navigationSort = 2;
 

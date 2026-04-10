@@ -37,7 +37,7 @@ class PaymentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informacoes do Pagamento')->schema([
+            Section::make('Informações do Pagamento')->schema([
                 Grid::make(3)->schema([
                     Components\Select::make('invoice_id')
                         ->label('Fatura Vinculada')
@@ -46,9 +46,9 @@ class PaymentResource extends Resource
                         ->preload()
                         ->required(),
                     Components\TextInput::make('amount')->label('Valor (R$)')->numeric()->prefix('R$')->required(),
-                    Components\Select::make('method')->label('Metodo de Pagamento')->options(PaymentMethod::class)->required(),
+                    Components\Select::make('method')->label('Método de Pagamento')->options(PaymentMethod::class)->required(),
                     Components\DateTimePicker::make('paid_at')->label('Data do Pagamento')->native(false),
-                    Components\TextInput::make('transaction_id')->label('ID de Transacao (Interno)')->maxLength(255),
+                    Components\TextInput::make('transaction_id')->label('ID de Transação (Interno)')->maxLength(255),
                     Components\TextInput::make('mp_payment_id')->label('ID MercadoPago')->maxLength(255),
                 ]),
                 Components\Select::make('mp_status')->label('Status Gateway')->options([
@@ -62,7 +62,7 @@ class PaymentResource extends Resource
                     'refunded' => 'Refunded',
                     'charged_back' => 'Charged Back',
                 ]),
-                Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
             ]),
 
             Section::make('Estorno / Reembolso')->schema([
@@ -77,7 +77,7 @@ class PaymentResource extends Resource
                     Components\TextInput::make('pix_qr_code')->label('Pix QR Code (Link)')->disabled(),
                     Components\Textarea::make('pix_qr_code_base64')->label('Pix QR Code (Base64)')->disabled(),
                     Components\TextInput::make('boleto_url')->label('Boleto (Link)')->disabled(),
-                    Components\Textarea::make('boleto_barcode')->label('Codigo de Barras Boleto')->disabled(),
+                    Components\Textarea::make('boleto_barcode')->label('Código de Barras Boleto')->disabled(),
                 ]),
             ])->collapsed(),
         ]);
@@ -88,7 +88,7 @@ class PaymentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('invoice.invoice_number')->label('Fatura')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('method')->label('Metodo')->badge(),
+                Tables\Columns\TextColumn::make('method')->label('Método')->badge(),
                 Tables\Columns\TextColumn::make('amount')->label('Valor')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
                 Tables\Columns\TextColumn::make('paid_at')->label('Data Pgto')->dateTime('d/m/Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('mp_status')->label('Status MP')->badge()
@@ -101,7 +101,7 @@ class PaymentResource extends Resource
                     }),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('method')->label('Metodo')->options(PaymentMethod::class),
+                Tables\Filters\SelectFilter::make('method')->label('Método')->options(PaymentMethod::class),
             ])
             ->actions([
                 Actions\EditAction::make(),

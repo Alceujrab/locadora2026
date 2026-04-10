@@ -31,18 +31,18 @@ class ContractTemplateResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Configuracoes Gerais')->schema([
+            Section::make('Configurações Gerais')->schema([
                 Grid::make(2)->schema([
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                     Components\TextInput::make('name')->label('Nome do Template')->required()->maxLength(255),
                 ]),
                 Grid::make(2)->schema([
-                    Components\Toggle::make('is_default')->label('Define como Padrao')->default(false),
+                    Components\Toggle::make('is_default')->label('Define como Padrão')->default(false),
                     Components\Toggle::make('is_active')->label('Ativo')->default(true),
                 ]),
             ])->columns(1),
 
-            Section::make('Variaveis Disponiveis')->schema([
+            Section::make('Variáveis Disponíveis')->schema([
                 Components\Placeholder::make('variables_help')
                     ->label('')
                     ->content(new \Illuminate\Support\HtmlString('
@@ -111,7 +111,7 @@ class ContractTemplateResource extends Resource
                     ')),
             ])->collapsible(),
 
-            Section::make('Conteudo do Contrato')->schema([
+            Section::make('Conteúdo do Contrato')->schema([
                 Components\RichEditor::make('content')
                     ->label('')
                     ->columnSpanFull()
@@ -132,7 +132,7 @@ class ContractTemplateResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Nome')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('branch.name')->label('Filial')->searchable()->sortable(),
-                Tables\Columns\IconColumn::make('is_default')->label('Padrao')->boolean(),
+                Tables\Columns\IconColumn::make('is_default')->label('Padrão')->boolean(),
                 Tables\Columns\IconColumn::make('is_active')->label('Ativo')->boolean(),
                 Tables\Columns\TextColumn::make('created_at')->label('Criado em')->dateTime('d/m/Y')->sortable(),
             ])

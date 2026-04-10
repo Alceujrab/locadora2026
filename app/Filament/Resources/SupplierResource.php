@@ -33,8 +33,8 @@ class SupplierResource extends Resource
             \Filament\Schemas\Components\Section::make('Dados do Fornecedor')->schema([
                 Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload(),
                 Components\Select::make('type')->label('Tipo')->options([
-                    'oficina' => 'Oficina', 'pecas' => 'Pecas', 'seguro' => 'Seguro',
-                    'combustivel' => 'Combustivel', 'outros' => 'Outros',
+                    'oficina' => 'Oficina', 'pecas' => 'Peças', 'seguro' => 'Seguro',
+                    'combustivel' => 'Combustível', 'outros' => 'Outros',
                 ])->required(),
                 Components\TextInput::make('name')->label('Nome / Razao Social')->required(),
                 Components\TextInput::make('cnpj')->label('CNPJ'),
@@ -45,10 +45,10 @@ class SupplierResource extends Resource
                 Components\TextInput::make('phone')->label('Telefone')->tel(),
                 Components\TextInput::make('email')->label('E-mail')->email(),
             ])->columns(2),
-            \Filament\Schemas\Components\Section::make('Endereco')->schema([
+            \Filament\Schemas\Components\Section::make('Endereço')->schema([
                 Components\TextInput::make('address_zip')->label('CEP'),
                 Components\TextInput::make('address_street')->label('Rua'),
-                Components\TextInput::make('address_number')->label('Numero'),
+                Components\TextInput::make('address_number')->label('Número'),
                 Components\TextInput::make('address_complement')->label('Complemento'),
                 Components\TextInput::make('address_neighborhood')->label('Bairro'),
                 Components\TextInput::make('address_city')->label('Cidade'),
@@ -56,7 +56,7 @@ class SupplierResource extends Resource
             ])->columns(3),
             \Filament\Schemas\Components\Section::make('Informacoes Adicionais')->schema([
                 Components\Textarea::make('specialties')->label('Especialidades'),
-                Components\Textarea::make('notes')->label('Observacoes'),
+                Components\Textarea::make('notes')->label('Observações'),
             ])->columns(2),
         ]);
     }
@@ -74,8 +74,8 @@ class SupplierResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')->label('Tipo')->options([
-                    'oficina' => 'Oficina', 'pecas' => 'Pecas', 'seguro' => 'Seguro',
-                    'combustivel' => 'Combustivel', 'outros' => 'Outros',
+                    'oficina' => 'Oficina', 'pecas' => 'Peças', 'seguro' => 'Seguro',
+                    'combustivel' => 'Combustível', 'outros' => 'Outros',
                 ]),
                 Tables\Filters\TernaryFilter::make('is_active')->label('Status'),
             ])

@@ -52,7 +52,7 @@ class ReservationResource extends Resource
                     ]),
                     Grid::make(2)->schema([
                         Components\Select::make('category_id')->label('Categoria')->relationship('category', 'name')->searchable()->preload(),
-                        Components\Select::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
+                        Components\Select::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
                     ]),
                     Components\Select::make('status')->label('Status')->options(ReservationStatus::class)->default(ReservationStatus::PENDING)->required(),
                 ]),
@@ -68,7 +68,7 @@ class ReservationResource extends Resource
                                 static::recalculate($get, $set);
                             }),
                         Components\DateTimePicker::make('return_date')
-                            ->label('Data/Hora Devolucao')
+                            ->label('Data/Hora Devolução')
                             ->required()
                             ->native(false)
                             ->live(onBlur: true)
@@ -78,14 +78,14 @@ class ReservationResource extends Resource
                     ]),
                     Grid::make(2)->schema([
                         Components\Select::make('pickup_branch_id')->label('Local de Retirada')->relationship('pickupBranch', 'name')->searchable()->preload(),
-                        Components\Select::make('return_branch_id')->label('Local de Devolucao')->relationship('returnBranch', 'name')->searchable()->preload(),
+                        Components\Select::make('return_branch_id')->label('Local de Devolução')->relationship('returnBranch', 'name')->searchable()->preload(),
                     ]),
                 ]),
 
                 Tabs\Tab::make('Valores')->icon('heroicon-o-currency-dollar')->schema([
                     Grid::make(3)->schema([
                         Components\TextInput::make('daily_rate')
-                            ->label('Diaria (R$)')
+                            ->label('Diária (R$)')
                             ->numeric()
                             ->prefix('R$')
                             ->required()
@@ -99,7 +99,7 @@ class ReservationResource extends Resource
                             ->disabled()
                             ->dehydrated(),
                         Components\TextInput::make('subtotal')
-                            ->label('Subtotal Diarias (R$)')
+                            ->label('Subtotal Diárias (R$)')
                             ->numeric()
                             ->prefix('R$')
                             ->disabled()
@@ -181,8 +181,8 @@ class ReservationResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-                Tabs\Tab::make('Observacoes')->icon('heroicon-o-chat-bubble-left')->schema([
-                    Components\Textarea::make('notes')->label('Observacoes Internas')->columnSpanFull(),
+                Tabs\Tab::make('Observações')->icon('heroicon-o-chat-bubble-left')->schema([
+                    Components\Textarea::make('notes')->label('Observações Internas')->columnSpanFull(),
                 ]),
             ])->columnSpanFull(),
         ]);
@@ -215,9 +215,9 @@ class ReservationResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label('#')->sortable(),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('pickup_date')->label('Retirada')->dateTime('d/m/Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('return_date')->label('Devolucao')->dateTime('d/m/Y H:i')->sortable(),
+                Tables\Columns\TextColumn::make('return_date')->label('Devolução')->dateTime('d/m/Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('total_days')->label('Dias')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),

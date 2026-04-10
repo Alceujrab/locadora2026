@@ -31,7 +31,7 @@ class PostCategoryResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informacoes da Categoria')->schema([
+            Section::make('Informações da Categoria')->schema([
                 Components\TextInput::make('name')
                     ->label('Nome')
                     ->required()
@@ -43,7 +43,7 @@ class PostCategoryResource extends Resource
                     ->required()
                     ->unique(PostCategory::class, 'slug', ignoreRecord: true)
                     ->maxLength(255),
-                Components\Textarea::make('description')->label('Descricao')->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição')->columnSpanFull(),
                 Components\Toggle::make('is_active')->label('Ativo')->default(true),
             ])->columns(2),
         ]);

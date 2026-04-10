@@ -45,39 +45,39 @@ class ContractResource extends Resource
         return $schema->schema([
             Tabs::make('Contrato')->tabs([
                 Tabs\Tab::make('Dados Principais')->icon('heroicon-o-document')->schema([
-                    Components\TextInput::make('contract_number')->label('Numero do Contrato')->disabled()->dehydrated(false)->maxLength(255),
+                    Components\TextInput::make('contract_number')->label('Número do Contrato')->disabled()->dehydrated(false)->maxLength(255),
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                     Components\Select::make('customer_id')->label('Cliente')->relationship('customer', 'name')->searchable()->preload()->required(),
-                    Components\Select::make('vehicle_id')->label('Veiculo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
+                    Components\Select::make('vehicle_id')->label('Veículo')->relationship('vehicle', 'plate')->searchable()->preload()->required(),
                     Components\Select::make('reservation_id')->label('Reserva Vinculada')->relationship('reservation', 'id')->searchable()->preload(),
                     Components\Select::make('template_id')->label('Template do Contrato')->relationship('template', 'name')->searchable()->preload(),
                     Components\Select::make('status')->label('Status')->options(ContractStatus::class)->default(ContractStatus::DRAFT)->required(),
-                    Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                    Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
                 ])->columns(3),
 
                 Tabs\Tab::make('Datas e KM')->icon('heroicon-o-clock')->schema([
                     Components\DateTimePicker::make('pickup_date')->label('Data/Hora Retirada')->required(),
                     Components\TextInput::make('pickup_mileage')->label('KM Retirada')->numeric()->default(0)->required(),
-                    Components\DateTimePicker::make('return_date')->label('Data/Hora Devolucao Prevista')->required(),
-                    Components\TextInput::make('return_mileage')->label('KM Devolucao')->numeric(),
-                    Components\DateTimePicker::make('actual_return_date')->label('Data/Hora Devolucao Efetiva'),
+                    Components\DateTimePicker::make('return_date')->label('Data/Hora Devolução Prevista')->required(),
+                    Components\TextInput::make('return_mileage')->label('KM Devolução')->numeric(),
+                    Components\DateTimePicker::make('actual_return_date')->label('Data/Hora Devolução Efetiva'),
                 ])->columns(2),
 
                 Tabs\Tab::make('Valores e Pagamentos')->icon('heroicon-o-currency-dollar')->schema([
-                    Components\TextInput::make('daily_rate')->label('Valor da Diaria (R$)')->numeric()->prefix('R$')->required(),
+                    Components\TextInput::make('daily_rate')->label('Valor da Diária (R$)')->numeric()->prefix('R$')->required(),
                     Components\TextInput::make('total_days')->label('Total de Dias')->numeric()->required(),
                     Components\TextInput::make('extras_total')->label('Total Extras (R$)')->numeric()->prefix('R$')->default(0),
-                    Components\TextInput::make('caution_amount')->label('Caucao (R$)')->numeric()->prefix('R$')->default(0),
+                    Components\TextInput::make('caution_amount')->label('Caução (R$)')->numeric()->prefix('R$')->default(0),
                     Components\TextInput::make('discount')->label('Desconto (R$)')->numeric()->prefix('R$')->default(0),
-                    Components\TextInput::make('additional_charges')->label('Acrescimos (R$)')->numeric()->prefix('R$')->default(0),
-                    Components\Textarea::make('additional_charges_description')->label('Descricao de Acrescimos')->columnSpanFull(),
+                    Components\TextInput::make('additional_charges')->label('Acréscimos (R$)')->numeric()->prefix('R$')->default(0),
+                    Components\Textarea::make('additional_charges_description')->label('Descrição de Acréscimos')->columnSpanFull(),
                     Components\TextInput::make('total')->label('Valor Total (R$)')->numeric()->prefix('R$')->required(),
                 ])->columns(3),
 
                 Tabs\Tab::make('Assinatura')->icon('heroicon-o-pencil-square')->schema([
                     Components\DateTimePicker::make('signed_at')->label('Data da Assinatura')->disabled(),
                     Components\TextInput::make('signature_ip')->label('IP da Assinatura')->disabled(),
-                    Components\TextInput::make('signature_method')->label('Metodo')->disabled(),
+                    Components\TextInput::make('signature_method')->label('Método')->disabled(),
                     Components\TextInput::make('signature_hash')->label('Hash')->disabled()->columnSpanFull(),
                 ])->columns(3),
             ])->columnSpanFull(),
@@ -90,9 +90,9 @@ class ContractResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('contract_number')->label('Contrato')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veiculo')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('pickup_date')->label('Retirada')->dateTime('d/m/Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('return_date')->label('Devolucao')->dateTime('d/m/Y H:i')->sortable(),
+                Tables\Columns\TextColumn::make('return_date')->label('Devolução')->dateTime('d/m/Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('status')->label('Status')->badge(),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
                 Tables\Columns\IconColumn::make('signed_at')->label('Assinado')->boolean()

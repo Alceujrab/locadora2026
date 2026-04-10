@@ -38,7 +38,7 @@ class UserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Tabs::make('Usuario')->tabs([
+            Tabs::make('Usuário')->tabs([
                 Tabs\Tab::make('Dados Pessoais')->icon('heroicon-o-user')->schema([
                     Grid::make(2)->schema([
                         Components\TextInput::make('name')->label('Nome Completo')->required()->maxLength(255),
@@ -57,7 +57,7 @@ class UserResource extends Resource
                     ]),
                 ]),
 
-                Tabs\Tab::make('Seguranca')->icon('heroicon-o-lock-closed')->schema([
+                Tabs\Tab::make('Segurança')->icon('heroicon-o-lock-closed')->schema([
                     Components\TextInput::make('password')
                         ->label('Senha')
                         ->password()
@@ -68,21 +68,21 @@ class UserResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-                Tabs\Tab::make('Permissoes')->icon('heroicon-o-shield-check')->schema([
+                Tabs\Tab::make('Permissões')->icon('heroicon-o-shield-check')->schema([
                     Components\CheckboxList::make('roles')
-                        ->label('Papeis (Roles)')
+                        ->label('Papéis (Roles)')
                         ->relationship('roles', 'name')
                         ->columns(3)
                         ->columnSpanFull()
                         ->descriptions([
                             'admin' => 'Acesso total ao sistema',
-                            'gerente' => 'Gerencia operacoes e equipe',
-                            'operador' => 'Operacoes do dia a dia',
-                            'financeiro' => 'Acesso a modulos financeiros',
-                            'cliente' => 'Area do cliente (publico)',
+                            'gerente' => 'Gerencia operações e equipe',
+                            'operador' => 'Operações do dia a dia',
+                            'financeiro' => 'Acesso a módulos financeiros',
+                            'cliente' => 'Área do cliente (público)',
                         ]),
                     Components\CheckboxList::make('permissions')
-                        ->label('Permissoes Especificas')
+                        ->label('Permissões Específicas')
                         ->relationship('permissions', 'name')
                         ->columns(3)
                         ->columnSpanFull(),
@@ -98,12 +98,12 @@ class UserResource extends Resource
                 Tables\Columns\ImageColumn::make('avatar')->label('')->circular()->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&background=1a1a2e&color=f7c948&size=40'),
                 Tables\Columns\TextColumn::make('name')->label('Nome')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('email')->label('E-mail')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('roles.name')->label('Papeis')->badge()
+                Tables\Columns\TextColumn::make('roles.name')->label('Papéis')->badge()
                     ->colors(['primary' => 'admin', 'success' => 'gerente', 'warning' => 'operador', 'info' => 'financeiro', 'gray' => 'cliente']),
                 Tables\Columns\TextColumn::make('branch.name')->label('Filial')->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->label('Ativo')->boolean(),
                 Tables\Columns\TextColumn::make('last_login')
-                    ->label('Ultimo Acesso')
+                    ->label('Último Acesso')
                     ->getStateUsing(fn (User $record) => LoginLog::where('user_id', $record->id)->where('action', 'login')->latest()->value('created_at'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(false),

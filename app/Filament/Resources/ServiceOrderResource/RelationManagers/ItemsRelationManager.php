@@ -52,7 +52,7 @@ class ItemsRelationManager extends RelationManager
                     'peca' => 'primary',
                     'mao_de_obra' => 'success',
                 }),
-                Tables\Columns\TextColumn::make('description')->label('Descricao'),
+                Tables\Columns\TextColumn::make('description')->label('Descrição'),
                 Tables\Columns\TextColumn::make('quantity')->label('Qtd.'),
                 Tables\Columns\TextColumn::make('unit_price')->label('Vlr. Unitario')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.')),
                 Tables\Columns\TextColumn::make('total')->label('Total')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.')),

@@ -31,17 +31,17 @@ class VehicleCategoryResource extends Resource
             \Filament\Schemas\Components\Section::make('Dados da Categoria')->schema([
                 Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload(),
                 Components\TextInput::make('name')->label('Nome')->required()->maxLength(255),
-                Components\Textarea::make('description')->label('Descricao')->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição')->columnSpanFull(),
                 Components\TextInput::make('icon')->label('Icone')->maxLength(50),
                 Components\TextInput::make('sort_order')->label('Ordem')->numeric()->default(0),
                 Components\Toggle::make('is_active')->label('Ativa')->default(true),
             ])->columns(3),
 
             \Filament\Schemas\Components\Section::make('Tarifas')->schema([
-                Components\TextInput::make('daily_rate')->label('Diaria (R$)')->numeric()->prefix('R$')->required(),
+                Components\TextInput::make('daily_rate')->label('Diária (R$)')->numeric()->prefix('R$')->required(),
                 Components\TextInput::make('weekly_rate')->label('Semanal (R$)')->numeric()->prefix('R$')->default(0)->required(),
                 Components\TextInput::make('monthly_rate')->label('Mensal (R$)')->numeric()->prefix('R$')->default(0)->required(),
-                Components\TextInput::make('insurance_daily')->label('Seguro Diario (R$)')->numeric()->prefix('R$')->default(0)->required(),
+                Components\TextInput::make('insurance_daily')->label('Seguro Diário (R$)')->numeric()->prefix('R$')->default(0)->required(),
             ])->columns(4),
 
             \Filament\Schemas\Components\Section::make('Quilometragem')->schema([
@@ -58,10 +58,10 @@ class VehicleCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Nome')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('branch.name')->label('Filial')->sortable(),
-                Tables\Columns\TextColumn::make('daily_rate')->label('Diaria')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
+                Tables\Columns\TextColumn::make('daily_rate')->label('Diária')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.'))->sortable(),
                 Tables\Columns\TextColumn::make('weekly_rate')->label('Semanal')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.')),
                 Tables\Columns\TextColumn::make('monthly_rate')->label('Mensal')->formatStateUsing(fn ($state) => 'R$ '.number_format((float) $state, 2, ',', '.')),
-                Tables\Columns\TextColumn::make('vehicles_count')->label('Veiculos')->counts('vehicles')->formatStateUsing(fn ($state) => (string) $state)->sortable(),
+                Tables\Columns\TextColumn::make('vehicles_count')->label('Veículos')->counts('vehicles')->formatStateUsing(fn ($state) => (string) $state)->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->label('Ativa')->boolean(),
             ])
             ->filters([

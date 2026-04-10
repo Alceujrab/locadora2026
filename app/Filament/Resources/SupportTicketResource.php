@@ -34,19 +34,19 @@ class SupportTicketResource extends Resource
             Section::make('Identificacao e Cliente')->schema([
                 Grid::make(2)->schema([
                     Components\Select::make('customer_id')->label('Cliente/Solicitante')->relationship('customer', 'name')->searchable()->preload()->required(),
-                    Components\Select::make('assigned_to')->label('Atendente Responsavel')->relationship('assignedTo', 'name')->searchable()->preload(),
+                    Components\Select::make('assigned_to')->label('Atendente Responsável')->relationship('assignedTo', 'name')->searchable()->preload(),
                 ]),
                 Components\TextInput::make('subject')->label('Assunto (Resumo)')->required()->maxLength(255),
-                Components\Textarea::make('description')->label('Descricao do Problema/Solicitacao')->required()->columnSpanFull(),
+                Components\Textarea::make('description')->label('Descrição do Problema/Solicitação')->required()->columnSpanFull(),
             ]),
 
             Section::make('Classificacao')->schema([
                 Grid::make(3)->schema([
                     Components\Select::make('priority')->label('Prioridade')->options([
                         'baixa' => 'Baixa',
-                        'media' => 'Media',
+                        'media' => 'Média',
                         'alta' => 'Alta',
-                        'critica' => 'Critica',
+                        'critica' => 'Crítica',
                     ])->default('media')->required(),
                     Components\Select::make('status')->label('Status')->options([
                         'aberto' => 'Aberto (Novo)',
@@ -54,7 +54,7 @@ class SupportTicketResource extends Resource
                         'aguardando_cliente' => 'Aguardando Cliente',
                         'resolvido' => 'Resolvido/Fechado',
                     ])->default('aberto')->required(),
-                    Components\TextInput::make('category')->label('Categoria (Duvida, Manutencao, Pagamento, etc)')->maxLength(255),
+                    Components\TextInput::make('category')->label('Categoria (Dúvida, Manutenção, Pagamento, etc)')->maxLength(255),
                 ]),
             ]),
         ]);
@@ -95,9 +95,9 @@ class SupportTicketResource extends Resource
                 ]),
                 Tables\Filters\SelectFilter::make('priority')->options([
                     'baixa' => 'Baixa',
-                    'media' => 'Media',
+                    'media' => 'Média',
                     'alta' => 'Alta',
-                    'critica' => 'Critica',
+                    'critica' => 'Crítica',
                 ]),
             ])
             ->actions([

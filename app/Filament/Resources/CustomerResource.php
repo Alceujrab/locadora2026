@@ -46,9 +46,9 @@ class CustomerResource extends Resource
                         ->unique(table: 'customers', column: 'cpf_cnpj', ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->whereNull('deleted_at')),
                     Components\TextInput::make('rg')->label('RG/IE')->maxLength(20),
                     Components\DatePicker::make('birth_date')->label('Data de Nascimento'),
-                    Components\TextInput::make('company_name')->label('Razao Social')->visible(fn (Get $get) => $get('type') === 'pj'),
-                    Components\TextInput::make('state_registration')->label('Inscricao Estadual')->visible(fn (Get $get) => $get('type') === 'pj'),
-                    Components\TextInput::make('responsible_name')->label('Responsavel')->visible(fn (Get $get) => $get('type') === 'pj'),
+                    Components\TextInput::make('company_name')->label('Razão Social')->visible(fn (Get $get) => $get('type') === 'pj'),
+                    Components\TextInput::make('state_registration')->label('Inscrição Estadual')->visible(fn (Get $get) => $get('type') === 'pj'),
+                    Components\TextInput::make('responsible_name')->label('Responsável')->visible(fn (Get $get) => $get('type') === 'pj'),
                     Components\TextInput::make('responsible_cpf')->label('CPF Responsavel')->visible(fn (Get $get) => $get('type') === 'pj'),
                 ])->columns(3),
 
@@ -64,20 +64,20 @@ class CustomerResource extends Resource
                     Components\DatePicker::make('cnh_expiry')->label('Validade'),
                 ])->columns(3),
 
-                \Filament\Schemas\Components\Tabs\Tab::make('Endereco')->icon('heroicon-o-map-pin')->schema([
+                \Filament\Schemas\Components\Tabs\Tab::make('Endereço')->icon('heroicon-o-map-pin')->schema([
                     Components\TextInput::make('address_zip')->label('CEP')->maxLength(9),
                     Components\TextInput::make('address_street')->label('Logradouro'),
-                    Components\TextInput::make('address_number')->label('Numero')->maxLength(10),
+                    Components\TextInput::make('address_number')->label('Número')->maxLength(10),
                     Components\TextInput::make('address_complement')->label('Complemento'),
                     Components\TextInput::make('address_neighborhood')->label('Bairro'),
                     Components\TextInput::make('address_city')->label('Cidade'),
                     Components\TextInput::make('address_state')->label('UF')->maxLength(2),
                 ])->columns(3),
 
-                \Filament\Schemas\Components\Tabs\Tab::make('Emergencia')->icon('heroicon-o-exclamation-triangle')->schema([
+                \Filament\Schemas\Components\Tabs\Tab::make('Emergência')->icon('heroicon-o-exclamation-triangle')->schema([
                     Components\TextInput::make('emergency_contact_name')->label('Nome'),
                     Components\TextInput::make('emergency_contact_phone')->label('Telefone')->tel(),
-                    Components\TextInput::make('emergency_contact_relation')->label('Relacao'),
+                    Components\TextInput::make('emergency_contact_relation')->label('Relação'),
                 ])->columns(3),
 
                 \Filament\Schemas\Components\Tabs\Tab::make('Documentos')->icon('heroicon-o-document-arrow-up')->schema([
@@ -85,7 +85,7 @@ class CustomerResource extends Resource
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])->openable()->downloadable(),
                     Components\FileUpload::make('doc_cpf_cnpj_card')->label('Cartao CPF/CNPJ')->directory('customers/cpf_cnpj')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])->openable()->downloadable(),
-                    Components\FileUpload::make('doc_address_proof')->label('Comprovante de Endereco')->directory('customers/address_proof')
+                    Components\FileUpload::make('doc_address_proof')->label('Comprovante de Endereço')->directory('customers/address_proof')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])->openable()->downloadable(),
                     Components\FileUpload::make('doc_social_contract')->label('Contrato Social (PJ)')->directory('customers/social_contract')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])->openable()->downloadable()
@@ -95,7 +95,7 @@ class CustomerResource extends Resource
                 \Filament\Schemas\Components\Tabs\Tab::make('Status')->icon('heroicon-o-shield-check')->schema([
                     Components\Toggle::make('is_blocked')->label('Bloqueado'),
                     Components\Textarea::make('blocked_reason')->label('Motivo Bloqueio')->visible(fn (Get $get) => $get('is_blocked')),
-                    Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                    Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
                 ]),
             ])->columnSpanFull(),
         ]);

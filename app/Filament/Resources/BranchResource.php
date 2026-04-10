@@ -31,7 +31,7 @@ class BranchResource extends Resource
             \Filament\Schemas\Components\Section::make('Dados da Filial')->schema([
                 Components\TextInput::make('name')->label('Nome')->required()->maxLength(255),
                 Components\TextInput::make('cnpj')->label('CNPJ')->maxLength(18),
-                Components\TextInput::make('state_registration')->label('Inscricao Estadual')->maxLength(20),
+                Components\TextInput::make('state_registration')->label('Inscrição Estadual')->maxLength(20),
                 Components\FileUpload::make('logo')->label('Logo')->image()->directory('branches/logos')->columnSpanFull(),
             ])->columns(3),
 
@@ -41,19 +41,19 @@ class BranchResource extends Resource
                 Components\TextInput::make('email')->label('E-mail')->email(),
             ])->columns(3),
 
-            \Filament\Schemas\Components\Section::make('Endereco')->schema([
+            \Filament\Schemas\Components\Section::make('Endereço')->schema([
                 Components\TextInput::make('address_zip')->label('CEP')->maxLength(9),
                 Components\TextInput::make('address_street')->label('Rua')->maxLength(255),
-                Components\TextInput::make('address_number')->label('Numero')->maxLength(10),
+                Components\TextInput::make('address_number')->label('Número')->maxLength(10),
                 Components\TextInput::make('address_complement')->label('Complemento')->maxLength(100),
                 Components\TextInput::make('address_neighborhood')->label('Bairro')->maxLength(100),
                 Components\TextInput::make('address_city')->label('Cidade')->maxLength(100),
                 Components\TextInput::make('address_state')->label('UF')->maxLength(2),
             ])->columns(3),
 
-            \Filament\Schemas\Components\Section::make('Configuracoes')->schema([
+            \Filament\Schemas\Components\Section::make('Configurações')->schema([
                 Components\Toggle::make('is_active')->label('Ativa')->default(true),
-                Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
             ]),
         ]);
     }

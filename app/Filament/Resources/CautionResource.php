@@ -31,7 +31,7 @@ class CautionResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Dados da Caucao')->schema([
+            Section::make('Dados da Caução')->schema([
                 Grid::make(2)->schema([
                     Components\Select::make('contract_id')
                         ->label('Contrato Vinculado')
@@ -40,7 +40,7 @@ class CautionResource extends Resource
                         ->preload()
                         ->required(),
                     Components\Select::make('customer_id')
-                        ->label('Locatario')
+                        ->label('Locatário')
                         ->relationship('customer', 'name')
                         ->searchable()
                         ->preload()
@@ -48,11 +48,11 @@ class CautionResource extends Resource
                 ]),
                 Grid::make(3)->schema([
                     Components\Select::make('type')->label('Tipo (Meio)')->options([
-                        'cartao_credito' => 'Cartao de Credito',
+                        'cartao_credito' => 'Cartão de Crédito',
                         'dinheiro' => 'Dinheiro',
                         'pix' => 'Pix',
                         'cheque' => 'Cheque',
-                        'promissoria' => 'Nota Promissoria',
+                        'promissoria' => 'Nota Promissória',
                     ])->required()->default('cartao_credito'),
                     Components\TextInput::make('amount')->label('Valor Retido (R$)')->numeric()->prefix('R$')->required(),
                     Components\Select::make('status')->label('Status')->options([
@@ -63,7 +63,7 @@ class CautionResource extends Resource
                 ]),
             ]),
 
-            Section::make('Integracao & Controle')->schema([
+            Section::make('Integração & Controle')->schema([
                 Grid::make(3)->schema([
                     Components\TextInput::make('mp_payment_id')->label('ID Pagamento (Gateway)'),
                     Components\TextInput::make('mp_preauth_id')->label('ID Pre-Auth (Gateway)'),
@@ -73,7 +73,7 @@ class CautionResource extends Resource
                     Components\TextInput::make('charged_amount')->label('Valor Executado (R$)')->numeric()->prefix('R$')->default(0),
                     Components\TextInput::make('charge_reason')->label('Motivo da Execucao (Danos/Multas)'),
                 ]),
-                Components\Textarea::make('notes')->label('Observacoes da Caucao')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações da Caução')->columnSpanFull(),
             ]),
         ]);
     }

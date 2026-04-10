@@ -19,12 +19,12 @@ class VehicleStatsOverview extends BaseWidget
 
         return [
             Stat::make('Total Frota', $total)
-                ->description('Veiculos cadastrados')
+                ->description('Veículos cadastrados')
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('warning'),
 
-            Stat::make('Disponiveis', $disponivel)
-                ->description('Prontos para locacao')
+            Stat::make('Disponíveis', $disponivel)
+                ->description('Prontos para locação')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
 
@@ -33,8 +33,8 @@ class VehicleStatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-key')
                 ->color('primary'),
 
-            Stat::make('Manutencao', $manutencao)
-                ->description('Em reparo/revisao')
+            Stat::make('Manutenção', $manutencao)
+                ->description('Em reparo/revisão')
                 ->descriptionIcon('heroicon-m-wrench-screwdriver')
                 ->color('danger'),
 

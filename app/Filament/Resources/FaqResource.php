@@ -33,7 +33,7 @@ class FaqResource extends Resource
             Section::make('Conteudo da Pergunta')->schema([
                 Components\TextInput::make('question')->label('Pergunta')->required()->maxLength(255)->columnSpanFull(),
                 Components\RichEditor::make('answer')->label('Resposta')->required()->columnSpanFull(),
-                Components\TextInput::make('position')->label('Ordem de Exibicao')->numeric()->default(0),
+                Components\TextInput::make('position')->label('Ordem de Exibição')->numeric()->default(0),
                 Components\Toggle::make('is_active')->label('Ativo')->default(true),
             ])->columns(2),
         ]);

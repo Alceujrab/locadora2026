@@ -39,7 +39,7 @@ class InvoiceResource extends Resource
         return $schema->schema([
             Tabs::make('Fatura')->tabs([
                 Tabs\Tab::make('Dados Principais')->icon('heroicon-o-information-circle')->schema([
-                    Components\TextInput::make('invoice_number')->label('Numero da Fatura')->disabled()->dehydrated(false)->maxLength(255),
+                    Components\TextInput::make('invoice_number')->label('Número da Fatura')->disabled()->dehydrated(false)->maxLength(255),
                     Components\Select::make('branch_id')->label('Filial')->relationship('branch', 'name')->searchable()->preload()->required(),
                     Components\Select::make('customer_id')->label('Cliente')->relationship('customer', 'name')->searchable()->preload()->required(),
                     Components\Select::make('contract_id')->label('Contrato Vinculado')->relationship('contract', 'contract_number')->searchable()->preload(),
@@ -59,9 +59,9 @@ class InvoiceResource extends Resource
 
                 Tabs\Tab::make('Pagamento')->icon('heroicon-o-banknotes')->schema([
                     Components\DateTimePicker::make('paid_at')->label('Data de Pagamento')->native(false),
-                    Components\Select::make('payment_method')->label('Metodo de Pagamento')->options(PaymentMethod::class),
+                    Components\Select::make('payment_method')->label('Método de Pagamento')->options(PaymentMethod::class),
                     Components\TextInput::make('mp_payment_id')->label('ID MercadoPago')->maxLength(255),
-                    Components\Textarea::make('notes')->label('Observacoes da Fatura')->columnSpanFull(),
+                    Components\Textarea::make('notes')->label('Observações da Fatura')->columnSpanFull(),
                 ])->columns(3),
 
                 Tabs\Tab::make('Nota Fiscal (NFS-e)')->icon('heroicon-o-document-text')->schema([

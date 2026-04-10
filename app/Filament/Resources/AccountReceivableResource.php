@@ -39,7 +39,7 @@ class AccountReceivableResource extends Resource
                     Components\Select::make('contract_id')->label('Contrato Vinculado')->relationship('contract', 'contract_number')->searchable()->preload(),
                     Components\Select::make('invoice_id')->label('Fatura')->relationship('invoice', 'invoice_number')->searchable()->preload(),
                 ]),
-                Components\TextInput::make('description')->label('Descricao')->required()->maxLength(255),
+                Components\TextInput::make('description')->label('Descrição')->required()->maxLength(255),
             ]),
 
             Section::make('Valores e Datas')->schema([
@@ -62,9 +62,9 @@ class AccountReceivableResource extends Resource
                     Components\DateTimePicker::make('received_at')->label('Data/Hora do Recebimento')->native(false),
                     Components\Select::make('payment_method')->label('Forma de Pagamento')->options([
                         'pix' => 'PIX',
-                        'cartao_credito' => 'Cartao de Credito',
-                        'cartao_debito' => 'Cartao de Debito',
-                        'transferencia' => 'Transferencia Bancaria',
+                        'cartao_credito' => 'Cartão de Crédito',
+                        'cartao_debito' => 'Cartão de Débito',
+                        'transferencia' => 'Transferência Bancária',
                         'boleto' => 'Boleto',
                         'dinheiro' => 'Dinheiro',
                         'cheque' => 'Cheque',
@@ -77,7 +77,7 @@ class AccountReceivableResource extends Resource
                     Components\TextInput::make('payment_reference')->label('Comprovante / Referencia')->maxLength(255),
                 ]),
                 Components\FileUpload::make('payment_proof_path')->label('Comprovante de Pagamento (anexo)')->directory('payment-proofs')->acceptedFileTypes(['image/*', 'application/pdf'])->maxSize(5120),
-                Components\Textarea::make('notes')->label('Observacoes')->columnSpanFull(),
+                Components\Textarea::make('notes')->label('Observações')->columnSpanFull(),
             ])->collapsed(),
         ]);
     }
@@ -86,7 +86,7 @@ class AccountReceivableResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')->label('Descricao')->searchable()->sortable()->limit(40),
+                Tables\Columns\TextColumn::make('description')->label('Descrição')->searchable()->sortable()->limit(40),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('invoice.invoice_number')->label('Fatura')->searchable()->sortable()->toggleable(),
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),
@@ -132,9 +132,9 @@ class AccountReceivableResource extends Resource
                             ->default(fn (AccountReceivable $record) => $record->remaining),
                         Components\Select::make('forma_pagamento')->label('Forma de Pagamento')->options([
                             'pix' => 'PIX',
-                            'cartao_credito' => 'Cartao de Credito',
-                            'cartao_debito' => 'Cartao de Debito',
-                            'transferencia' => 'Transferencia Bancaria',
+                            'cartao_credito' => 'Cartão de Crédito',
+                            'cartao_debito' => 'Cartão de Débito',
+                            'transferencia' => 'Transferência Bancária',
                             'boleto' => 'Boleto',
                             'dinheiro' => 'Dinheiro',
                             'cheque' => 'Cheque',
@@ -156,8 +156,8 @@ class AccountReceivableResource extends Resource
                         $novoStatus = $novoPago >= $total ? 'recebido' : 'parcial';
 
                         $methodLabels = [
-                            'pix' => 'PIX', 'cartao_credito' => 'Cartao de Credito',
-                            'cartao_debito' => 'Cartao de Debito', 'transferencia' => 'Transferencia',
+                            'pix' => 'PIX', 'cartao_credito' => 'Cartão de Crédito',
+                            'cartao_debito' => 'Cartão de Débito', 'transferencia' => 'Transferencia',
                             'boleto' => 'Boleto', 'dinheiro' => 'Dinheiro',
                             'cheque' => 'Cheque', 'outro' => 'Outro',
                         ];
