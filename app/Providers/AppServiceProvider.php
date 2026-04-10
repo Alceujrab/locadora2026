@@ -21,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Forçar locale pt_BR para garantir traduções Filament
+        app()->setLocale('pt_BR');
+
         // Auth event listeners for login logs
         \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Login::class, [\App\Listeners\LogAuthenticationEvents::class, 'handleLogin']);
         \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Logout::class, [\App\Listeners\LogAuthenticationEvents::class, 'handleLogout']);
