@@ -1,25 +1,25 @@
 <x-filament-panels::page>
     <form wire:submit="save">
-        {{-- Seção: Conexão Evolution API --}}
-        <x-filament::section heading="Conexao com Evolution API" description="Configure os dados de acesso a sua instancia Evolution API para envio de mensagens WhatsApp." icon="heroicon-o-signal">
+        {{-- Seção: Conexão Evolution Go --}}
+        <x-filament::section heading="Conexao com Evolution Go" description="Configure a URL da API e o token da instancia Evolution Go usado para enviar mensagens no WhatsApp." icon="heroicon-o-signal">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL da API</label>
                     <input type="url" wire:model="evolution_api_url" placeholder="https://api.seudominio.com"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500" />
-                    <p class="text-xs text-gray-500 mt-1">Ex: https://evo.seusistema.com.br</p>
+                    <p class="text-xs text-gray-500 mt-1">Ex: https://evo.seusistema.com.br ou http://localhost:4000</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">API Key</label>
-                    <input type="password" wire:model="evolution_api_key" placeholder="Sua chave de API"
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Token da Instancia</label>
+                    <input type="password" wire:model="evolution_api_key" placeholder="Token configurado na instancia"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500" />
-                    <p class="text-xs text-gray-500 mt-1">Chave global ou da instancia</p>
+                    <p class="text-xs text-gray-500 mt-1">Na Evolution Go, o envio usa o token da instancia no header apikey</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome da Instancia</label>
                     <input type="text" wire:model="evolution_instance_name" placeholder="minha-instancia"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500" />
-                    <p class="text-xs text-gray-500 mt-1">Nome configurado na Evolution</p>
+                    <p class="text-xs text-gray-500 mt-1">Campo opcional para identificacao visual no sistema</p>
                 </div>
             </div>
 

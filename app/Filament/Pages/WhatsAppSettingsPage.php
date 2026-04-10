@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use App\Services\EvolutionApiService;
 use Filament\Forms\Components;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -10,7 +11,6 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class WhatsAppSettingsPage extends Page
@@ -75,34 +75,39 @@ class WhatsAppSettingsPage extends Page
 
     public function testConnection(): void
     {
-        if (empty($this->evolution_api_url) || empty($this->evolution_api_key) || empty($this->evolution_instance_name)) {
+        if (empty($this->evolution_api_url) || empty($this->evolution_api_key)) {
             Notification::make()
                 ->title('Dados incompletos')
-                ->body('Preencha URL, API Key e Nome da Instancia antes de testar.')
+                ->body('Preencha a URL e o token da instancia antes de testar.')
                 ->danger()
                 ->send();
             return;
         }
 
         try {
-            $url = rtrim($this->evolution_api_url, '/') . '/instance/connectionState/' . $this->evolution_instance_name;
+            $status = app(EvolutionApiService::class)->getConnectionStatus();
 
-            $response = Http::withHeaders([
-                'apikey' => $this->evolution_api_key,
-            ])->timeout(10)->get($url);
+            if ($status !== null) {
+                $state = $status['data']['status']
+                    ?? (($status['data']['connected'] ?? false) ? 'open' : null)
+                    ?? $status['data']['state']
+                    ?? $status['status']
+                    ?? 'desconhecido';
 
-            if ($response->successful()) {
-                $state = $response->json('instance.state') ?? $response->json('state') ?? 'desconhecido';
+                $profileName = $status['data']['profileName']
+                    ?? $status['data']['name']
+                    ?? $this->evolution_instance_name
+                    ?? 'Instancia';
 
                 Notification::make()
                     ->title('Conexao OK!')
-                    ->body("Instancia: {$this->evolution_instance_name} | Status: {$state}")
+                    ->body("Instancia: {$profileName} | Status: {$state}")
                     ->success()
                     ->send();
             } else {
                 Notification::make()
                     ->title('Erro na conexao')
-                    ->body("HTTP {$response->status()}: {$response->body()}")
+                    ->body('Nao foi possivel consultar o status da instancia na Evolution Go.')
                     ->danger()
                     ->send();
             }

@@ -41,7 +41,7 @@ class SendInvoiceCommunicationJob implements ShouldQueue
             Log::info("Email de fatura agendado p/ {$customer->email}");
         }
 
-        // 2. Enviar WhatsApp via Evolution API
+        // 2. Enviar WhatsApp via Evolution Go
         $phone = $customer->phone ?? $customer->whatsapp;
         if (! empty($phone)) {
             $name = explode(' ', $customer->name)[0];

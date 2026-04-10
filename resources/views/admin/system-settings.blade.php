@@ -153,11 +153,11 @@
             </div>
         </div>
 
-        {{-- WHATSAPP / EVOLUTION --}}
+        {{-- WHATSAPP / EVOLUTION GO --}}
         <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 16px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
                 <span style="font-size: 1.2rem;">💬</span>
-                <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">WhatsApp (Evolution API)</h3>
+                <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">WhatsApp (Evolution Go)</h3>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div>
@@ -165,7 +165,7 @@
                     <input type="text" name="EVOLUTION_API_URL" value="{{ $settings['EVOLUTION_API_URL'] }}" class="settings-input" placeholder="https://api.evolution.com">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; opacity: 0.7;">API Key</label>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; opacity: 0.7;">Token da Instância</label>
                     <input type="password" name="EVOLUTION_API_KEY" value="{{ $settings['EVOLUTION_API_KEY'] }}" class="settings-input" placeholder="••••••••••">
                 </div>
                 <div>

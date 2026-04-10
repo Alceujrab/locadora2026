@@ -26,6 +26,22 @@ class EvolutionApiService
     }
 
     /**
+     * A Evolution Go autentica a instância pelo token enviado no header apikey.
+     */
+    protected function hasRequiredConfiguration(): bool
+    {
+        return ! empty($this->baseUrl) && ! empty($this->apiKey);
+    }
+
+    protected function baseHeaders(): array
+    {
+        return [
+            'apikey' => $this->apiKey,
+            'Accept' => 'application/json',
+        ];
+    }
+
+    /**
      * Verifica se o WhatsApp está habilitado no sistema
      */
     public function isEnabled(): bool
@@ -42,26 +58,29 @@ class EvolutionApiService
     }
 
     /**
-     * Envia uma mensagem de texto via Evolution API
+     * Envia uma mensagem de texto via Evolution Go
      */
     public function sendText(string $number, string $text): ?array
     {
-        if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
-            Log::warning('Configurações da Evolution API incompletas.');
+        if (! $this->hasRequiredConfiguration()) {
+            Log::warning('Configuracoes da Evolution Go incompletas.', [
+                'base_url_configured' => ! empty($this->baseUrl),
+                'instance_token_configured' => ! empty($this->apiKey),
+                'instance_name_configured' => ! empty($this->instanceName),
+            ]);
             return null;
         }
 
         try {
-            $endpoint = "{$this->baseUrl}/message/sendText/{$this->instanceName}";
+            $endpoint = "{$this->baseUrl}/send/text";
 
-            $response = Http::withHeaders([
-                'apikey' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])
+            $response = Http::withHeaders($this->baseHeaders())
+                ->asJson()
                 ->timeout(30)
                 ->post($endpoint, [
                     'number' => $this->formatNumber($number),
                     'text' => $text,
+                    'formatJid' => true,
                 ]);
 
             if ($response->successful()) {
@@ -69,7 +88,7 @@ class EvolutionApiService
                 return $response->json();
             }
 
-            Log::error("Erro Evolution API no envio p/ {$number}", [
+            Log::error("Erro Evolution Go no envio p/ {$number}", [
                 'status' => $response->status(),
                 'response' => $response->body(),
             ]);
@@ -100,33 +119,38 @@ class EvolutionApiService
     }
 
     /**
-     * Envia um documento (PDF) via Evolution API
+     * Envia um documento (PDF) via Evolution Go.
      */
     public function sendDocument(string $number, string $mediaUrl, string $fileName, ?string $caption = null): ?array
     {
-        if (empty($this->baseUrl) || empty($this->instanceName) || empty($this->apiKey)) {
-            Log::warning('Configurações da Evolution API incompletas.');
+        if (! $this->hasRequiredConfiguration()) {
+            Log::warning('Configuracoes da Evolution Go incompletas.', [
+                'base_url_configured' => ! empty($this->baseUrl),
+                'instance_token_configured' => ! empty($this->apiKey),
+                'instance_name_configured' => ! empty($this->instanceName),
+            ]);
             return null;
         }
 
         try {
-            $endpoint = "{$this->baseUrl}/message/sendMedia/{$this->instanceName}";
+            $endpoint = "{$this->baseUrl}/send/media";
 
             $payload = [
                 'number' => $this->formatNumber($number),
-                'mediatype' => 'document',
-                'media' => $mediaUrl,
+                'type' => 'document',
+                'url' => $mediaUrl,
+                'mediaUrl' => $mediaUrl,
+                'filename' => $fileName,
                 'fileName' => $fileName,
+                'formatJid' => true,
             ];
 
             if ($caption) {
                 $payload['caption'] = $caption;
             }
 
-            $response = Http::withHeaders([
-                'apikey' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])
+            $response = Http::withHeaders($this->baseHeaders())
+                ->asJson()
                 ->timeout(60)
                 ->post($endpoint, $payload);
 
@@ -135,7 +159,7 @@ class EvolutionApiService
                 return $response->json();
             }
 
-            Log::error("Erro Evolution API no envio de documento p/ {$number}", [
+            Log::error("Erro Evolution Go no envio de documento p/ {$number}", [
                 'status' => $response->status(),
                 'response' => $response->body(),
             ]);
@@ -143,6 +167,37 @@ class EvolutionApiService
             return null;
         } catch (\Exception $e) {
             Log::error('Exceção ao enviar documento WhatsApp: '.$e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Consulta o status da instância autenticada pelo token configurado.
+     */
+    public function getConnectionStatus(): ?array
+    {
+        if (! $this->hasRequiredConfiguration()) {
+            Log::warning('Configuracoes da Evolution Go incompletas para consulta de status.');
+            return null;
+        }
+
+        try {
+            $response = Http::withHeaders($this->baseHeaders())
+                ->timeout(15)
+                ->get("{$this->baseUrl}/instance/status");
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            Log::error('Erro Evolution Go ao consultar status da instancia.', [
+                'status' => $response->status(),
+                'response' => $response->body(),
+            ]);
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Excecao ao consultar status da Evolution Go: '.$e->getMessage());
             return null;
         }
     }
