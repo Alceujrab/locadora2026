@@ -305,28 +305,15 @@ class ReservationResource extends Resource
                     ->action(function (Reservation $record) {
                         $record->load(['customer', 'branch', 'vehicle', 'extras.rentalExtra']);
 
-                        // Gera número de fatura seguro: busca o maior sequencial existente e incrementa
-                        $year = date('Y');
-                        $prefix = 'FAT-' . $year . '-';
-                        $last = Invoice::where('invoice_number', 'LIKE', $prefix . '%')
-                            ->orderByRaw('CAST(SUBSTRING(invoice_number, ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
-                            ->value('invoice_number');
-                        $nextSeq = $last ? ((int) substr($last, strlen($prefix)) + 1) : 1;
-                        // Garante unicidade em caso de race condition
-                        do {
-                            $invoiceNumber = $prefix . str_pad($nextSeq, 5, '0', STR_PAD_LEFT);
-                            $nextSeq++;
-                        } while (Invoice::where('invoice_number', $invoiceNumber)->exists());
-
                         $notes = "Reserva #{$record->id}\n"
                             . "Veiculo: {$record->vehicle?->plate} - {$record->vehicle?->brand} {$record->vehicle?->model}\n"
                             . "Periodo: {$record->pickup_date?->format('d/m/Y H:i')} a {$record->return_date?->format('d/m/Y H:i')}\n"
                             . "Dias: {$record->total_days} | Diaria: R$ " . number_format((float) $record->daily_rate, 2, ',', '.');
 
-                        $invoice = Invoice::create([
+                        $invoiceService = app(\App\Services\InvoiceService::class);
+                        $invoice = $invoiceService->createCustomInvoice([
                             'branch_id' => $record->branch_id,
                             'customer_id' => $record->customer_id,
-                            'invoice_number' => $invoiceNumber,
                             'due_date' => now()->addDays(3),
                             'amount' => $record->subtotal,
                             'discount' => $record->discount ?? 0,

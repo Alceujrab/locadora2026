@@ -309,10 +309,10 @@ class ServiceOrderResource extends Resource
                 $invoiceAmount = $record->customer_charge > 0 ? (float) $record->customer_charge : (float) $record->total;
 
                 // Criar Invoice
-                $invoice = \App\Models\Invoice::create([
+                $invoiceService = app(\App\Services\InvoiceService::class);
+                $invoice = $invoiceService->createCustomInvoice([
                     'branch_id' => $record->branch_id,
                     'customer_id' => $record->customer_id,
-                    'invoice_number' => 'OS-' . str_pad($record->id, 5, '0', STR_PAD_LEFT),
                     'due_date' => now()->addDays(7),
                     'amount' => $invoiceAmount,
                     'total' => $invoiceAmount,

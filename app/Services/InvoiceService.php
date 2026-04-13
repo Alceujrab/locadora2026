@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Enums\InvoiceStatus;
 use App\Models\Contract;
 use App\Models\Invoice;
+use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceService
 {
@@ -35,11 +37,10 @@ class InvoiceService
                 $amount += $difference;
             }
 
-            $invoice = Invoice::create([
+            $invoice = $this->createInvoiceWithUniqueNumber([
                 'branch_id' => $contract->branch_id,
                 'contract_id' => $contract->id,
                 'customer_id' => $contract->customer_id,
-                'invoice_number' => $this->generateInvoiceNumber($contract->branch_id),
                 'due_date' => $baseDate->copy()->addMonths($i - 1),
                 'installment_number' => $i,
                 'total_installments' => $installments,
@@ -59,11 +60,30 @@ class InvoiceService
      */
     public function createCustomInvoice(array $data): Invoice
     {
-        $data['invoice_number'] = $this->generateInvoiceNumber($data['branch_id'] ?? null);
         $data['status'] = $data['status'] ?? InvoiceStatus::OPEN;
         $data['total'] = $data['amount'] - ($data['discount'] ?? 0);
 
-        return Invoice::create($data);
+        return $this->createInvoiceWithUniqueNumber($data);
+    }
+
+    /**
+     * Cria invoice com retry automático em caso de número duplicado
+     */
+    private function createInvoiceWithUniqueNumber(array $data, int $maxRetries = 5): Invoice
+    {
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                $data['invoice_number'] = $this->generateInvoiceNumber($data['branch_id'] ?? null);
+
+                return Invoice::create($data);
+            } catch (UniqueConstraintViolationException $e) {
+                if ($attempt === $maxRetries) {
+                    throw $e;
+                }
+            }
+        }
+
+        throw new \RuntimeException('Não foi possível gerar número único para a fatura.');
     }
 
     /**
