@@ -69,8 +69,8 @@ class FineTrafficResource extends Resource
                     Components\TextInput::make('amount')->label('Valor (R$)')->numeric()->prefix('R$')->required(),
                     Components\Select::make('responsibility')->label('Responsabilidade')->options([
                         'locadora' => 'Locadora',
-                        'cliente' => 'Cliente',
-                    ])->default('cliente')->required(),
+                        'locatario' => 'Cliente',
+                    ])->default('locatario')->required(),
                     Components\Select::make('status')->label('Status')->options([
                         'pendente' => 'Pendente',
                         'indicado' => 'Indicado',
@@ -249,7 +249,7 @@ class FineTrafficResource extends Resource
                 ]),
                 Tables\Filters\SelectFilter::make('responsibility')->options([
                     'locadora' => 'Locadora',
-                    'cliente' => 'Cliente',
+                    'locatario' => 'Cliente',
                 ]),
             ])
             ->actions([
