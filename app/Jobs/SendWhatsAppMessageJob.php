@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\EvolutionApiService;
+use App\Services\WuzapiService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -29,7 +29,7 @@ class SendWhatsAppMessageJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(EvolutionApiService $evolutionService): void
+    public function handle(WuzapiService $wuzapi): void
     {
         if (empty($this->phoneNumber)) {
             Log::warning('SendWhatsAppMessageJob cancelado: Telefone vazio.');
@@ -37,6 +37,6 @@ class SendWhatsAppMessageJob implements ShouldQueue
             return;
         }
 
-        $evolutionService->sendText($this->phoneNumber, $this->message);
+        $wuzapi->sendText($this->phoneNumber, $this->message);
     }
 }
