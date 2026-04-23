@@ -37,7 +37,7 @@ class ViewVehicle extends ViewRecord
     protected function getViewData(): array
     {
         $vehicle = $this->record;
-        $vehicle->load(['contracts.customer', 'reservations.customer', 'serviceOrders', 'fines', 'inspections', 'maintenanceAlerts', 'category', 'branch', 'photos']);
+        $vehicle->load(['contracts.customer', 'reservations.customer', 'serviceOrders', 'fines.customer', 'inspections', 'maintenanceAlerts', 'category', 'branch', 'photos']);
 
         // Cálculos
         $totalContracts = $vehicle->contracts->count();

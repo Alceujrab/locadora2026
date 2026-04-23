@@ -73,6 +73,9 @@
             <button class="vd-tab" :class="activeTab === 'servicos' && 'vd-tab-active'" @click="activeTab = 'servicos'">
                 Serviços <span class="vd-tab-badge" style="background: rgba(234,88,12,0.15); color: #fb923c;">{{ $totalServiceOrders }}</span>
             </button>
+            <button class="vd-tab" :class="activeTab === 'multas' && 'vd-tab-active'" @click="activeTab = 'multas'">
+                Multas <span class="vd-tab-badge" style="background: rgba(239,68,68,0.15); color: #f87171;">{{ $totalFines }}</span>
+            </button>
             <button class="vd-tab" :class="activeTab === 'financeiro' && 'vd-tab-active'" @click="activeTab = 'financeiro'">
                 Financeiro
             </button>
@@ -433,6 +436,100 @@
                     </div>
                 </section>
             @endif
+        </div>
+
+        {{-- ========== ABA: MULTAS ========== --}}
+        <div x-show="activeTab === 'multas'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+            <section class="fi-section fi-section-has-header">
+                <header class="fi-section-header">
+                    <div class="fi-section-header-text-ctn">
+                        <h3 class="fi-section-header-heading">Multas de Trânsito</h3>
+                        <p class="fi-section-header-description" style="font-size: 0.8125rem; color: #94a3b8; margin-top: 0.15rem;">
+                            Histórico de autuações vinculadas a este veículo — total: <strong style="color: #f87171;">R$ {{ number_format($expensesFines, 2, ',', '.') }}</strong>
+                        </p>
+                    </div>
+                    <div class="fi-section-header-after-ctn">
+                        <a href="{{ url('/admin/fine-traffic/create?vehicle_id='.$vehicle->id) }}"
+                           style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.45rem 0.95rem;
+                                  background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;
+                                  border-radius:0.4rem;font-size:0.8125rem;font-weight:600;text-decoration:none;
+                                  box-shadow:0 2px 6px rgba(37,99,235,0.35);transition:opacity 0.15s;"
+                           onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">
+                            + Lançar Multa
+                        </a>
+                    </div>
+                </header>
+                <div class="fi-section-content-ctn">
+                    <div style="overflow-x: auto;">
+                        <table class="vd-table">
+                            <thead>
+                                <tr>
+                                    <th>AIT</th>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Condutor / Cliente</th>
+                                    <th>Vencimento</th>
+                                    <th style="text-align: right;">Valor</th>
+                                    <th style="text-align: center;">Responsável</th>
+                                    <th style="text-align: center;">Status</th>
+                                    <th style="text-align: center;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($vehicle->fines->sortByDesc('fine_date') as $fine)
+                                    @php
+                                        $fStatus = $fine->status ?? 'pendente';
+                                        $fColor = match($fStatus) {
+                                            'pago', 'paga' => 'background: rgba(34,197,94,0.15); color: #4ade80;',
+                                            'pendente' => 'background: rgba(234,179,8,0.15); color: #facc15;',
+                                            'indicado', 'transferida' => 'background: rgba(59,130,246,0.15); color: #60a5fa;',
+                                            'recorrido', 'recurso' => 'background: rgba(148,163,184,0.15); color: #cbd5e1;',
+                                            'cancelado', 'cancelada' => 'background: rgba(239,68,68,0.15); color: #f87171;',
+                                            default => 'background: rgba(107,114,128,0.15); color: #9ca3af;',
+                                        };
+                                        $driverLabel = $fine->driver_name ?: ($fine->customer?->name ?? '—');
+                                    @endphp
+                                    <tr>
+                                        <td style="font-weight: 600;">{{ $fine->auto_infraction_number ?: '—' }}</td>
+                                        <td style="color: #cbd5e1;">{{ $fine->fine_date?->format('d/m/Y') ?? '—' }}</td>
+                                        <td style="max-width: 280px; white-space: normal;">{{ \Illuminate\Support\Str::limit($fine->description, 70) }}</td>
+                                        <td>{{ $driverLabel }}</td>
+                                        <td style="color: {{ $fine->isOverdue() ? '#f87171' : '#cbd5e1' }};">
+                                            {{ $fine->due_date?->format('d/m/Y') ?? '—' }}
+                                        </td>
+                                        <td style="text-align: right; font-weight: 700; color: #f87171;">
+                                            R$ {{ number_format((float)$fine->amount, 2, ',', '.') }}
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span class="vd-badge" style="background: rgba(148,163,184,0.12); color: #cbd5e1;">
+                                                {{ $fine->responsibility === 'locadora' ? 'Locadora' : 'Cliente' }}
+                                            </span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span class="vd-badge" style="{{ $fColor }}">{{ ucfirst($fStatus) }}</span>
+                                        </td>
+                                        <td style="text-align: center; white-space: nowrap;">
+                                            <a href="{{ url('/admin/fine-traffic/'.$fine->id.'/edit') }}"
+                                               style="color:#60a5fa;text-decoration:none;font-size:0.75rem;font-weight:600;margin-right:0.5rem;">
+                                                Editar
+                                            </a>
+                                            @if($fine->driver_name && $fine->driver_cpf)
+                                                <a href="{{ route('admin.fines-traffic.fici', ['id' => $fine->id]) }}" target="_blank"
+                                                   style="color:#4ade80;text-decoration:none;font-size:0.75rem;font-weight:600;">
+                                                    FICI
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="9" class="vd-empty">Nenhuma multa registrada para este veículo.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
 
         {{-- ========== ABA: FINANCEIRO ========== --}}
