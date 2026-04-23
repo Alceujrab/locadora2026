@@ -13,7 +13,14 @@ class EditFineTraffic extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('downloadFici')
+                ->label('Baixar FICI (PDF)')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->visible(fn () => ! empty($this->record?->driver_name) && ! empty($this->record?->driver_cpf))
+                ->url(fn () => route('admin.fines-traffic.fici', ['id' => $this->record->id]), shouldOpenInNewTab: true),
             Actions\DeleteAction::make(),
         ];
     }
 }
+

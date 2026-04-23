@@ -13,7 +13,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-
 class FineTrafficResource extends Resource
 {
     protected static ?string $model = FineTraffic::class;
@@ -95,7 +94,51 @@ class FineTrafficResource extends Resource
                         Components\TextInput::make('driver_cpf')
                             ->label('CPF')
                             ->mask('999.999.999-99')
-                            ->maxLength(20),
+                            ->maxLength(20)
+                            ->live(onBlur: true)
+                            ->suffixAction(
+                                \Filament\Actions\Action::make('buscarPorCpf')
+                                    ->icon('heroicon-o-magnifying-glass')
+                                    ->tooltip('Buscar cliente cadastrado por este CPF')
+                                    ->action(function ($state, \Filament\Schemas\Components\Utilities\Set $set) {
+                                        $only = preg_replace('/\D/', '', (string) $state);
+                                        if (strlen((string) $only) !== 11) {
+                                            \Filament\Notifications\Notification::make()
+                                                ->title('CPF incompleto')
+                                                ->warning()->send();
+                                            return;
+                                        }
+                                        $c = \App\Models\Customer::whereRaw(
+                                            "REPLACE(REPLACE(REPLACE(cpf_cnpj,'.',''),'-',''),'/','') = ?",
+                                            [$only]
+                                        )->first();
+                                        if (! $c) {
+                                            \Filament\Notifications\Notification::make()
+                                                ->title('Nenhum cliente encontrado com esse CPF')
+                                                ->body('Ao salvar, um novo cliente será criado automaticamente.')
+                                                ->info()->send();
+                                            return;
+                                        }
+                                        $set('customer_id', $c->id);
+                                        $set('driver_name', $c->name);
+                                        $set('driver_rg', $c->rg);
+                                        $set('driver_phone', $c->phone ?? $c->whatsapp);
+                                        $set('driver_email', $c->email);
+                                        $set('driver_cnh_number', $c->cnh_number);
+                                        $set('driver_cnh_expires_at', $c->cnh_expiry);
+                                        $set('driver_zipcode', $c->address_zip);
+                                        $set('driver_address', $c->address_street);
+                                        $set('driver_address_number', $c->address_number);
+                                        $set('driver_address_complement', $c->address_complement);
+                                        $set('driver_neighborhood', $c->address_neighborhood);
+                                        $set('driver_city', $c->address_city);
+                                        $set('driver_state', $c->address_state);
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('Cliente encontrado')
+                                            ->body('Dados de '.$c->name.' carregados automaticamente.')
+                                            ->success()->send();
+                                    })
+                            ),
                         Components\TextInput::make('driver_rg')
                             ->label('RG')
                             ->maxLength(30),

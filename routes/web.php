@@ -65,6 +65,11 @@ Route::get('/admin/accounts-receivable/{id}/recibo', [App\Http\Controllers\Payme
     ->name('admin.accounts-receivable.receipt')
     ->middleware(['web']);
 
+// FICI — Formulário de Identificação do Condutor Infrator (Multas)
+Route::get('/admin/fines-traffic/{id}/fici', [App\Http\Controllers\FineDriverIdentificationController::class, 'download'])
+    ->name('admin.fines-traffic.fici')
+    ->middleware(['web', 'auth']);
+
 // ==========================================
 // ADMIN: SALVAR CONFIGURAÇÕES DO SISTEMA
 // ==========================================

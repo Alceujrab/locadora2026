@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Contract::observe(\App\Observers\ContractObserver::class);
         \App\Models\ServiceOrder::observe(\App\Observers\ServiceOrderObserver::class);
         \App\Models\ServiceOrderItem::observe(\App\Observers\ServiceOrderItemObserver::class);
+        \App\Models\FineTraffic::observe(\App\Observers\FineTrafficObserver::class);
 
         // Dinamicamente alimenta as configurações do Login Social via Banco de Dados (ignora erros de compilação CLI)
         try {
