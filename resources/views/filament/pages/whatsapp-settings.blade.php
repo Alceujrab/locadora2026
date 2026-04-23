@@ -135,4 +135,35 @@
             </x-filament::button>
         </div>
     </form>
+
+    {{-- ===== Enviar mensagem de teste ===== --}}
+    <section class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mt-6">
+        <header class="flex items-center gap-3 border-b border-gray-200 px-6 py-4 dark:border-white/10">
+            <x-filament::icon icon="heroicon-o-paper-airplane" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+            <div>
+                <h2 class="text-base font-semibold text-gray-950 dark:text-white">Enviar mensagem de teste</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Dispara uma mensagem de texto pelo WuzAPI usando o cabecalho/rodape configurados acima. Salve as configuracoes antes de testar.</p>
+            </div>
+        </header>
+        <div class="px-6 py-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Numero de destino</label>
+                    <input type="text" wire:model="test_phone" placeholder="66999998888"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none" />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">DDD + numero. O prefixo 55 e adicionado automaticamente.</p>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Texto da mensagem</label>
+                    <textarea wire:model="test_message" rows="3"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"></textarea>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-3">
+                <x-filament::button type="button" wire:click="sendTestMessage" color="success" icon="heroicon-o-paper-airplane">
+                    Enviar teste
+                </x-filament::button>
+            </div>
+        </div>
+    </section>
 </x-filament-panels::page>

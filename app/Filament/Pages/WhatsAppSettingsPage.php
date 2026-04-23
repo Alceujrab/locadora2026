@@ -37,6 +37,10 @@ class WhatsAppSettingsPage extends Page
     public ?string $whatsapp_default_message_header = '';
     public ?string $whatsapp_default_message_footer = '';
 
+    // Teste de envio
+    public ?string $test_phone = '';
+    public ?string $test_message = 'Mensagem de teste do sistema Elite Locadora.';
+
     public function mount(): void
     {
         // Lê chaves novas; se vazias, cai nas antigas (evolution_*) para migrar suave
@@ -122,6 +126,59 @@ class WhatsAppSettingsPage extends Page
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Falha na conexao')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function sendTestMessage(): void
+    {
+        if (empty($this->test_phone)) {
+            Notification::make()
+                ->title('Numero obrigatorio')
+                ->body('Informe o numero de destino no formato DDD + numero (ex: 66992184925).')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        if (empty($this->wuzapi_api_url) || empty($this->wuzapi_token)) {
+            Notification::make()
+                ->title('Configuracao incompleta')
+                ->body('Preencha e salve a URL e o token do WuzAPI antes de enviar testes.')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        $header = trim((string) $this->whatsapp_default_message_header);
+        $footer = trim((string) $this->whatsapp_default_message_footer);
+        $body = trim((string) $this->test_message) ?: 'Mensagem de teste.';
+
+        $full = ($header ? "*{$header}*\n\n" : '')
+            . $body
+            . ($footer ? "\n\n_{$footer}_" : '');
+
+        try {
+            $result = app(WuzapiService::class)->sendText($this->test_phone, $full);
+
+            if ($result !== null) {
+                Notification::make()
+                    ->title('Mensagem enviada!')
+                    ->body("Enviado para {$this->test_phone}. Verifique o WhatsApp do destinatario.")
+                    ->success()
+                    ->send();
+            } else {
+                Notification::make()
+                    ->title('Falha no envio')
+                    ->body('A API nao confirmou o envio. Verifique storage/logs/laravel.log.')
+                    ->danger()
+                    ->send();
+            }
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('Erro ao enviar')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
