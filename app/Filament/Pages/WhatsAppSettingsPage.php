@@ -4,8 +4,16 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use App\Services\WuzapiService;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class WhatsAppSettingsPage extends Page
 {
@@ -21,73 +29,191 @@ class WhatsAppSettingsPage extends Page
 
     protected string $view = 'filament.pages.whatsapp-settings';
 
-    // Conexão WuzAPI
-    public ?string $wuzapi_api_url = '';
-    public ?string $wuzapi_token = '';
-    public ?string $wuzapi_instance_label = '';
+    /** @var array<string, mixed> */
+    public array $data = [];
 
-    // Toggles
-    public bool $whatsapp_enabled = false;
-    public bool $whatsapp_notify_contracts = true;
-    public bool $whatsapp_notify_invoices = true;
-    public bool $whatsapp_notify_service_orders = true;
-    public bool $whatsapp_notify_reservations = true;
-
-    // Mensagens padrão
-    public ?string $whatsapp_default_message_header = '';
-    public ?string $whatsapp_default_message_footer = '';
-
-    // Teste de envio
-    public ?string $test_phone = '';
-    public ?string $test_message = 'Mensagem de teste do sistema Elite Locadora.';
+    /** @var array<string, mixed> */
+    public array $testData = [];
 
     public function mount(): void
     {
-        // Lê chaves novas; se vazias, cai nas antigas (evolution_*) para migrar suave
-        $this->wuzapi_api_url = Setting::get('wuzapi_api_url', Setting::get('evolution_api_url', ''), null);
-        $this->wuzapi_token = Setting::get('wuzapi_token', Setting::get('evolution_api_key', ''), null);
-        $this->wuzapi_instance_label = Setting::get('wuzapi_instance_label', Setting::get('evolution_instance_name', ''), null);
+        $this->form->fill([
+            'wuzapi_api_url' => Setting::get('wuzapi_api_url', Setting::get('evolution_api_url', ''), null),
+            'wuzapi_token' => Setting::get('wuzapi_token', Setting::get('evolution_api_key', ''), null),
+            'wuzapi_instance_label' => Setting::get('wuzapi_instance_label', Setting::get('evolution_instance_name', ''), null),
 
-        $this->whatsapp_enabled = (bool) Setting::get('whatsapp_enabled', false, null);
-        $this->whatsapp_notify_contracts = (bool) Setting::get('whatsapp_notify_contracts', true, null);
-        $this->whatsapp_notify_invoices = (bool) Setting::get('whatsapp_notify_invoices', true, null);
-        $this->whatsapp_notify_service_orders = (bool) Setting::get('whatsapp_notify_service_orders', true, null);
-        $this->whatsapp_notify_reservations = (bool) Setting::get('whatsapp_notify_reservations', true, null);
+            'whatsapp_enabled' => (bool) Setting::get('whatsapp_enabled', false, null),
+            'whatsapp_notify_contracts' => (bool) Setting::get('whatsapp_notify_contracts', true, null),
+            'whatsapp_notify_invoices' => (bool) Setting::get('whatsapp_notify_invoices', true, null),
+            'whatsapp_notify_service_orders' => (bool) Setting::get('whatsapp_notify_service_orders', true, null),
+            'whatsapp_notify_reservations' => (bool) Setting::get('whatsapp_notify_reservations', true, null),
 
-        $this->whatsapp_default_message_header = Setting::get('whatsapp_default_message_header', 'Elite Locadora', null);
-        $this->whatsapp_default_message_footer = Setting::get('whatsapp_default_message_footer', 'Elite Locadora - Aluguel de Veiculos', null);
+            'whatsapp_default_message_header' => Setting::get('whatsapp_default_message_header', 'Elite Locadora', null),
+            'whatsapp_default_message_footer' => Setting::get('whatsapp_default_message_footer', 'Elite Locadora - Aluguel de Veiculos', null),
+        ]);
+
+        $this->testForm->fill([
+            'test_phone' => '',
+            'test_message' => 'Mensagem de teste do sistema Elite Locadora.',
+        ]);
+    }
+
+    /** @return array<int, string> */
+    protected function getForms(): array
+    {
+        return ['form', 'testForm'];
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->statePath('data')
+            ->components([
+                Section::make('Conexão com WuzAPI')
+                    ->description('Configure a URL da API e o token do usuário gerado no painel do WuzAPI.')
+                    ->icon('heroicon-o-signal')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            TextInput::make('wuzapi_api_url')
+                                ->label('URL da API')
+                                ->placeholder('https://wuzapi.seudominio.com.br')
+                                ->helperText('Ex.: https://wuzapi.seudominio.com.br ou http://localhost:8080')
+                                ->url()
+                                ->columnSpan(2),
+
+                            TextInput::make('wuzapi_instance_label')
+                                ->label('Rótulo da Instância')
+                                ->placeholder('principal')
+                                ->helperText('Identificação visual (opcional).'),
+                        ]),
+
+                        TextInput::make('wuzapi_token')
+                            ->label('Token do Usuário')
+                            ->placeholder('token gerado no painel do WuzAPI')
+                            ->helperText('Enviado no header "token" de todas as requisições.')
+                            ->password()
+                            ->revealable()
+                            ->autocomplete('off'),
+                    ])
+                    ->footerActions([
+                        Action::make('testConnection')
+                            ->label('Testar Conexão')
+                            ->icon('heroicon-o-signal')
+                            ->color('info')
+                            ->action('testConnection'),
+                    ]),
+
+                Section::make('Ativação do WhatsApp')
+                    ->description('Ative ou desative o envio de notificações por módulo.')
+                    ->icon('heroicon-o-bell-alert')
+                    ->schema([
+                        Toggle::make('whatsapp_enabled')
+                            ->label('WhatsApp Ativo')
+                            ->helperText('Ativar/desativar todo o envio via WhatsApp no sistema.')
+                            ->inline(false),
+
+                        Grid::make(2)->schema([
+                            Checkbox::make('whatsapp_notify_contracts')
+                                ->label('Contratos')
+                                ->helperText('Enviar contratos e assinaturas por WhatsApp.'),
+                            Checkbox::make('whatsapp_notify_invoices')
+                                ->label('Faturas')
+                                ->helperText('Notificar sobre faturas pendentes e vencidas.'),
+                            Checkbox::make('whatsapp_notify_service_orders')
+                                ->label('Ordens de Serviço')
+                                ->helperText('Enviar OS para assinatura digital via WhatsApp.'),
+                            Checkbox::make('whatsapp_notify_reservations')
+                                ->label('Reservas')
+                                ->helperText('Confirmar reservas e lembretes por WhatsApp.'),
+                        ]),
+                    ]),
+
+                Section::make('Mensagens Padrão')
+                    ->description('Cabeçalho e rodapé anexados às mensagens enviadas.')
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('whatsapp_default_message_header')
+                                ->label('Cabeçalho da Mensagem')
+                                ->placeholder('Elite Locadora')
+                                ->helperText('Texto adicionado no início de cada mensagem.'),
+                            TextInput::make('whatsapp_default_message_footer')
+                                ->label('Rodapé da Mensagem')
+                                ->placeholder('Elite Locadora - Aluguel de Veículos')
+                                ->helperText('Texto adicionado no final de cada mensagem.'),
+                        ]),
+                    ]),
+            ]);
+    }
+
+    public function testForm(Schema $schema): Schema
+    {
+        return $schema
+            ->statePath('testData')
+            ->components([
+                Section::make('Enviar mensagem de teste')
+                    ->description('Dispara uma mensagem de texto pelo WuzAPI usando o cabeçalho/rodapé configurados acima. Salve as configurações antes de testar.')
+                    ->icon('heroicon-o-paper-airplane')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            TextInput::make('test_phone')
+                                ->label('Número de destino')
+                                ->placeholder('66999998888')
+                                ->helperText('DDD + número. O prefixo 55 é adicionado automaticamente.')
+                                ->required()
+                                ->columnSpan(1),
+
+                            Textarea::make('test_message')
+                                ->label('Texto da mensagem')
+                                ->rows(2)
+                                ->columnSpan(2),
+                        ]),
+                    ])
+                    ->footerActions([
+                        Action::make('sendTestMessage')
+                            ->label('Enviar teste')
+                            ->icon('heroicon-o-paper-airplane')
+                            ->color('success')
+                            ->action('sendTestMessage'),
+                    ]),
+            ]);
     }
 
     public function save(): void
     {
-        Setting::set('wuzapi_api_url', $this->wuzapi_api_url ?? '', 'whatsapp');
-        Setting::set('wuzapi_token', $this->wuzapi_token ?? '', 'whatsapp');
-        Setting::set('wuzapi_instance_label', $this->wuzapi_instance_label ?? '', 'whatsapp');
+        $data = $this->form->getState();
 
-        // Mantém compatibilidade com chaves legadas (enquanto Setting::get pode cair nelas)
-        Setting::set('evolution_api_url', $this->wuzapi_api_url ?? '', 'whatsapp');
-        Setting::set('evolution_api_key', $this->wuzapi_token ?? '', 'whatsapp');
-        Setting::set('evolution_instance_name', $this->wuzapi_instance_label ?? '', 'whatsapp');
+        Setting::set('wuzapi_api_url', $data['wuzapi_api_url'] ?? '', 'whatsapp');
+        Setting::set('wuzapi_token', $data['wuzapi_token'] ?? '', 'whatsapp');
+        Setting::set('wuzapi_instance_label', $data['wuzapi_instance_label'] ?? '', 'whatsapp');
 
-        Setting::set('whatsapp_enabled', $this->whatsapp_enabled ? '1' : '0', 'whatsapp');
-        Setting::set('whatsapp_notify_contracts', $this->whatsapp_notify_contracts ? '1' : '0', 'whatsapp');
-        Setting::set('whatsapp_notify_invoices', $this->whatsapp_notify_invoices ? '1' : '0', 'whatsapp');
-        Setting::set('whatsapp_notify_service_orders', $this->whatsapp_notify_service_orders ? '1' : '0', 'whatsapp');
-        Setting::set('whatsapp_notify_reservations', $this->whatsapp_notify_reservations ? '1' : '0', 'whatsapp');
+        Setting::set('evolution_api_url', $data['wuzapi_api_url'] ?? '', 'whatsapp');
+        Setting::set('evolution_api_key', $data['wuzapi_token'] ?? '', 'whatsapp');
+        Setting::set('evolution_instance_name', $data['wuzapi_instance_label'] ?? '', 'whatsapp');
 
-        Setting::set('whatsapp_default_message_header', $this->whatsapp_default_message_header ?? '', 'whatsapp');
-        Setting::set('whatsapp_default_message_footer', $this->whatsapp_default_message_footer ?? '', 'whatsapp');
+        Setting::set('whatsapp_enabled', !empty($data['whatsapp_enabled']) ? '1' : '0', 'whatsapp');
+        Setting::set('whatsapp_notify_contracts', !empty($data['whatsapp_notify_contracts']) ? '1' : '0', 'whatsapp');
+        Setting::set('whatsapp_notify_invoices', !empty($data['whatsapp_notify_invoices']) ? '1' : '0', 'whatsapp');
+        Setting::set('whatsapp_notify_service_orders', !empty($data['whatsapp_notify_service_orders']) ? '1' : '0', 'whatsapp');
+        Setting::set('whatsapp_notify_reservations', !empty($data['whatsapp_notify_reservations']) ? '1' : '0', 'whatsapp');
+
+        Setting::set('whatsapp_default_message_header', $data['whatsapp_default_message_header'] ?? '', 'whatsapp');
+        Setting::set('whatsapp_default_message_footer', $data['whatsapp_default_message_footer'] ?? '', 'whatsapp');
 
         Notification::make()
-            ->title('Configuracoes salvas!')
-            ->body('As configuracoes do WhatsApp (WuzAPI) foram atualizadas com sucesso.')
+            ->title('Configurações salvas!')
+            ->body('As configurações do WhatsApp (WuzAPI) foram atualizadas com sucesso.')
             ->success()
             ->send();
     }
 
     public function testConnection(): void
     {
-        if (empty($this->wuzapi_api_url) || empty($this->wuzapi_token)) {
+        $data = $this->form->getState();
+        $url = $data['wuzapi_api_url'] ?? '';
+        $token = $data['wuzapi_token'] ?? '';
+
+        if (empty($url) || empty($token)) {
             Notification::make()
                 ->title('Dados incompletos')
                 ->body('Preencha a URL e o token do WuzAPI antes de testar.')
@@ -96,19 +222,18 @@ class WhatsAppSettingsPage extends Page
             return;
         }
 
-        // Salva antes para o service pegar os valores atualizados
-        Setting::set('wuzapi_api_url', $this->wuzapi_api_url ?? '', 'whatsapp');
-        Setting::set('wuzapi_token', $this->wuzapi_token ?? '', 'whatsapp');
+        Setting::set('wuzapi_api_url', $url, 'whatsapp');
+        Setting::set('wuzapi_token', $token, 'whatsapp');
 
         try {
             $status = app(WuzapiService::class)->getConnectionStatus();
 
             if ($status !== null) {
-                $data = $status['data'] ?? $status;
-                $connected = $data['connected'] ?? $data['Connected'] ?? false;
-                $loggedIn = $data['loggedIn'] ?? $data['LoggedIn'] ?? false;
-                $jid = $data['jid'] ?? $data['JID'] ?? '';
-                $name = $data['name'] ?? $data['Name'] ?? '';
+                $payload = $status['data'] ?? $status;
+                $connected = $payload['connected'] ?? $payload['Connected'] ?? false;
+                $loggedIn = $payload['loggedIn'] ?? $payload['LoggedIn'] ?? false;
+                $jid = $payload['jid'] ?? $payload['JID'] ?? '';
+                $name = $payload['name'] ?? $payload['Name'] ?? '';
 
                 $state = $connected && $loggedIn
                     ? 'Conectado e Logado'
@@ -117,20 +242,20 @@ class WhatsAppSettingsPage extends Page
                 $detail = $state . ($name ? " - {$name}" : '') . ($jid ? " ({$jid})" : '');
 
                 Notification::make()
-                    ->title('Conexao com WuzAPI OK!')
+                    ->title('Conexão com WuzAPI OK!')
                     ->body("Status: {$detail}")
                     ->success()
                     ->send();
             } else {
                 Notification::make()
-                    ->title('Erro na conexao')
-                    ->body('Nao foi possivel consultar o status da sessao no WuzAPI. Verifique URL e token.')
+                    ->title('Erro na conexão')
+                    ->body('Não foi possível consultar o status da sessão no WuzAPI. Verifique URL e token.')
                     ->danger()
                     ->send();
             }
         } catch (\Exception $e) {
             Notification::make()
-                ->title('Falha na conexao')
+                ->title('Falha na conexão')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
@@ -139,45 +264,49 @@ class WhatsAppSettingsPage extends Page
 
     public function sendTestMessage(): void
     {
-        if (empty($this->test_phone)) {
+        $config = $this->form->getState();
+        $test = $this->testForm->getState();
+
+        $phone = trim((string) ($test['test_phone'] ?? ''));
+        if ($phone === '') {
             Notification::make()
-                ->title('Numero obrigatorio')
-                ->body('Informe o numero de destino no formato DDD + numero (ex: 66992184925).')
+                ->title('Número obrigatório')
+                ->body('Informe o número de destino no formato DDD + número (ex: 66992184925).')
                 ->danger()
                 ->send();
             return;
         }
 
-        if (empty($this->wuzapi_api_url) || empty($this->wuzapi_token)) {
+        if (empty($config['wuzapi_api_url']) || empty($config['wuzapi_token'])) {
             Notification::make()
-                ->title('Configuracao incompleta')
+                ->title('Configuração incompleta')
                 ->body('Preencha e salve a URL e o token do WuzAPI antes de enviar testes.')
                 ->danger()
                 ->send();
             return;
         }
 
-        $header = trim((string) $this->whatsapp_default_message_header);
-        $footer = trim((string) $this->whatsapp_default_message_footer);
-        $body = trim((string) $this->test_message) ?: 'Mensagem de teste.';
+        $header = trim((string) ($config['whatsapp_default_message_header'] ?? ''));
+        $footer = trim((string) ($config['whatsapp_default_message_footer'] ?? ''));
+        $body = trim((string) ($test['test_message'] ?? '')) ?: 'Mensagem de teste.';
 
         $full = ($header ? "*{$header}*\n\n" : '')
             . $body
             . ($footer ? "\n\n_{$footer}_" : '');
 
         try {
-            $result = app(WuzapiService::class)->sendText($this->test_phone, $full);
+            $result = app(WuzapiService::class)->sendText($phone, $full);
 
             if ($result !== null) {
                 Notification::make()
                     ->title('Mensagem enviada!')
-                    ->body("Enviado para {$this->test_phone}. Verifique o WhatsApp do destinatario.")
+                    ->body("Enviado para {$phone}. Verifique o WhatsApp do destinatário.")
                     ->success()
                     ->send();
             } else {
                 Notification::make()
                     ->title('Falha no envio')
-                    ->body('A API nao confirmou o envio. Verifique storage/logs/laravel.log.')
+                    ->body('A API não confirmou o envio. Verifique storage/logs/laravel.log.')
                     ->danger()
                     ->send();
             }
