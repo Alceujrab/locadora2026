@@ -94,18 +94,20 @@ class InvoiceService
         $year   = date('Y');
         $prefix = 'FAT-' . $year . '-';
 
-        // Pega o maior número já existente no padrão FAT-ANO-XXXXX
-        $last = Invoice::where('invoice_number', 'LIKE', $prefix . '%')
+        // Pega o maior número já existente no padrão FAT-ANO-XXXXX (incluindo soft-deleted,
+        // porque o UNIQUE index do banco de dados também considera registros soft-deleted)
+        $last = Invoice::withTrashed()
+            ->where('invoice_number', 'LIKE', $prefix . '%')
             ->orderByRaw('CAST(SUBSTRING(invoice_number, ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
             ->value('invoice_number');
 
         $nextSeq = $last ? ((int) substr($last, strlen($prefix)) + 1) : 1;
 
-        // Loop de segurança contra race conditions
+        // Loop de segurança contra race conditions (também considera soft-deleted)
         do {
             $number = $prefix . str_pad($nextSeq, 5, '0', STR_PAD_LEFT);
             $nextSeq++;
-        } while (Invoice::where('invoice_number', $number)->exists());
+        } while (Invoice::withTrashed()->where('invoice_number', $number)->exists());
 
         return $number;
     }
