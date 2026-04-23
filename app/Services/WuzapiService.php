@@ -79,16 +79,18 @@ class WuzapiService
         }
 
         try {
+            $phone = $this->resolveJidNumber($number);
+
             $response = Http::withHeaders($this->baseHeaders())
                 ->asJson()
                 ->timeout(30)
                 ->post("{$this->baseUrl}/chat/send/text", [
-                    'Phone' => $this->formatNumber($number),
+                    'Phone' => $phone,
                     'Body' => $text,
                 ]);
 
             if ($response->successful()) {
-                Log::info("WhatsApp (WuzAPI) disparado p/ {$number}");
+                Log::info("WhatsApp (WuzAPI) disparado p/ {$number} (jid-phone={$phone})");
                 return $response->json();
             }
 
@@ -119,7 +121,7 @@ class WuzapiService
             }
 
             $payload = [
-                'Phone' => $this->formatNumber($number),
+                'Phone' => $this->resolveJidNumber($number),
                 'Document' => 'data:application/pdf;base64,'.$base64,
                 'FileName' => $fileName,
             ];
@@ -181,6 +183,58 @@ class WuzapiService
     public function getInstanceLabel(): string
     {
         return $this->instanceLabel;
+    }
+
+    /**
+     * Consulta o WuzAPI para descobrir o JID real de um numero.
+     * Isso evita problemas com o "9" extra em numeros brasileiros antigos,
+     * onde o numero cadastrado no WhatsApp tem 8 digitos locais mas o usuario
+     * digita 9 digitos. Sem isso, o envio e aceito como "Sent" mas nunca entregue.
+     *
+     * Retorna o numero (apenas digitos) do JID correto, ou o original caso a
+     * checagem falhe / numero nao esteja no WhatsApp.
+     */
+    public function resolveJidNumber(string $number): string
+    {
+        $formatted = $this->formatNumber($number);
+
+        if (! $this->hasRequiredConfiguration()) {
+            return $formatted;
+        }
+
+        try {
+            $response = Http::withHeaders($this->baseHeaders())
+                ->asJson()
+                ->timeout(10)
+                ->post("{$this->baseUrl}/user/check", [
+                    'Phone' => [$formatted],
+                ]);
+
+            if (! $response->successful()) {
+                return $formatted;
+            }
+
+            $users = $response->json('data.Users', []);
+            if (empty($users) || ! is_array($users)) {
+                return $formatted;
+            }
+
+            $user = $users[0] ?? [];
+            $isInWa = $user['IsInWhatsapp'] ?? false;
+            $jid = (string) ($user['JID'] ?? '');
+
+            if (! $isInWa || $jid === '') {
+                return $formatted;
+            }
+
+            // Extrai apenas os digitos antes do "@s.whatsapp.net"
+            $jidNumber = preg_replace('/[^0-9]/', '', explode('@', $jid)[0] ?? '');
+
+            return $jidNumber !== '' ? $jidNumber : $formatted;
+        } catch (\Exception $e) {
+            Log::warning('Falha ao resolver JID no WuzAPI: '.$e->getMessage());
+            return $formatted;
+        }
     }
 
     protected function formatNumber(string $number): string

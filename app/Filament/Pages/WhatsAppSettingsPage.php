@@ -104,16 +104,21 @@ class WhatsAppSettingsPage extends Page
             $status = app(WuzapiService::class)->getConnectionStatus();
 
             if ($status !== null) {
-                $connected = $status['data']['Connected'] ?? $status['Connected'] ?? false;
-                $loggedIn = $status['data']['LoggedIn'] ?? $status['LoggedIn'] ?? false;
+                $data = $status['data'] ?? $status;
+                $connected = $data['connected'] ?? $data['Connected'] ?? false;
+                $loggedIn = $data['loggedIn'] ?? $data['LoggedIn'] ?? false;
+                $jid = $data['jid'] ?? $data['JID'] ?? '';
+                $name = $data['name'] ?? $data['Name'] ?? '';
 
                 $state = $connected && $loggedIn
                     ? 'Conectado e Logado'
                     : ($connected ? 'Conectado (sem login)' : 'Desconectado');
 
+                $detail = $state . ($name ? " - {$name}" : '') . ($jid ? " ({$jid})" : '');
+
                 Notification::make()
                     ->title('Conexao com WuzAPI OK!')
-                    ->body("Status: {$state}")
+                    ->body("Status: {$detail}")
                     ->success()
                     ->send();
             } else {
