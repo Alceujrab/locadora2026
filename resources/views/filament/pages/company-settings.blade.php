@@ -1,7 +1,15 @@
 <x-filament-panels::page>
-    <form wire:submit="save">
+    <form wire:submit="save" class="space-y-6">
         {{-- Seção: Dados da Empresa --}}
-        <x-filament::section heading="Dados da Empresa" description="Informacoes que aparecem nos PDFs de faturas e ordens de servico." icon="heroicon-o-building-office-2">
+        <section class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
+            <header class="flex items-center gap-3 border-b border-gray-200 px-6 py-4 dark:border-white/10">
+                <x-filament::icon icon="heroicon-o-building-office-2" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <div>
+                    <h2 class="text-base font-semibold text-gray-950 dark:text-white">Dados da Empresa</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Informacoes que aparecem nos PDFs de faturas e ordens de servico.</p>
+                </div>
+            </header>
+            <div class="px-6 py-5">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Razao Social / Nome</label>
@@ -48,10 +56,19 @@
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500" />
                 </div>
             </div>
-        </x-filament::section>
+            </div>
+        </section>
 
         {{-- Seção: Dados Bancários e PIX --}}
-        <x-filament::section heading="Dados Bancarios e PIX" description="Informacoes de pagamento que aparecem nas faturas e paginas de confirmacao." icon="heroicon-o-banknotes" class="mt-6">
+        <section class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
+            <header class="flex items-center gap-3 border-b border-gray-200 px-6 py-4 dark:border-white/10">
+                <x-filament::icon icon="heroicon-o-banknotes" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <div>
+                    <h2 class="text-base font-semibold text-gray-950 dark:text-white">Dados Bancarios e PIX</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Informacoes de pagamento que aparecem nas faturas e paginas de confirmacao.</p>
+                </div>
+            </header>
+            <div class="px-6 py-5">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo Chave PIX</label>
@@ -92,10 +109,19 @@
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500" />
                 </div>
             </div>
-        </x-filament::section>
+            </div>
+        </section>
 
         {{-- Seção: Textos de Documentos --}}
-        <x-filament::section heading="Textos de Documentos" description="Textos personalizados que aparecem nos PDFs gerados pelo sistema." icon="heroicon-o-document-text" class="mt-6">
+        <section class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
+            <header class="flex items-center gap-3 border-b border-gray-200 px-6 py-4 dark:border-white/10">
+                <x-filament::icon icon="heroicon-o-document-text" class="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <div>
+                    <h2 class="text-base font-semibold text-gray-950 dark:text-white">Textos de Documentos</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Textos personalizados que aparecem nos PDFs gerados pelo sistema.</p>
+                </div>
+            </header>
+            <div class="px-6 py-5">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Instrucoes de Pagamento</label>
@@ -110,7 +136,8 @@
                     <p class="text-xs text-gray-500 mt-1">Aparece no final dos PDFs de faturas e OS</p>
                 </div>
             </div>
-        </x-filament::section>
+            </div>
+        </section>
 
         {{-- Botão Salvar --}}
         <div class="mt-6 flex justify-end">
