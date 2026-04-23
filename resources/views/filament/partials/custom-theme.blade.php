@@ -836,6 +836,56 @@
         padding: 1.1rem 1.25rem !important;
     }
 
+    /* Tabelas (histórico contratos, reservas, serviços, financeiro) */
+    .vd-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.8125rem;
+    }
+    .vd-table thead th {
+        padding: 0.65rem 0.85rem;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94a3b8;
+        background: rgba(59, 130, 246, 0.04);
+        border-bottom: 1px solid rgba(59, 130, 246, 0.12);
+        white-space: nowrap;
+    }
+    .vd-table tbody td {
+        padding: 0.75rem 0.85rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+        color: #e2e8f0;
+        vertical-align: middle;
+    }
+    .vd-table tbody tr:hover td {
+        background: rgba(59, 130, 246, 0.04);
+    }
+    .vd-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .vd-table td.vd-empty,
+    .vd-table .vd-empty {
+        padding: 1.5rem 0.85rem;
+        text-align: center;
+        color: #64748b;
+    }
+
+    /* Badges/pills genéricos dentro do dashboard do veículo */
+    .vd-badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+
     @media (max-width: 768px) {
         .vd-header { flex-direction: column; align-items: stretch; }
         .vd-header-photo, .vd-header-placeholder { width: 100%; height: 180px; }
