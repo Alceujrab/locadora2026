@@ -91,6 +91,22 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('cliente.payments') }}" class="{{ request()->routeIs('cliente.payments') ? 'bg-gray-50 text-primary-600' : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50' }} group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition">
+                                            <svg class="{{ request()->routeIs('cliente.payments') ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600' }} h-6 w-6 shrink-0 transition" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                            </svg>
+                                            Pagamentos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('cliente.fines') }}" class="{{ request()->routeIs('cliente.fines') ? 'bg-gray-50 text-primary-600' : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50' }} group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition">
+                                            <svg class="{{ request()->routeIs('cliente.fines') ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600' }} h-6 w-6 shrink-0 transition" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                            </svg>
+                                            Multas
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('cliente.support') }}" class="{{ request()->routeIs('cliente.support') ? 'bg-gray-50 text-primary-600' : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50' }} group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition">
                                             <svg class="{{ request()->routeIs('cliente.support') ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600' }} h-6 w-6 shrink-0 transition" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.436 3 12c0 1.967.653 3.765 1.761 5.23l-1.071 2.946a.75.75 0 00.941.986l3.051-1.077A9.043 9.043 0 0012 20.25z" />
@@ -158,6 +174,22 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.386 3.075A.478.478 0 015 17.764V3h14v14.764a.478.478 0 01-1.034.481l-5.386-3.075a.478.478 0 00-.478 0z" />
                                     </svg>
                                     Ordens de Servico
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('cliente.payments') }}" class="{{ request()->routeIs('cliente.payments') ? 'bg-primary-50 text-primary-700 font-bold' : 'text-slate-600 hover:text-primary-600 transition-colors hover:bg-gray-50 font-medium' }} group flex gap-x-3 rounded-xl p-3 text-sm leading-6">
+                                    <svg class="{{ request()->routeIs('cliente.payments') ? 'text-primary-600' : 'text-slate-400 group-hover:text-primary-600 transition-colors' }} h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                    </svg>
+                                    Pagamentos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('cliente.fines') }}" class="{{ request()->routeIs('cliente.fines') ? 'bg-primary-50 text-primary-700 font-bold' : 'text-slate-600 hover:text-primary-600 transition-colors hover:bg-gray-50 font-medium' }} group flex gap-x-3 rounded-xl p-3 text-sm leading-6">
+                                    <svg class="{{ request()->routeIs('cliente.fines') ? 'text-primary-600' : 'text-slate-400 group-hover:text-primary-600 transition-colors' }} h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                    Multas
                                 </a>
                             </li>
                             <li class="pt-4 mt-4 border-t border-slate-100">

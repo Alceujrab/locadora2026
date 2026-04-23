@@ -60,5 +60,32 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Vehicle::observe($auditObserver);
         \App\Models\FineTraffic::observe($auditObserver);
         \App\Models\Nfse::observe($auditObserver);
+
+        // Compartilha dados da empresa/unidade em TODAS as views publicas e do portal do cliente
+        \Illuminate\Support\Facades\View::composer(['public.*', 'client.*'], function ($view) {
+            try {
+                $branch = \App\Models\Branch::where('is_active', true)->first() ?? \App\Models\Branch::first();
+            } catch (\Throwable $e) {
+                $branch = null;
+            }
+            $phone = $branch->phone ?? '';
+            $whatsapp = $branch->whatsapp ?? $phone;
+            $whatsappDigits = preg_replace('/\D/', '', $whatsapp ?? '');
+            $addressParts = array_filter([
+                $branch->address_street ?? null,
+                $branch->address_number ?? null,
+                $branch->address_neighborhood ?? null,
+                ($branch->address_city ?? null) . (($branch->address_state ?? null) ? ' - ' . $branch->address_state : ''),
+            ]);
+            $view->with([
+                'branch' => $branch,
+                'companyName' => $branch->name ?? 'Elite Locadora',
+                'companyPhone' => $phone,
+                'companyWhatsapp' => $whatsapp,
+                'companyEmail' => $branch->email ?? null,
+                'companyAddress' => implode(', ', $addressParts) ?: null,
+                'whatsappLink' => $whatsappDigits ? 'https://wa.me/55' . $whatsappDigits : null,
+            ]);
+        });
     }
 }

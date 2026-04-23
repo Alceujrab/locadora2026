@@ -101,4 +101,48 @@ class PublicPageController extends Controller
 
         return view('public.vehicles.show', compact('vehicle', 'relatedVehicles'));
     }
+
+    public function about()
+    {
+        $testimonials = Testimonial::where('is_active', true)->orderBy('id', 'desc')->take(3)->get();
+        $stats = [
+            'vehicles' => Vehicle::count(),
+            'customers' => \App\Models\Customer::count(),
+            'rentals' => \App\Models\Contract::count(),
+            'cities' => \App\Models\Branch::where('is_active', true)->distinct('address_city')->count('address_city'),
+        ];
+
+        return view('public.about', compact('testimonials', 'stats'));
+    }
+
+    public function contact()
+    {
+        return view('public.contact');
+    }
+
+    public function contactSubmit(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:120',
+            'email' => 'required|email|max:120',
+            'phone' => 'nullable|string|max:20',
+            'subject' => 'nullable|string|max:120',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        try {
+            \App\Models\SupportTicket::create([
+                'subject' => $data['subject'] ?? 'Contato pelo site',
+                'description' => "Nome: {$data['name']}\nEmail: {$data['email']}\nTelefone: ".($data['phone'] ?? '-')."\n\n".$data['message'],
+                'status' => 'aberto',
+                'priority' => 'normal',
+                'category' => 'contato_site',
+            ]);
+        } catch (\Throwable $e) {
+            // falha silenciosa para nao quebrar a UX publica
+            \Log::warning('Falha ao criar ticket de contato: '.$e->getMessage());
+        }
+
+        return back()->with('success', 'Mensagem enviada com sucesso! Entraremos em contato em breve.');
+    }
 }

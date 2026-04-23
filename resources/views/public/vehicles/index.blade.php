@@ -4,20 +4,18 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="relative bg-gray-900 py-16 sm:py-24">
-    <div class="absolute inset-0 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Frota" class="w-full h-full object-cover opacity-20">
-        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 opacity-90"></div>
+<section class="relative bg-slate-950 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-25">
+        <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1950&q=80" alt="Frota" class="w-full h-full object-cover">
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4">Lista de Veículos</h1>
-        <div class="flex items-center justify-center space-x-2 text-sm font-medium text-gray-300">
-            <a href="{{ route('public.home') }}" class="hover:text-white transition">Início</a>
-            <span>&bull;</span>
-            <span class="text-primary-400">Frota</span>
-        </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/30"></div>
+    <div class="absolute -top-32 -right-24 w-96 h-96 bg-primary-600/30 rounded-full blur-3xl"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <span class="inline-block px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-widest text-primary-300">Nossa Frota</span>
+        <h1 class="mt-6 font-display text-4xl sm:text-6xl font-black tracking-tight">Encontre o carro <span class="bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">perfeito.</span></h1>
+        <p class="mt-4 text-slate-300">Veículos revisados, tarifas claras e reserva 100% online.</p>
     </div>
-</div>
+</section>
 
 <div class="bg-gray-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -151,8 +149,8 @@
                     @forelse($vehicles as $vehicle)
                         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group overflow-hidden flex flex-col">
                             <div class="relative h-56 bg-gray-100 overflow-hidden">
-                                @if($vehicle->photos && count($vehicle->photos) > 0)
-                                    <img src="{{ asset('storage/' . $vehicle->photos[0]) }}" alt="{{ $vehicle->model }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                @if($vehicle->cover_photo)
+                                    <img src="{{ asset('storage/' . $vehicle->cover_photo) }}" alt="{{ $vehicle->model }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-400 font-medium">Sem Imagem</div>
                                 @endif

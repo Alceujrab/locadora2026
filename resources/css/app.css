@@ -6,7 +6,8 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-sans: 'Instrument Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-display: 'Outfit', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Elite Blue */
     --color-primary-50: #eff6ff;

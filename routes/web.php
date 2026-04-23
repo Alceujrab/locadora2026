@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PublicPageController::class, 'home'])->name('public.home');
 Route::get('/frota', [PublicPageController::class, 'vehicles'])->name('public.vehicles');
 Route::get('/frota/{id}', [PublicPageController::class, 'vehicleDetails'])->name('public.vehicles.show');
+Route::get('/sobre', [PublicPageController::class, 'about'])->name('public.about');
+Route::get('/contato', [PublicPageController::class, 'contact'])->name('public.contact');
+Route::post('/contato', [PublicPageController::class, 'contactSubmit'])->name('public.contact.submit');
 
 // ==========================================
 // RESERVA / CHECKOUT ROUTES
@@ -135,6 +138,8 @@ Route::prefix('cliente')->name('cliente.')->group(function () {
         Route::get('/reservas', [ClientPanelController::class, 'reservations'])->name('reservations');
         Route::get('/suporte', [ClientPanelController::class, 'support'])->name('support');
         Route::get('/ordens-de-servico', [ClientPanelController::class, 'serviceOrders'])->name('service-orders');
+        Route::get('/multas', [ClientPanelController::class, 'fines'])->name('fines');
+        Route::get('/pagamentos', [ClientPanelController::class, 'payments'])->name('payments');
     });
 });
 

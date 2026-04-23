@@ -61,8 +61,8 @@
                 <div class="bg-white rounded-2xl p-2 sm:p-4 shadow-xl shadow-gray-200/50">
                     <!-- Main Image -->
                     <div class="relative w-full h-[300px] sm:h-[450px] rounded-xl overflow-hidden bg-gray-100 group">
-                        @if($vehicle->photos && count($vehicle->photos) > 0)
-                            <img src="{{ asset('storage/' . $vehicle->photos[0]) }}" alt="{{ $vehicle->model }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" id="main-gallery-image">
+                        @if($vehicle->cover_photo)
+                            <img src="{{ asset('storage/' . $vehicle->cover_photo) }}" alt="{{ $vehicle->model }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" id="main-gallery-image">
                         @else
                             <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
                                 <svg class="w-16 h-16 mb-2 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -72,12 +72,12 @@
                     </div>
                     
                     <!-- Thumbnails -->
-                    @if($vehicle->photos && count($vehicle->photos) > 1)
+                    @if($vehicle->photos && $vehicle->photos->count() > 1)
                         <div class="flex gap-2 sm:gap-4 mt-2 sm:mt-4 overflow-x-auto pb-2 custom-scrollbar">
                             @foreach($vehicle->photos as $index => $photo)
-                                <button type="button" class="relative flex-none w-20 h-16 sm:w-32 sm:h-24 rounded-lg overflow-hidden border-2 {{ $index === 0 ? 'border-primary-600' : 'border-transparent' }} hover:border-primary-400 transition-colors focus:outline-none" onclick="document.getElementById('main-gallery-image').src='{{ asset('storage/' . $photo) }}'; this.parentNode.querySelectorAll('button').forEach(b => b.classList.replace('border-primary-600', 'border-transparent')); this.classList.replace('border-transparent', 'border-primary-600');">
+                                <button type="button" class="relative flex-none w-20 h-16 sm:w-32 sm:h-24 rounded-lg overflow-hidden border-2 {{ $index === 0 ? 'border-primary-600' : 'border-transparent' }} hover:border-primary-400 transition-colors focus:outline-none" onclick="document.getElementById('main-gallery-image').src='{{ asset('storage/' . $photo->path) }}'; this.parentNode.querySelectorAll('button').forEach(b => b.classList.replace('border-primary-600', 'border-transparent')); this.classList.replace('border-transparent', 'border-primary-600');">
                                     <span class="sr-only">Ver imagem {{ $index + 1 }}</span>
-                                    <img src="{{ asset('storage/' . $photo) }}" alt="" class="absolute inset-0 w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $photo->path) }}" alt="" class="absolute inset-0 w-full h-full object-cover">
                                 </button>
                             @endforeach
                         </div>
@@ -254,8 +254,8 @@
                 @foreach($relatedVehicles as $related)
                     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group overflow-hidden flex flex-col">
                         <div class="relative h-48 bg-gray-100 overflow-hidden">
-                            @if($related->photos && count($related->photos) > 0)
-                                <img src="{{ asset('storage/' . $related->photos[0]) }}" alt="{{ $related->model }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            @if($related->cover_photo)
+                                <img src="{{ asset('storage/' . $related->cover_photo) }}" alt="{{ $related->model }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-gray-400">Sem Foto</div>
                             @endif

@@ -23,6 +23,7 @@ class ClientPanelController extends Controller
         $activeContractsCount = $customer->contracts()->whereIn('status', ['active', 'em_andamento'])->count();
         $pendingInvoicesCount = $customer->invoices()->where('status', 'open')->count();
         $openTicketsCount = $customer->supportTickets()->where('status', 'aberto')->count();
+        $pendingFinesCount = $customer->fines()->where('status', 'pendente')->count();
 
         // Próximas reservas
         $upcomingReservations = $customer->reservations()
@@ -37,6 +38,7 @@ class ClientPanelController extends Controller
             'activeContractsCount',
             'pendingInvoicesCount',
             'openTicketsCount',
+            'pendingFinesCount',
             'upcomingReservations'
         ));
     }
@@ -98,5 +100,36 @@ class ClientPanelController extends Controller
             ->get();
 
         return view('client.service-orders', compact('orders'));
+    }
+
+    /**
+     * Minhas Multas
+     */
+    public function fines()
+    {
+        $customer = Auth::guard('web')->user()->customer;
+        $fines = $customer->fines()
+            ->with(['vehicle', 'contract'])
+            ->orderBy('fine_date', 'desc')
+            ->get();
+
+        return view('client.fines', compact('fines'));
+    }
+
+    /**
+     * Meus Pagamentos
+     */
+    public function payments()
+    {
+        $customer = Auth::guard('web')->user()->customer;
+        $payments = \App\Models\Payment::whereHas('invoice', function ($q) use ($customer) {
+            $q->where('customer_id', $customer->id);
+        })
+            ->with(['invoice.contract.vehicle'])
+            ->orderBy('paid_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('client.payments', compact('payments'));
     }
 }
