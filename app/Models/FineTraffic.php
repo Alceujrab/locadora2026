@@ -15,6 +15,12 @@ class FineTraffic extends Model
         'vehicle_id', 'contract_id', 'customer_id', 'fine_code', 'description',
         'amount', 'fine_date', 'due_date', 'notification_date',
         'auto_infraction_number', 'status', 'responsibility', 'notes',
+        // Condutor informado (indicação de condutor)
+        'driver_name', 'driver_cpf', 'driver_rg', 'driver_phone', 'driver_email',
+        'driver_cnh_number', 'driver_cnh_expires_at',
+        'driver_zipcode', 'driver_address', 'driver_address_number', 'driver_address_complement',
+        'driver_neighborhood', 'driver_city', 'driver_state',
+        'driver_cnh_path', 'driver_address_proof_path',
     ];
 
     protected $casts = [
@@ -22,6 +28,7 @@ class FineTraffic extends Model
         'fine_date' => 'date',
         'due_date' => 'date',
         'notification_date' => 'date',
+        'driver_cnh_expires_at' => 'date',
     ];
 
     public function vehicle()

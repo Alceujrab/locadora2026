@@ -83,6 +83,91 @@ class FineTrafficResource extends Resource
                 Components\Textarea::make('description')->label('Descrição da Infração')->columnSpanFull(),
                 Components\Textarea::make('notes')->label('Observações Internas')->columnSpanFull(),
             ]),
+
+            Section::make('Condutor Informado')
+                ->description('Dados do condutor indicado para transferência de pontos/responsabilidade da multa.')
+                ->collapsible()
+                ->schema([
+                    Grid::make(3)->schema([
+                        Components\TextInput::make('driver_name')
+                            ->label('Nome Completo')
+                            ->maxLength(150),
+                        Components\TextInput::make('driver_cpf')
+                            ->label('CPF')
+                            ->mask('999.999.999-99')
+                            ->maxLength(20),
+                        Components\TextInput::make('driver_rg')
+                            ->label('RG')
+                            ->maxLength(30),
+                    ]),
+                    Grid::make(3)->schema([
+                        Components\TextInput::make('driver_phone')
+                            ->label('Telefone')
+                            ->tel()
+                            ->mask('(99) 99999-9999')
+                            ->maxLength(30),
+                        Components\TextInput::make('driver_email')
+                            ->label('E-mail')
+                            ->email()
+                            ->maxLength(150),
+                        Components\TextInput::make('driver_cnh_number')
+                            ->label('Nº da CNH')
+                            ->maxLength(30),
+                    ]),
+                    Grid::make(3)->schema([
+                        Components\DatePicker::make('driver_cnh_expires_at')
+                            ->label('Validade da CNH')
+                            ->native(false),
+                        Components\TextInput::make('driver_zipcode')
+                            ->label('CEP')
+                            ->mask('99999-999')
+                            ->maxLength(15),
+                        Components\TextInput::make('driver_address')
+                            ->label('Logradouro')
+                            ->maxLength(255),
+                    ]),
+                    Grid::make(4)->schema([
+                        Components\TextInput::make('driver_address_number')
+                            ->label('Número')
+                            ->maxLength(20),
+                        Components\TextInput::make('driver_address_complement')
+                            ->label('Complemento')
+                            ->maxLength(100),
+                        Components\TextInput::make('driver_neighborhood')
+                            ->label('Bairro')
+                            ->maxLength(120),
+                        Components\TextInput::make('driver_city')
+                            ->label('Cidade')
+                            ->maxLength(120),
+                    ]),
+                    Grid::make(4)->schema([
+                        Components\TextInput::make('driver_state')
+                            ->label('UF')
+                            ->maxLength(2),
+                    ]),
+                    Grid::make(2)->schema([
+                        Components\FileUpload::make('driver_cnh_path')
+                            ->label('Cópia da CNH')
+                            ->disk('public')
+                            ->directory('fines/driver-cnh')
+                            ->visibility('public')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(8192)
+                            ->downloadable()
+                            ->openable()
+                            ->previewable(true),
+                        Components\FileUpload::make('driver_address_proof_path')
+                            ->label('Comprovante de Endereço')
+                            ->disk('public')
+                            ->directory('fines/driver-address-proof')
+                            ->visibility('public')
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(8192)
+                            ->downloadable()
+                            ->openable()
+                            ->previewable(true),
+                    ]),
+                ]),
         ]);
     }
 
@@ -93,6 +178,10 @@ class FineTrafficResource extends Resource
                 Tables\Columns\TextColumn::make('auto_infraction_number')->label('AIT')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('vehicle.plate')->label('Veículo')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('customer.name')->label('Cliente')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('driver_name')->label('Condutor Informado')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('fine_date')->label('Data Infracao')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('due_date')->label('Vencimento')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('amount')->label('Valor')
