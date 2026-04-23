@@ -702,17 +702,144 @@
     /* ==========================================
        VEHICLE DASHBOARD — vd-* classes
        ========================================== */
+
+    /* Grids responsivos */
+    .vd-grid { display: grid; gap: 1rem; }
+    .vd-g2 { grid-template-columns: repeat(2, 1fr); }
+    .vd-g3 { grid-template-columns: repeat(3, 1fr); }
+    .vd-g4 { grid-template-columns: repeat(4, 1fr); }
+    .vd-g6 { grid-template-columns: repeat(6, 1fr); }
+    @media (max-width: 1280px) {
+        .vd-g4 { grid-template-columns: repeat(2, 1fr); }
+        .vd-g6 { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .vd-g2, .vd-g3, .vd-g4 { grid-template-columns: 1fr; }
+        .vd-g6 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* HEADER do veículo */
     .vd-header {
-        background: rgba(15, 23, 42, 0.6) !important;
-        outline: 1px solid rgba(59, 130, 246, 0.08) !important;
+        display: flex; align-items: stretch; gap: 1.25rem;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(11, 17, 32, 0.75) 100%) !important;
+        border: 1px solid rgba(59, 130, 246, 0.1) !important;
+        border-radius: 1rem !important;
+        outline: none !important;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
+    .vd-header-photo {
+        width: 180px; height: 130px;
+        object-fit: cover;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(59, 130, 246, 0.15);
+        flex-shrink: 0;
+    }
+    .vd-header-placeholder {
+        width: 180px; height: 130px;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(59, 130, 246, 0.05);
+        border: 1px dashed rgba(59, 130, 246, 0.2);
+        border-radius: 0.75rem;
+        flex-shrink: 0;
+    }
+    .vd-header-title {
+        font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em;
+        color: #f8fafc; margin: 0 0 0.5rem 0; line-height: 1.15;
+    }
+    .vd-header-meta {
+        display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+        font-size: 0.8125rem; color: #cbd5e1; margin-bottom: 0.35rem;
+    }
+    .vd-header-meta > span:not(.vd-plate) {
+        padding: 0.15rem 0.55rem;
+        background: rgba(59, 130, 246, 0.08);
+        border-radius: 0.4rem; font-size: 0.75rem;
+        color: #cbd5e1;
+    }
+    .vd-header-details {
+        display: flex; flex-wrap: wrap; gap: 0.75rem;
+        font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;
+    }
+    .vd-header-details > span { display: inline-flex; align-items: center; gap: 0.25rem; }
     .vd-plate {
-        background: var(--elite-blue-500) !important;
+        display: inline-block !important;
+        padding: 0.2rem 0.65rem !important;
+        background: linear-gradient(135deg, var(--elite-blue-600), var(--elite-blue-500)) !important;
         color: #fff !important;
+        font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace !important;
+        font-size: 0.8125rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em !important;
+        border-radius: 0.4rem !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
     }
+    .vd-status-area {
+        display: flex; flex-direction: column; align-items: flex-end;
+        gap: 0.35rem; min-width: 140px; flex-shrink: 0;
+    }
+    .vd-status-label {
+        font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.08em; color: #64748b;
+    }
+    .vd-status-badge {
+        padding: 0.3rem 0.85rem; border-radius: 9999px;
+        font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em;
+        display: inline-block; text-align: center;
+    }
+
+    /* TABS */
+    .vd-tabs {
+        display: flex; gap: 0; flex-wrap: wrap;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        padding: 0 0.25rem;
+    }
+    .vd-tab {
+        padding: 0.75rem 1.15rem;
+        background: transparent; border: none;
+        color: #94a3b8;
+        font-size: 0.8125rem; font-weight: 600;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
+        display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .vd-tab:hover { color: #e2e8f0; background: rgba(59, 130, 246, 0.04); }
     .vd-tab-active {
         color: var(--elite-blue-400) !important;
-        border-bottom-color: var(--elite-blue-500) !important;
+        border-bottom: 2px solid var(--elite-blue-500) !important;
+        background: rgba(59, 130, 246, 0.06) !important;
+    }
+    .vd-tab-badge {
+        padding: 0.1rem 0.45rem;
+        border-radius: 9999px;
+        font-size: 0.65rem; font-weight: 700;
+        line-height: 1.4;
+    }
+
+    /* Info rows dentro de seções */
+    .vd-section-info { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.25rem 0; }
+    .vd-section-info > div {
+        display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+        font-size: 0.8125rem;
+    }
+    .vd-lbl { color: #94a3b8; font-weight: 600; font-size: 0.75rem; }
+    .vd-val { color: #e2e8f0; font-weight: 500; }
+    .vd-val-green { color: #34d399; font-weight: 700; }
+    .vd-empty { color: #64748b; font-size: 0.8125rem; text-align: center; margin: 0; }
+
+    /* Ajuste de espaçamento dos cards KPI dentro de vd-grid */
+    .vd-grid .fi-wi-stats-overview-stat {
+        margin: 0 !important;
+        padding: 1.1rem 1.25rem !important;
+    }
+
+    @media (max-width: 768px) {
+        .vd-header { flex-direction: column; align-items: stretch; }
+        .vd-header-photo, .vd-header-placeholder { width: 100%; height: 180px; }
+        .vd-status-area { align-items: flex-start; }
     }
 
     /* ==========================================
