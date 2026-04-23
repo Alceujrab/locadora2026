@@ -183,8 +183,9 @@
         <p class="decl" style="font-size: 8.5pt; color: #222;">
             <strong>Documentos obrigatórios anexos</strong> (conforme Res. CONTRAN 918/2022, art. 11, §2º):
             cópia da <strong>CNH</strong> ou documento de identificação oficial com foto do condutor e
-            comprovante de endereço. <strong>A assinatura do condutor infrator e do proprietário deve ser
-            reconhecida em cartório</strong> (firma reconhecida por autenticidade ou semelhança).
+            comprovante de endereço <em>(incluídos nas páginas seguintes deste documento, quando disponíveis)</em>.
+            <strong>A assinatura do condutor infrator e do proprietário deve ser reconhecida em cartório</strong>
+            (firma reconhecida por autenticidade ou semelhança).
         </p>
         <div class="check">
             <span></span> Cópia da CNH (ou documento de identificação oficial com foto) anexa &nbsp;&nbsp;

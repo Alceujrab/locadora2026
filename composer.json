@@ -16,6 +16,8 @@
         "laravel/horizon": "^5.44",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
+        "setasign/fpdi": "^2.6",
+        "setasign/fpdi-fpdf": "^2.3",
         "spatie/laravel-activitylog": "^4.11",
         "spatie/laravel-backup": "^10.0",
         "spatie/laravel-medialibrary": "^11.20",
