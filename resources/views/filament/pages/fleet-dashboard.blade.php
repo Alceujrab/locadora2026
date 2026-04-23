@@ -38,6 +38,11 @@
             <div class="rpt-utilization-bar">
                 <div class="rpt-utilization-fill" style="width: {{ $utilizationRate }}%; background: {{ $utilizationRate >= 70 ? '#34d399' : ($utilizationRate >= 40 ? '#fb923c' : '#fb7185') }};"></div>
             </div>
+            <div class="rpt-chart-container" style="padding: 1rem 0 0;">
+                <div style="max-width: 230px; margin: 0 auto;">
+                    <canvas id="fleetUtilizationChart" height="180"></canvas>
+                </div>
+            </div>
         </div>
 
         {{-- GRID 2 COLUNAS: MANUTENCAO + DOCUMENTOS --}}
@@ -135,4 +140,88 @@
 
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (() => {
+            const chartData = @json([
+                'labels' => ['Locados', 'Reservados', 'Disponiveis', 'Manutencao', 'Inativos'],
+                'values' => [
+                    (int) ($fleetCounts['rented'] ?? 0),
+                    (int) ($fleetCounts['reserved'] ?? 0),
+                    (int) ($fleetCounts['available'] ?? 0),
+                    (int) ($fleetCounts['maintenance'] ?? 0),
+                    (int) ($fleetCounts['inactive'] ?? 0),
+                ],
+                'colors' => ['#60a5fa', '#fb923c', '#34d399', '#fbbf24', '#fb7185'],
+            ]);
+
+            const renderFleetUtilizationChart = () => {
+                const canvas = document.getElementById('fleetUtilizationChart');
+
+                if (!canvas || typeof window.Chart === 'undefined') {
+                    return;
+                }
+
+                if (window.fleetUtilizationChartInstance) {
+                    window.fleetUtilizationChartInstance.destroy();
+                }
+
+                const filtered = chartData.values
+                    .map((value, index) => ({
+                        label: chartData.labels[index],
+                        value,
+                        color: chartData.colors[index],
+                    }))
+                    .filter((item) => item.value > 0);
+
+                const labels = filtered.length ? filtered.map((item) => item.label) : ['Sem dados'];
+                const values = filtered.length ? filtered.map((item) => item.value) : [1];
+                const colors = filtered.length ? filtered.map((item) => item.color) : ['#64748b'];
+
+                window.fleetUtilizationChartInstance = new window.Chart(canvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: colors,
+                            borderColor: '#0f172a',
+                            borderWidth: 2,
+                            hoverOffset: 4,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '68%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#cbd5e1',
+                                    boxWidth: 12,
+                                    boxHeight: 12,
+                                    padding: 12,
+                                },
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => `${context.label}: ${context.parsed}`,
+                                },
+                            },
+                        },
+                    },
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', renderFleetUtilizationChart, { once: true });
+            } else {
+                renderFleetUtilizationChart();
+            }
+
+            document.addEventListener('livewire:navigated', renderFleetUtilizationChart);
+        })();
+    </script>
 </x-filament-panels::page>
